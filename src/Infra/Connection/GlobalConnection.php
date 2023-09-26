@@ -1,0 +1,29 @@
+<?php
+
+namespace Gso\Ws\Infra\Connection;
+
+use Gso\Ws\Infra\Interfaces\GlobalConnectionInterface;
+
+class GlobalConnection implements GlobalConnectionInterface
+{
+    public function __construct()
+    {
+        $this->conn();
+    }
+
+    public function conn(): \PDO
+    {
+        return new \PDO(
+            getenv('DBDRIVE').':host='.getenv('DBHOST').';dbname='.getenv('DBNAME'),
+            getenv('DBUSER'),
+            getenv('DBPASS'),
+            [
+                \PDO::ATTR_PERSISTENT => true,
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_EMULATE_PREPARES => true,
+                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+                \PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci',
+            ]
+        );
+    }
+}

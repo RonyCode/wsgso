@@ -1,0 +1,31 @@
+{
+  "name": "gso/app",
+  "description": "Api para gerenciamento de ocorrências",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ronycode",
+      "email": "ronypc@outlook.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Gso\\Ws\\": "src/",
+      "Test\\": "Test/"
+    }
+  },
+  "require": {
+    "slim/slim": "4.*",
+    "nyholm/psr7": "^1.5",
+    "nyholm/psr7-server": "dev-master",
+    "selective/basepath": "dev-master",
+    "php-di/slim-bridge": "dev-master",
+    "ext-http": "*",
+    "ext-pdo": "*",
+    "firebase/php-jwt": "dev-main"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest"
+  }
+}
