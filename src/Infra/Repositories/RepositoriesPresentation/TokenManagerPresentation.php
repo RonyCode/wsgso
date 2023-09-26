@@ -1,10 +1,10 @@
 <?php
 
-namespace Gso\App\Infra\Repositories\RepositoriesPresentation;
+namespace Gso\Ws\Infra\Repositories\RepositoriesPresentation;
 
 use Gso\Ws\App\Helper\ResponseError;
-use Gso\App\App\UseCases\TokenManagerByCodUsuarioCase\OutputBoundaryTokenManagerByCodUsuario;
-use Gso\App\Infra\Interfaces\InterfacesPresentation\TokenManagerByCodUsuarioPresentationInterface;
+use Gso\Ws\App\UseCases\TokenManagerByCodUsuarioCase\OutputBoundaryTokenManagerByCodUsuario;
+use Gso\Ws\Infra\Interfaces\InterfacesPresentation\TokenManagerByCodUsuarioPresentationInterface;
 use RuntimeException;
 
 class TokenManagerPresentation implements TokenManagerByCodUsuarioPresentationInterface

@@ -11,7 +11,12 @@
   ],
   "autoload": {
     "psr-4": {
-      "Gso\\Ws\\": "src/",
+      "Gso\\Ws\\": "src/"
+    }
+  },
+
+  "autoload-dev": {
+    "psr-4": {
       "Test\\": "Test/"
     }
   },

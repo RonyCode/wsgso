@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'gso/app',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => NULL,
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '78ca28de850aee4516979e2b5ba3a8d32c40b79d',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,9 +22,9 @@
             'dev_requirement' => false,
         ),
         'gso/app' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => NULL,
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '78ca28de850aee4516979e2b5ba3a8d32c40b79d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -33,7 +33,7 @@
         'laravel/serializable-closure' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e5a3057a5591e1cfe8183034b0203921abe2c902',
+            'reference' => 'bfc58d9617b857721a1e65c731f7d3442f4910cd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/serializable-closure',
             'aliases' => array(
@@ -73,18 +73,18 @@
             'dev_requirement' => false,
         ),
         'php-di/invoker' => array(
-            'pretty_version' => '2.3.3',
-            'version' => '2.3.3.0',
-            'reference' => 'cd6d9f267d1a3474bdddf1be1da079f01b942786',
+            'pretty_version' => '2.3.4',
+            'version' => '2.3.4.0',
+            'reference' => '33234b32dafa8eb69202f950a1fc92055ed76a86',
             'type' => 'library',
             'install_path' => __DIR__ . '/../php-di/invoker',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'php-di/php-di' => array(
-            'pretty_version' => '7.0.3',
-            'version' => '7.0.3.0',
-            'reference' => 'd5dad2500f409d8b78371823c8b382fe9b5d0917',
+            'pretty_version' => '7.0.5',
+            'version' => '7.0.5.0',
+            'reference' => '9ea40a5a6970bf1ca5cbe148bc16cbad6ca3db6c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../php-di/php-di',
             'aliases' => array(),
@@ -110,7 +110,7 @@
         'psr/container' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '90db7b9ac2a2c5b849fcb69dde58f3ae182c68f5',
+            'reference' => '707984727bd5b2b670e59559d3ed2500240cf875',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/container',
             'aliases' => array(
@@ -127,7 +127,7 @@
         'psr/http-factory' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '6d70f402f0eddb2b154b22950b5381bbf5b28469',
+            'reference' => '7037f4b0950474e9d1350e8df89b15f1842085f6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/http-factory',
             'aliases' => array(
@@ -159,7 +159,7 @@
         'psr/http-server-handler' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '84c4fb66179be4caaf8e97bd239203245302e7d4',
+            'reference' => '3cf66170cf70b854699046e5f38479ab21bc83f1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/http-server-handler',
             'aliases' => array(
@@ -170,7 +170,7 @@
         'psr/http-server-middleware' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c1481f747daaa6a0782775cd6a8c26a1bf4a3829',
+            'reference' => '459eeb7efeae55b4102a951c4ecc93a11ce58d0f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/http-server-middleware',
             'aliases' => array(
@@ -192,7 +192,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '4bdecf23905dae843494483debeae99c08e4f66f',
+            'reference' => 'ea3fc67b2c04a0af64eb18579946c5b83b6f3067',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
@@ -203,7 +203,7 @@
         'selective/basepath' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f0bfd7d69e595aba24ca72f05ea9cea1cac7d4d6',
+            'reference' => 'c332fc762505ddca9790965de084b787310fc051',
             'type' => 'library',
             'install_path' => __DIR__ . '/../selective/basepath',
             'aliases' => array(
@@ -214,7 +214,7 @@
         'slim/slim' => array(
             'pretty_version' => '4.x-dev',
             'version' => '4.9999999.9999999.9999999-dev',
-            'reference' => '8298785288f38f6a744c57cabf350e2b887699ee',
+            'reference' => '6de4dc6395a1aa902a5b7b5857284b73242900bb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../slim/slim',
             'aliases' => array(),

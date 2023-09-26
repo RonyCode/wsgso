@@ -1,9 +1,9 @@
 <?php
 
-namespace Gso\App\Infra\Repositories\RepositoriesPresentation;
+namespace Gso\Ws\Infra\Repositories\RepositoriesPresentation;
 
 use Gso\Ws\App\Helper\ResponseError;
-use Gso\App\App\UseCases\UsuarioAuthCase\OutputBoundaryUsuarioAuth;
+use Gso\Ws\App\UseCases\UsuarioAuthCase\OutputBoundaryUsuarioAuth;
 use RuntimeException;
 
 class UsuarioAuthPresentation
