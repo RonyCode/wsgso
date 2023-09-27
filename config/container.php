@@ -1,14 +1,17 @@
 <?php
 
 
-use Gso\Ws\Domains\Contracts\TokenManagerRepositoryInterface;
-use Gso\Ws\Domains\Contracts\UsuarioAuthRepositoryInterface;
+use Gso\Ws\Domains\PublishEvents;
+use Gso\Ws\Domains\User\Interface\TokenUserRepositoryInterface;
+use Gso\Ws\Domains\User\Interface\UserRepositoryInterface;
+use Gso\Ws\Domains\User\ReactEvent\LogUserSignIn;
 use Gso\Ws\Infra\Connection\GlobalConnection;
 use Gso\Ws\Infra\Interfaces\GlobalConnectionInterface;
-use Gso\Ws\Infra\Interfaces\InterfacesPresentation\TokenManagerByCodUsuarioPresentationInterface;
-use Gso\Ws\Infra\Interfaces\InterfacesPresentation\UsuarioAuthPresentationInterface;
-use Gso\Ws\Infra\Repositories\RepositoriesModel\TokenManagerRepository;
-use Gso\Ws\Infra\Repositories\RepositoriesModel\UsuarioAuthRepository;
+use Gso\Ws\Infra\Interfaces\InterfacesPresentation\TokenByCodUsuarioPresentationInterface;
+use Gso\Ws\Infra\Repositories\RepositoriesModel\TokenUserRepository;
+use Gso\Ws\Infra\Repositories\RepositoriesPresentation\UserPresentationRepository;
+use Gso\Ws\Infra\User\Interface\UserPresentationInterface;
+use Gso\Ws\Infra\User\Repository\UserRepository;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Psr\Container\ContainerInterface;
@@ -56,32 +59,42 @@ return [
         return new BasePathMiddleware($container->get(App::class));
     },
 
+
+    // ==============================================================
+    // INJECT DEPENDENCY
+    // ==============================================================
+    LogUserSignIn::class => static function (ContainerInterface $container) {
+        return $container->get(PublishEvents::class);
+    },
+
+
+
     // ==============================================================
     // INTERFACES MODEL SIOCB
     // ==============================================================
+    UserRepositoryInterface::class => static function (ContainerInterface $container) {
+        return $container->get(UserRepository::class);
+    },
+    TokenUserRepositoryInterface::class => static function (ContainerInterface $container) {
+        return $container->get(TokenUserRepository::class);
+    },
 
-    UsuarioAuthRepositoryInterface::class  => static function (ContainerInterface $container) {
-        return $container->get(UsuarioAuthRepository::class);
-    },
-    TokenManagerRepositoryInterface::class => static function (ContainerInterface $container) {
-        return $container->get(TokenManagerRepository::class);
-    },
 
     // ==============================================================
     // INTERFACES PRESENTATION  SIOCB
     // ==============================================================
+    TokenByCodUsuarioPresentationInterface::class => static function (ContainerInterface $container) {
+        return $container->get(TokenUserRepository::class);
+    },
+    UserPresentationInterface::class => static function (ContainerInterface $container) {
+        return $container->get(UserPresentationRepository::class);
+    },
 
-    TokenManagerByCodUsuarioPresentationInterface::class => static function (ContainerInterface $container) {
-        return $container->get(TokenManagerRepository::class);
-    },
-    UsuarioAuthPresentationInterface::class              => static function (ContainerInterface $container) {
-        return $container->get(UsuarioAuthRepository::class);
-    },
+
 
     // ==============================================================
     // ANOTHER INTERFACES  SIOCB
     // ==============================================================
-
     GlobalConnectionInterface::class => static function (ContainerInterface $container) {
         return $container->get(GlobalConnection::class);
     },

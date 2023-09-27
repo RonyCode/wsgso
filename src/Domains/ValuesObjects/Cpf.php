@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Domains\ValuesObjects;
 
-use Gso\Ws\App\Helper\ResponseError;
+use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
 final class Cpf
 {
     use ResponseError;
 
-    private ?string $cpf = null;
+    private ?string $cpf;
 
-    public function __construct(string $cpf = null)
+    public function __construct(string $cpf = '')
     {
         try {
-            if (!$this->validaCPF($cpf)) {
-                throw new \RuntimeException();
+            if ($cpf !== null) {
+                if ( ! $this->validaCPF($cpf)) {
+                    throw new \RuntimeException();
+                }
             }
             $this->cpf = $cpf;
         } catch (RuntimeException) {

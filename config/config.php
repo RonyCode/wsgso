@@ -25,6 +25,6 @@ return static function (App $app) {
 
     // DIRETORIES
     putenv('ROOT='.dirname(getcwd(), 1));
-    putenv('DIR_IMG='.getenv('ROOT').'/storage/photos');
+    putenv('DIR_IMG='.getenv('ROOT').'/app/storage/photos');
     putenv("ISS={$_SERVER['DOCUMENT_ROOT']}");
 };

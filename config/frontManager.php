@@ -30,7 +30,7 @@ $app->add(
 );
 
 // ADICIONANDO AS ROTAS
-(require __DIR__ . '/../src/Routes/routes.php')($app);
+(require __DIR__ . '/../src/Web/Routes/routes.php')($app);
 
 // ADICIONANDO OS MIDDLEWARES
 (require __DIR__.'/middleware.php')($app);

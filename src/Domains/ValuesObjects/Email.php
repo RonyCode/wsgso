@@ -10,10 +10,10 @@ final class Email
 {
     private string $email;
 
-    public function __construct(string $email)
+    public function __construct(string $email = null)
     {
         try {
-            if (null != $email) {
+            if (null !== $email) {
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     throw new \DomainException('Email is not valid');
                 }
@@ -22,7 +22,8 @@ final class Email
             }
         } catch (Exception) {
             echo json_encode([
-                'status' => 'ERROR',
+                "code"    => 404,
+                'status'  => 'ERROR',
                 'message' => 'Formato de email nâo suportado',
             ], JSON_THROW_ON_ERROR | 64 | 256);
         }

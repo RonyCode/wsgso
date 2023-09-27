@@ -14,10 +14,9 @@
       "Gso\\Ws\\": "src/"
     }
   },
-
   "autoload-dev": {
     "psr-4": {
-      "Test\\": "Test/"
+      "Gso\\Ws\\Test\\": "Test/"
     }
   },
   "require": {
@@ -31,6 +30,7 @@
     "firebase/php-jwt": "dev-main"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest"
+    "roave/security-advisories": "dev-latest",
+    "phpunit/phpunit": "^9.1"
   }
 }

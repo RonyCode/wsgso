@@ -13,10 +13,12 @@ final class Senha
     public function __construct(string $senha = null)
     {
         try {
-            if (! $this->validatePass($senha)) {
-                throw new RuntimeException();
+            if (null !== $senha) {
+                if ( ! $this->validatePass($senha)) {
+                    throw new RuntimeException();
+                }
+                $this->senha = $senha;
             }
-            $this->senha = $senha;
         } catch (RuntimeException) {
             echo json_encode([
                 "status"  => "ERROR",
@@ -28,7 +30,7 @@ final class Senha
     public function validatePass(string $pass): bool
     {
         $regex = "/^\S*(?=\S{8,})(?=\S*[a-zA-Z])(?=\S*[\d])\S*$/";
-        if (! preg_match($regex, $pass, $match)) {
+        if ( ! preg_match($regex, $pass, $match)) {
             return false;
         }
 
