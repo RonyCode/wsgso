@@ -8,16 +8,13 @@ use RuntimeException;
 
 final class Senha
 {
-    private string $senha;
-
-    public function __construct(string $senha = null)
+    public function __construct(public readonly ?string $senha = null)
     {
         try {
-            if (null !== $senha) {
-                if ( ! $this->validatePass($senha)) {
+            if (null !== $this->senha) {
+                if (! $this->validatePass($this->senha)) {
                     throw new RuntimeException();
                 }
-                $this->senha = $senha;
             }
         } catch (RuntimeException) {
             echo json_encode([
@@ -30,7 +27,7 @@ final class Senha
     public function validatePass(string $pass): bool
     {
         $regex = "/^\S*(?=\S{8,})(?=\S*[a-zA-Z])(?=\S*[\d])\S*$/";
-        if ( ! preg_match($regex, $pass, $match)) {
+        if (! preg_match($regex, $pass, $match)) {
             return false;
         }
 

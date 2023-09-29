@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Domains\User;
 
-final readonly class TokenUser
+final readonly class Token
 {
     public function __construct(
         public ?int $codToken = null,

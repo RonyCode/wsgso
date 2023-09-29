@@ -12,7 +12,7 @@ class PassHandleUserService implements PassHandleUserInterface
     /**
      * @throws \JsonException
      */
-    public function encodePassUser(string $pass): string
+    public  function encodePassUser(string $pass): string
     {
         if (empty($pass)) {
             throw new InvalidArgumentException();

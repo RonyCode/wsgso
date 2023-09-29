@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gso\Ws\Infra\Repositories\RepositoriesModel;
 
 use Gso\Ws\Domains\User\Interface\TokenUserRepositoryInterface;
-use Gso\Ws\Domains\User\TokenUser;
+use Gso\Ws\Domains\User\Token;
 use Gso\Ws\Infra\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Web\Helper\ResponseError;
 
@@ -18,7 +18,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
     ) {
     }
 
-    public function selectTokenByCodUsuario(int $codusuario): TokenUser
+    public function selectTokenByCodUsuario(int $codusuario): Token
     {
         try {
             $stmt = $this->globalConnection->conn()->prepare(
@@ -27,7 +27,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
             $stmt->bindValue(':codUsuario', $codusuario, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 == $stmt->rowCount()) {
-                return new TokenUser();
+                return new Token();
             }
 
             return $this->newObjUnidade($stmt->fetch());
@@ -36,7 +36,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
         }
     }
 
-    public function saveTokenUsuario(TokenUser $tokenManagerModel): TokenUser
+    public function saveTokenUsuario(Token $tokenManagerModel): Token
     {
         try {
             if ($tokenManagerModel->codToken) {
@@ -49,10 +49,10 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
         }
     }
 
-    private function newObjUnidade($data): TokenUser
+    private function newObjUnidade($data): Token
     {
         try {
-            $tokenManagerModel = new TokenUser(
+            $tokenManagerModel = new Token(
                 $data['cod_token'],
                 $data['cod_usuario'],
                 $data['token'],
@@ -73,7 +73,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
         }
     }
 
-    private function insertToken(TokenUser $tokenManagerModel): TokenUser
+    private function insertToken(Token $tokenManagerModel): Token
     {
         try {
             $stmt = $this->globalConnection
@@ -96,7 +96,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
         }
     }
 
-    private function updateToken(TokenUser $tokenManagerModel): TokenUser
+    private function updateToken(Token $tokenManagerModel): Token
     {
         try {
             $stmt = $this->globalConnection

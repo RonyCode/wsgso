@@ -1,10 +1,9 @@
 <?php
 
-namespace Gso\Ws\Domains;
+namespace Gso\Ws\Domains\Event;
 
-use Gso\Ws\Domains\User\Interface\Event;
 
-abstract class ListennerEvent
+abstract class ListenerEvent
 {
     public function process(Event $event): void
     {

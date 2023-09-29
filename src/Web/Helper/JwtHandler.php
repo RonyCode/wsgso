@@ -7,8 +7,9 @@ use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Firebase\JWT\SignatureInvalidException;
+use stdClass;
 
-class JwtHandler
+class JwtHandler extends StdClass
 {
     protected int $issuedAt;
     protected int $expire;
@@ -32,12 +33,12 @@ class JwtHandler
     {
         $token = [
             // Adding the identifier to the token (who issue the token)
-            'iss' => $pathBase,
-            'aud' => $pathBase,
+            'iss'  => $pathBase,
+            'aud'  => $pathBase,
             // Adding the current timestamp to the token, for identifying that when the token was issued.
-            'iat' => $this->issuedAt,
+            'iat'  => $this->issuedAt,
             // Token expiration
-            'exp' => $this->expire,
+            'exp'  => $this->expire,
             // Payload
             'data' => $data,
         ];
@@ -46,13 +47,13 @@ class JwtHandler
     }
 
     // DECODING THE TOKEN
-    public function jwtDecode($jwt_token): \stdClass|array
+    public function jwtDecode($jwt_token): stdClass|array
     {
         try {
             return JWT::decode($jwt_token, new Key($this->jwt_secrect, 'HS256'));
         } catch (
-            ExpiredException|SignatureInvalidException|
-            BeforeValidException|\DomainException|\InvalidArgumentException|\UnexpectedValueException $e
+            ExpiredException | SignatureInvalidException |
+            BeforeValidException | \DomainException | \InvalidArgumentException | \UnexpectedValueException $e
         ) {
             return [false, $e->getMessage()];
         }

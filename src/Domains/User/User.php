@@ -10,11 +10,8 @@ use Gso\Ws\Domains\ValuesObjects\Email;
 use Gso\Ws\Domains\ValuesObjects\Senha;
 use JsonException;
 
-final  class User
+final readonly class User
 {
-    /**
-     * @throws JsonException
-     */
     public function __construct(
         public ?int $codUsuario = null,
         public ?Cpf $cpf = null,
@@ -31,7 +28,7 @@ final  class User
     /**
      * @throws JsonException
      */
-    public function userSerialize(
+    public static function userSerialize(
         ?int $codUsuario,
         ?string $cpf,
         ?string $nome,

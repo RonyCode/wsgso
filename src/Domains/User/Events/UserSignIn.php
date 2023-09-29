@@ -2,14 +2,14 @@
 
 namespace Gso\Ws\Domains\User\Events;
 
-use Gso\Ws\Domains\User\Interface\Event;
+use Gso\Ws\Domains\Event\Event;
 use Gso\Ws\Domains\ValuesObjects\Email;
 
-class UserSign implements Event
+class UserSignIn implements Event
 {
     private \DateTimeImmutable $moment;
 
-    public function __construct( readonly public Email $email )
+    public function __construct(readonly public Email $email)
     {
         $this->moment = new \DateTimeImmutable();
     }
@@ -22,5 +22,10 @@ class UserSign implements Event
     public function moment(): \DateTimeImmutable
     {
         return $this->moment;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return get_object_vars($this);
     }
 }

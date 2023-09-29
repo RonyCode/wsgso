@@ -20,7 +20,7 @@ trait ResponseError
         string $message,
         int $code = 404
     ): false|string {
-        http_response_code($code);
+//        http_response_code($code);
 
         exit(
             json_encode(

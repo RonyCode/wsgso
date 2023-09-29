@@ -10,7 +10,7 @@ final class DateMysqlToFormatBr
 {
     use ResponseError;
 
-    public function __construct(private string $date)
+    public function __construct(private ?string $date = null)
     {
         try {
             if (null === $this->date) {
@@ -18,7 +18,7 @@ final class DateMysqlToFormatBr
             }
 
             $dateFormated = $this->dateBr($date);
-            $this->date = $dateFormated;
+            $this->date   = $dateFormated;
         } catch (\RuntimeException $e) {
             $this->responseCatchError('Formato de data deve seguir exatamente este formato 9999-99-99');
         }
@@ -26,7 +26,11 @@ final class DateMysqlToFormatBr
 
     public function __toString(): string
     {
-        return $this->date;
+        if (null !== $this->date) {
+            return $this->date;
+        }
+
+        return '';
     }
 
     public function dateBr(string $date): string|null

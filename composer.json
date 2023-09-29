@@ -1,7 +1,7 @@
 {
   "name": "gso/app",
   "description": "Api para gerenciamento de ocorrências",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
@@ -18,6 +18,9 @@
     "psr-4": {
       "Gso\\Ws\\Test\\": "Test/"
     }
+  },
+  "platforms": {
+    "php": ">=8.0"
   },
   "require": {
     "slim/slim": "4.*",

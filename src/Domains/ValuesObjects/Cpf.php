@@ -13,11 +13,11 @@ final class Cpf
 
     private ?string $cpf;
 
-    public function __construct(string $cpf = '')
+    public function __construct(string $cpf = null)
     {
         try {
             if ($cpf !== null) {
-                if ( ! $this->validaCPF($cpf)) {
+                if ( $this->validaCPF($cpf) == false) {
                     throw new \RuntimeException();
                 }
             }
@@ -29,11 +29,19 @@ final class Cpf
 
     public function __toString(): string
     {
-        return $this->cpf;
+        if (null !== $this->cpf) {
+            return $this->cpf;
+        }
+
+        return '';
     }
 
     public function validaCPF(string $cpf = null): bool
     {
+        if (null === $cpf) {
+            return false;
+        }
+
         // Extrai somente os números
         if ($cpf) {
             $cpf = preg_replace('/[^0-9]/is', '', $cpf);
@@ -58,7 +66,6 @@ final class Cpf
                 }
             }
         }
-
         return true;
     }
 }

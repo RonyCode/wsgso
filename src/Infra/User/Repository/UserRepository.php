@@ -6,10 +6,8 @@ namespace Gso\Ws\Infra\User\Repository;
 
 use Gso\Ws\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Domains\User\User;
-use Gso\Ws\Domains\ValuesObjects\Cpf;
-use Gso\Ws\Domains\ValuesObjects\Email;
-use Gso\Ws\Domains\ValuesObjects\Senha;
 use Gso\Ws\Infra\Interfaces\GlobalConnectionInterface;
+use Gso\Ws\Infra\User\services\PassHandleUserService;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
@@ -34,7 +32,7 @@ final class UserRepository implements UserRepositoryInterface
                 throw new \RuntimeException();
             }
             $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
-            if ( ! password_verify($senha, (string)$objUsuario->senha)) {
+            if (! (new PassHandleUserService())->verifyPassUser($senha, (string)$objUsuario->senha)) {
                 throw new \RuntimeException();
             }
 
@@ -72,7 +70,7 @@ final class UserRepository implements UserRepositoryInterface
             }
             $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
 
-            if ( ! password_verify($senha, (string)$objUsuario->senhaExterna)) {
+            if (! (new PassHandleUserService())->verifyPassUser($senha, (string)$objUsuario->senhaExterna)) {
                 throw new \RuntimeException();
             }
 
@@ -126,15 +124,20 @@ final class UserRepository implements UserRepositoryInterface
     {
         try {
             $stmt = $this->globalConnection->conn()->prepare(
-                'INSERT INTO USUARIO_AUTH (CODUSUARIO, CPF, NOME, EMAIL, SENHA, SENHAEXTERNA, DATACADASTRO, IMAGE, EXCLUIDO) 
+                'INSERT INTO USUARIO_AUTH 
+                    (CODUSUARIO, CPF, NOME, EMAIL, SENHA, SENHAEXTERNA, DATACADASTRO, IMAGE, EXCLUIDO) 
                     VALUES (:codUsuario,:cpf,:nome,:email,:senha,:senhaExterna,:dataCadastro,:image,:excluido)'
             );
+
+            $passEncripted         = (new PassHandleUserService())->encodePassUser((string)$usuario->senha);
+            $passExternalEncripted = (new PassHandleUserService())->encodePassUser((string)$usuario->senhaExterna);
+
             $stmt->bindValue(':codUsuario', $usuario->codUsuario, \PDO::PARAM_INT);
             $stmt->bindValue(':cpf', $usuario->cpf, \PDO::PARAM_STR_CHAR);
             $stmt->bindValue(':nome', $usuario->nome, \PDO::PARAM_STR_CHAR);
             $stmt->bindValue(':email', $usuario->email, \PDO::PARAM_STR_CHAR);
-            $stmt->bindValue(':senha', password_hash((string)$usuario->senha, PASSWORD_ARGON2I));
-            $stmt->bindValue(':senhaExterna', password_hash($usuario->senhaExterna, PASSWORD_ARGON2I));
+            $stmt->bindValue(':senha', $passEncripted);
+            $stmt->bindValue(':senhaExterna', $passExternalEncripted);
             $stmt->bindValue(':dataCadastro', $usuario->dataCadastro, \PDO::PARAM_STR_CHAR);
             $stmt->bindValue(':image', $usuario->image, \PDO::PARAM_STR_CHAR);
             $stmt->bindValue(':excluido', $usuario->excluido, \PDO::PARAM_INT);
@@ -155,8 +158,11 @@ final class UserRepository implements UserRepositoryInterface
             $stmt = $this->globalConnection->conn()->prepare(
                 'UPDATE USUARIO_AUTH SET SENHAEXTERNA = :senhaExterna WHERE CODUSUARIO = :codUsuario'
             );
+
+            $passEncripted = (new PassHandleUserService())->encodePassUser((string)$usuario->senhaExterna);
+
             $stmt->bindValue(':codUsuario', $usuario->codUsuario, \PDO::PARAM_INT);
-            $stmt->bindValue(':senhaExterna', password_hash($usuario->senhaExterna, PASSWORD_ARGON2I));
+            $stmt->bindValue(':senhaExterna', $passEncripted);
             $stmt->execute();
             if (0 === $stmt->rowCount()) {
                 throw new \RuntimeException();
@@ -177,7 +183,7 @@ final class UserRepository implements UserRepositoryInterface
                 throw new \RuntimeException();
             }
 
-            return (new User())->userSerialize(
+            return User::userSerialize(
                 $data['CODUSUARIO'],
                 $data['CPF'],
                 $data['NOME'],
@@ -187,10 +193,8 @@ final class UserRepository implements UserRepositoryInterface
                 $data['DATACADASTRO'],
                 $data['IMAGE'],
                 $data['EXCLUIDO'],
-
-
             );
-        } catch (\RuntimeException|\JsonException) {
+        } catch (\RuntimeException | \JsonException) {
             return new User();
         }
     }

@@ -7,7 +7,6 @@ namespace Gso\Ws\App\UseCases\UserExternal\SignInUserExternal;
 use Gso\Ws\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Domains\User\User;
-use Gso\Ws\Domains\ValuesObjects\Email;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
@@ -15,19 +14,21 @@ final class SignInUserExternal
 {
     use ResponseError;
 
+
     public function __construct(
         public readonly UserRepositoryInterface $usuarioAuthRepository,
         public readonly TokenUserRepositoryInterface $tokenManagerRepository,
     ) {
     }
 
-    public function handle(InputBoundaryUserExternal $inputValues): OutputBoundaryUserExternal
+
+    public function execute(InputBoundaryUserExternal $inputValues): OutputBoundaryUserExternal
     {
         try {
             $usuarioByEmail = $this->usuarioAuthRepository->getUsuarioByEmail($inputValues->email);
             if (empty($usuarioByEmail->senhaExterna)) {
                 $usuarioExterno = null;
-                $newObjUsuario = new User(
+                $newObjUsuario  = User::userSerialize(
                     $usuarioByEmail->codUsuario,
                     null,
                     $inputValues->nome,
@@ -39,12 +40,12 @@ final class SignInUserExternal
                     0,
                 );
 
-                //                CREATE NEW USER  OR UPDATE USER INTERNO WITH PASSWORD
+                // CREATE NEW USER  OR UPDATE USER INTERNO WITH PASSWORD
                 $usuarioExternoCriadoOuAtualizado = $this->usuarioAuthRepository->saveNewUsuarioAuth($newObjUsuario);
 
                 if ($usuarioExternoCriadoOuAtualizado->codUsuario) {
                     $usuarioExterno = $this->usuarioAuthRepository->loginUsuarioExterno(
-                        (string) $usuarioExternoCriadoOuAtualizado->email,
+                        (string)$usuarioExternoCriadoOuAtualizado->email,
                         $inputValues->senha
                     );
                 }

@@ -1,10 +1,10 @@
 <?php
 
 
-use Gso\Ws\Domains\PublishEvents;
+use Gso\Ws\Domains\Event\PublishEvents;
+use Gso\Ws\Domains\User\Events\LogUserSignIn;
 use Gso\Ws\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Domains\User\Interface\UserRepositoryInterface;
-use Gso\Ws\Domains\User\ReactEvent\LogUserSignIn;
 use Gso\Ws\Infra\Connection\GlobalConnection;
 use Gso\Ws\Infra\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Infra\Interfaces\InterfacesPresentation\TokenByCodUsuarioPresentationInterface;

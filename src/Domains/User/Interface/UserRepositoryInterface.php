@@ -2,7 +2,6 @@
 
 namespace Gso\Ws\Domains\User\Interface;
 
-
 use Gso\Ws\Domains\User\User;
 
 interface UserRepositoryInterface

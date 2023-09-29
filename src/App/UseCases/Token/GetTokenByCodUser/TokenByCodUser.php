@@ -4,7 +4,7 @@ namespace Gso\Ws\App\UseCases\TokenUser\GetTokenByCodUser;
 
 use Gso\Ws\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Domains\User\Interface\UserRepositoryInterface;
-use Gso\Ws\Domains\User\TokenUser;
+use Gso\Ws\Domains\User\Token;
 use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
 use http\Exception\RuntimeException;
@@ -53,7 +53,7 @@ class TokenByCodUser
             ]);
 
             $tokenRefreshed = (new JwtHandler(1200))->jwtDecode($tokenNovo);
-            $objToken = new TokenUser(
+            $objToken = new Token(
                 $tokenSalvo->codToken,
                 $tokenSalvo->codUsuario,
                 $tokenNovo,
