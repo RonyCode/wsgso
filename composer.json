@@ -1,7 +1,7 @@
 {
   "name": "gso/app",
   "description": "Api para gerenciamento de ocorrências",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "MIT",
   "authors": [
     {
@@ -30,7 +30,8 @@
     "php-di/slim-bridge": "dev-master",
     "ext-http": "*",
     "ext-pdo": "*",
-    "firebase/php-jwt": "dev-main"
+    "firebase/php-jwt": "dev-main",
+    "vlucas/phpdotenv": "^5.5@dev"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",

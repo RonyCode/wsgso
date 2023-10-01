@@ -1,17 +1,17 @@
 <?php
 
 
-use Gso\Ws\Domains\Event\PublishEvents;
-use Gso\Ws\Domains\User\Events\LogUserSignIn;
-use Gso\Ws\Domains\User\Interface\TokenUserRepositoryInterface;
-use Gso\Ws\Domains\User\Interface\UserRepositoryInterface;
-use Gso\Ws\Infra\Connection\GlobalConnection;
-use Gso\Ws\Infra\Interfaces\GlobalConnectionInterface;
-use Gso\Ws\Infra\Interfaces\InterfacesPresentation\TokenByCodUsuarioPresentationInterface;
-use Gso\Ws\Infra\Repositories\RepositoriesModel\TokenUserRepository;
-use Gso\Ws\Infra\Repositories\RepositoriesPresentation\UserPresentationRepository;
-use Gso\Ws\Infra\User\Interface\UserPresentationInterface;
-use Gso\Ws\Infra\User\Repository\UserRepository;
+use Gso\Ws\Context\User\Domains\User\Events\LogUserSignIn;
+use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
+use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
+use Gso\Ws\Context\User\Infra\Interfaces\GlobalConnectionInterface;
+use Gso\Ws\Context\User\Infra\Interfaces\InterfacesPresentation\TokenByCodUsuarioPresentationInterface;
+use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserRepository;
+use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
+use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
+use Gso\Ws\Shared\Event\PublishEvents;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Psr\Container\ContainerInterface;
@@ -70,7 +70,7 @@ return [
 
 
     // ==============================================================
-    // INTERFACES MODEL SIOCB
+    // INTERFACES MODEL GSO
     // ==============================================================
     UserRepositoryInterface::class => static function (ContainerInterface $container) {
         return $container->get(UserRepository::class);
@@ -81,7 +81,7 @@ return [
 
 
     // ==============================================================
-    // INTERFACES PRESENTATION  SIOCB
+    // INTERFACES PRESENTATION  GSO
     // ==============================================================
     TokenByCodUsuarioPresentationInterface::class => static function (ContainerInterface $container) {
         return $container->get(TokenUserRepository::class);
@@ -93,7 +93,7 @@ return [
 
 
     // ==============================================================
-    // ANOTHER INTERFACES  SIOCB
+    // ANOTHER INTERFACES  GSO
     // ==============================================================
     GlobalConnectionInterface::class => static function (ContainerInterface $container) {
         return $container->get(GlobalConnection::class);

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Web\Controllers;
 
-use Gso\Ws\App\UseCases\TokenUser\GetTokenByCodUser\InputBoundaryTokenByCodUsuario;
-use Gso\Ws\App\UseCases\TokenUser\GetTokenByCodUser\TokenByCodUser;
-use Gso\Ws\Infra\Repositories\RepositoriesPresentation\TokenPresentation;
+use Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser\InputBoundaryTokenByCodUsuario;
+use Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser\TokenByCodUser;
+use Gso\Ws\Context\User\Infra\Repositories\RepositoriesPresentation\TokenPresentation;
 use Gso\Ws\Web\Helper\ResponseError;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Web\Controllers;
 
-use Gso\Ws\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
-use Gso\Ws\App\UseCases\User\SignInUser\UserSignIn;
-use Gso\Ws\Infra\User\Repository\UserPresentationRepository;
+use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignIn;
+use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
 use Gso\Ws\Web\Helper\ResponseError;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
