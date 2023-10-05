@@ -2,7 +2,6 @@
 
 namespace Gso\Ws\Shared\ValuesObjects;
 
-use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
 final class Phone

@@ -17,7 +17,8 @@ class UserAuthRepositoryMemory implements UserAuthRepositoryInterface
     {
         $this->usersAuth[] = $userAuth;
 
-        return $this->usersAuth = array_unique($this->usersAuth);
+        return $this->usersAuth;
+//        return $this->usersAuth = array_unique($this->usersAuth);
     }
 
     /**
@@ -75,26 +76,39 @@ class UserAuthRepositoryMemory implements UserAuthRepositoryInterface
         $this->adicionar(
             UserAuth::userAuthSerialize(
                 1,
-                $email,
-                $password,
+                'teste@gmail.com',
+                '1234567teste',
                 null,
                 '2023-01-01',
                 0,
             )
         );
-        /** @var UserAuth[] */
+        $this->adicionar(
+            UserAuth::userAuthSerialize(
+                2,
+                'denis@gmail.com',
+                '1234567d',
+                null,
+                '2023-01-01',
+                0,
+            )
+        );
+        $this->adicionar(
+            UserAuth::userAuthSerialize(
+                3,
+                'ronyanderson@gmail.com',
+                '1234567a',
+                null,
+                '2023-01-01',
+                0,
+            )
+        );
         $userAuthFiltered = array_filter(
             $this->usersAuth,
             static fn(UserAuth $userAuth) => $userAuth->email == $email && $userAuth->password == $password
         );
 
-        return UserAuth::userAuthSerialize(
-            $userAuthFiltered[0]->id,
-            $userAuthFiltered[0]->email,
-            $userAuthFiltered[0]->password,
-            $userAuthFiltered[0]->passwordExternal,
-            $userAuthFiltered[0]->dataCriation,
-            $userAuthFiltered[0]->excluded,
-        );
+
+        return array_values($userAuthFiltered)[0];
     }
 }

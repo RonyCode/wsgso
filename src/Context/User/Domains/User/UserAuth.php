@@ -23,7 +23,6 @@ final readonly class UserAuth implements UserAuthRepositoryInterface
     ) {
     }
 
-
     /**
      * @throws JsonException
      */
@@ -45,11 +44,6 @@ final readonly class UserAuth implements UserAuthRepositoryInterface
         );
     }
 
-
-//    public function userAuthSignIn($email, $password): self
-//    {
-//        return $this->signIn($email, $password);
-//    }
 
     public function signIn(?string $email, ?string $password): self
     {

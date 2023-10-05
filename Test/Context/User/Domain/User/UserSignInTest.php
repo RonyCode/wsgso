@@ -69,9 +69,8 @@ class UserSignInTest extends TestCase
 //        $this->assertEquals(202, $result['code']);
 //    }
 
-        $userAuth = UserAuth::userAuthSerialize()->signIn('denis@gmail.com', '1234567a');
+        $userAuth = UserAuth::userAuthSerialize()->signIn('ronyanderson@gmail.com', '1234567a');
 
-        var_dump($userAuth);
 //        $account = Account::accountSerialize(
 //            33,
 //            22,
@@ -96,5 +95,7 @@ class UserSignInTest extends TestCase
 //            0,
 //            0
 //        );
+        var_dump($userAuth);
+
     }
 }
