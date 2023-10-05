@@ -9,18 +9,14 @@ use RuntimeException;
 
 final class Cpf
 {
-
     private ?string $cpf;
 
-    public function __construct(string $cpf = null)
+    public function __construct(?string $cpf = null)
     {
         try {
-            if ($cpf !== null) {
-                if (! $this->validaCPF($cpf)) {
-                    throw new \RuntimeException();
-                }
+            if (($cpf !== null && $cpf !== '') && ! $this->validaCPF($cpf)) {
+                throw new \RuntimeException();
             }
-            $this->cpf = $cpf;
         } catch (RuntimeException) {
             echo json_encode([
                 "code"    => 404,

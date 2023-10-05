@@ -11,16 +11,18 @@ final class DateBrToFormatMysql
 {
     private string $date;
 
-    public function __construct(string $date)
+    public function __construct(?string $date = null)
     {
         try {
-            if (!$dateFormated = $this->dateToDb($date)) {
-                throw new RuntimeException("Formato de data deve seguir exatamente este formato 99/99/9999");
+            if (null !== $date && '' !== $date) {
+                if (! $dateFormated = $this->dateToDb($date)) {
+                    throw new RuntimeException("Formato de data deve seguir exatamente este formato 99/99/9999");
+                }
+                $this->date = $dateFormated;
             }
-            $this->date = $dateFormated;
         } catch (RuntimeException $e) {
             echo json_encode([
-                "status" => "ERROR",
+                "status"  => "ERROR",
                 "message" => $e->getMessage()
             ], JSON_THROW_ON_ERROR);
         }
@@ -36,6 +38,7 @@ final class DateBrToFormatMysql
         if ($dateInputTime) {
             return $dateInputTime->format("Y-m-d H:i:s");
         }
+
         return null;
     }
 

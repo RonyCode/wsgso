@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Context\User\Domains\User;
 
+use AllowDynamicProperties;
 use JsonException;
 
-final class User
+#[AllowDynamicProperties] final class User
 {
     public function __construct(
-        readonly public ?int $codUsuario = null,
-        private ?UserAuth $userAuth = null,
+        readonly public ?int $id = null,
+        private ?int $userAuthId = null,
+        private ?int $accountId = null,
         private ?Profile $profile = null,
-        private ?Account $account = null,
         readonly public ?int $excluded = null,
     ) {
     }
 
-    public function getCodUsuario(): ?int
+    public function getId(): ?int
     {
-        return $this->codUsuario;
+        return $this->id;
     }
 
     public function getProfile(): ?Profile
@@ -27,36 +28,20 @@ final class User
         return $this->profile;
     }
 
-    public function getAccount(): ?Account
+    public function getAccountId(): ?int
     {
-        return $this->account;
+        return $this->accountId;
     }
 
-    public function getUserAuth(): ?UserAuth
+    public function getUserAuthId(): ?int
     {
-        return $this->userAuth;
+        return $this->userAuthId;
     }
 
     /**
      * @throws JsonException
      */
-    public function signInUserAuth(
-        $email,
-        $pass,
-        $passExternal,
-        $dateCreation,
-        $excluded
-    ): self {
-        $this->userAuth = UserAuth::userAuthSerialize(
-            $email,
-            $pass,
-            $passExternal,
-            $dateCreation,
-            $excluded
-        );
 
-        return $this;
-    }
 
     /**
      * @throws JsonException

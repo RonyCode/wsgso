@@ -11,7 +11,7 @@ final readonly class Pass
     public function __construct(public ?string $senha = null)
     {
         try {
-            if (null !== $this->senha) {
+            if (null !== $this->senha && '' !== $this->senha) {
                 if (! $this->validatePass($this->senha)) {
                     throw new RuntimeException();
                 }
@@ -30,7 +30,6 @@ final readonly class Pass
         if (! preg_match($regex, $pass, $match)) {
             return false;
         }
-
 
 
         return true;

@@ -9,7 +9,10 @@ use Dotenv\Dotenv;
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignIn;
 use Gso\Ws\Context\User\App\UseCases\UserExternal\SignInUserExternal\SignInUserExternal;
+use Gso\Ws\Context\User\Domains\User\Account;
+use Gso\Ws\Context\User\Domains\User\Profile;
 use Gso\Ws\Context\User\Domains\User\User;
+use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserMemoryRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserRepositoryMemory;
@@ -66,36 +69,32 @@ class UserSignInTest extends TestCase
 //        $this->assertEquals(202, $result['code']);
 //    }
 
-        $teste = (new User(
-            123,
-            null,
-            null,
-            null,
-            0
-        ))
-            ->signInUserAuth(
-                'ronyanderson@gmail.com',
-                '1234567a',
-                '1234567a',
-                '2020-01-01',
-                0
-            )
-            ->addProfile('user', '2020-01-01', '2020-01-01', 1234, 0)
-            ->addAccount(
-                'rony',
-                'rony@gmail.com',
-                '01680562169',
-                '63981270951',
-                '123456789',
-                'Rua dos bobos',
-                '123',
-                '77060046',
-                'asdasdasd',
-                'centro',
-                'palmas',
-                'SP',
-                0
-            );
-        var_dump($teste);
+        $userAuth = UserAuth::userAuthSerialize()->signIn('denis@gmail.com', '1234567a');
+
+        var_dump($userAuth);
+//        $account = Account::accountSerialize(
+//            33,
+//            22,
+//            'denis',
+//            'ronyanderson@gmail.com',
+//            '01680562169',
+//            '63981270951',
+//            '',
+//            0,
+//        );
+//        $teste   = new User(
+//            123,
+//            22,
+//            33,
+//            Profile::profileSerialize(
+//                'admin',
+//                '2023-01-01',
+//                '2023-01-01',
+//                22,
+//                0
+//            ),
+//            0,
+//            0
+//        );
     }
 }

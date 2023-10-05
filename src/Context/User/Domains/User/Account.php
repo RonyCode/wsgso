@@ -11,6 +11,8 @@ use JsonException;
 class Account
 {
     public function __construct(
+        ?string $id = null,
+        ?string $userAuthid = null,
         readonly public ?string $nome = null,
         readonly public ?Email $email = null,
         readonly public ?Cpf $cpf = null,
@@ -30,6 +32,8 @@ class Account
      * @throws JsonException
      */
     public static function accountSerialize(
+        ?string $id = null,
+        ?string $userAuthid = null,
         ?string $nome = null,
         ?string $email = null,
         ?string $cpf = null,
@@ -38,6 +42,8 @@ class Account
         ?int $excluded = null
     ): self {
         return new Account(
+            $id,
+            $userAuthid,
             $nome,
             new Email($email),
             new Cpf($cpf),

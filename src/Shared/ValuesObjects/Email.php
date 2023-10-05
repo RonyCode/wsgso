@@ -11,10 +11,10 @@ final class Email
 {
     private string $email;
 
-    public function __construct(string $email = null)
+    public function __construct(?string $email = null)
     {
         try {
-            if (null !== $email) {
+            if (null !== $email && '' !== $email) {
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     throw new DomainException('Email is not valid');
                 }
@@ -32,6 +32,6 @@ final class Email
 
     public function __toString(): string
     {
-        return $this->email;
+        return $this->email ?? '';
     }
 }

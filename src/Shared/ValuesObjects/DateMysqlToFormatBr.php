@@ -11,12 +11,11 @@ final class DateMysqlToFormatBr
     public function __construct(private ?string $date = null)
     {
         try {
-            if (null === $this->date) {
-                throw new \RuntimeException('Formato de data deve seguir exatamente este formato 9999-99-99');
+            if (null !== $date && '' !== $date) {
+                if (! $this->dateBr($date)) {
+                    throw new \RuntimeException('Formato de data deve seguir exatamente este formato 9999-99-99');
+                }
             }
-
-            $dateFormated = $this->dateBr($date);
-            $this->date   = $dateFormated;
         } catch (\RuntimeException $e) {
             echo json_encode([
                 "status"  => "ERROR",
@@ -30,8 +29,11 @@ final class DateMysqlToFormatBr
         return $this->date ?? '';
     }
 
-    public function dateBr(string $date): string|null
+    public function dateBr(?string $date = null): string|null
     {
+        if ($date === null) {
+            return null;
+        }
         $dateInput = \DateTimeImmutable::createFromFormat('Y-m-d', $date);
         if ($dateInput) {
             return $dateInput->format('d/m/Y');

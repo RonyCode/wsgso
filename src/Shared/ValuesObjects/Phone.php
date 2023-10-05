@@ -10,7 +10,7 @@ final class Phone
     public function __construct(public ?string $phone = null)
     {
         try {
-            if ($phone !== null) {
+            if ($phone !== null && $phone !== '') {
                 if (! $this->validaPhone($phone)) {
                     throw new \RuntimeException();
                 }

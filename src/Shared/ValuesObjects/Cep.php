@@ -10,7 +10,7 @@ final class Cep
     public function __construct(public ?string $cep = null)
     {
         try {
-            if (($cep !== null) && ! $this->validaCep($cep)) {
+            if (($this->cep !== null && $this->cep !== '') && ! $this->validaCep($cep)) {
                 throw new \RuntimeException();
             }
         } catch (RuntimeException) {
