@@ -9,7 +9,6 @@ use RuntimeException;
 
 final class Cpf
 {
-    use ResponseError;
 
     private ?string $cpf;
 
@@ -23,7 +22,11 @@ final class Cpf
             }
             $this->cpf = $cpf;
         } catch (RuntimeException) {
-            echo $this->responseCatchError('Cpf inválido!');
+            echo json_encode([
+                "code"    => 404,
+                'status'  => 'ERROR',
+                'message' => 'Cpf inválido',
+            ], JSON_THROW_ON_ERROR | 64 | 256);
         }
     }
 

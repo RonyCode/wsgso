@@ -5,7 +5,7 @@ namespace Gso\Ws\Context\User\App\UseCases\User\SignInUser;
 use Gso\Ws\Shared\ValuesObjects\Cpf;
 use Gso\Ws\Shared\ValuesObjects\DateMysqlToFormatBr;
 use Gso\Ws\Shared\ValuesObjects\Email;
-use Gso\Ws\Shared\ValuesObjects\Senha;
+use Gso\Ws\Shared\ValuesObjects\Pass;
 
 readonly class OutputBoundaryUserSignIn
 {
@@ -14,7 +14,7 @@ readonly class OutputBoundaryUserSignIn
         public ?Cpf $cpf = null,
         public ?string $nome = null,
         public ?Email $email = null,
-        public ?Senha $senha = null,
+        public ?Pass $senha = null,
         public ?DateMysqlToFormatBr $dataCadastro = null,
         public ?string $image = null,
         public ?string $token = null,

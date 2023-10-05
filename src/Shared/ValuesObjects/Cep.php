@@ -7,18 +7,18 @@ use RuntimeException;
 
 final class Cep
 {
-    use ResponseError;
-
     public function __construct(public ?string $cep = null)
     {
         try {
-            if ($cep !== null) {
-                if (! $this->validaCep($cep)) {
-                    throw new \RuntimeException();
-                }
+            if (($cep !== null) && ! $this->validaCep($cep)) {
+                throw new \RuntimeException();
             }
         } catch (RuntimeException) {
-            echo $this->responseCatchError('Cep inválido!');
+            echo json_encode([
+                "code"    => 404,
+                'status'  => 'ERROR',
+                'message' => 'Cep inválido',
+            ], JSON_THROW_ON_ERROR | 64 | 256);
         }
     }
 

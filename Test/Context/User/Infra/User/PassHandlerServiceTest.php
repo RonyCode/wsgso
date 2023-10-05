@@ -4,7 +4,7 @@ namespace Context\User\Infra\User;
 
 
 use Gso\Ws\Context\User\Infra\User\services\PassHandleUserService;
-use Gso\Ws\Shared\ValuesObjects\Senha;
+use Gso\Ws\Shared\ValuesObjects\Pass;
 use PHPUnit\Framework\TestCase;
 
 class PassHandlerServiceTest extends TestCase
@@ -14,7 +14,7 @@ class PassHandlerServiceTest extends TestCase
      */
     public function testPassHandlerEncode(): void
     {
-        $senha  = new Senha('1234567a');
+        $senha  = new Pass('1234567a');
         $status = (new PassHandleUserService())->encodePassUser($senha);
         $this->assertSame('1234567a', (string)$senha);
     }
@@ -24,7 +24,7 @@ class PassHandlerServiceTest extends TestCase
      */
     public function testPassHandlerVerify(): void
     {
-        $senha  = new Senha('1234567a');
+        $senha  = new Pass('1234567a');
         $status = (new PassHandleUserService())->encodePassUser($senha);
         $status = (new PassHandleUserService())->verifyPassUser($senha, $status);
         if ($status) {

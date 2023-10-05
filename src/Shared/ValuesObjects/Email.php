@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Shared\ValuesObjects;
 
+use DomainException;
 use Exception;
 
 final class Email
@@ -15,12 +16,12 @@ final class Email
         try {
             if (null !== $email) {
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new \DomainException('Email is not valid');
+                    throw new DomainException('Email is not valid');
                 }
 
                 $this->email = $email;
             }
-        } catch (Exception) {
+        } catch (DomainException) {
             echo json_encode([
                 "code"    => 404,
                 'status'  => 'ERROR',

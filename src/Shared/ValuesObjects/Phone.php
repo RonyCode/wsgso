@@ -7,8 +7,6 @@ use RuntimeException;
 
 final class Phone
 {
-    use ResponseError;
-
     public function __construct(public ?string $phone = null)
     {
         try {
@@ -18,7 +16,11 @@ final class Phone
                 }
             }
         } catch (RuntimeException) {
-            echo $this->responseCatchError('Telefone inválido!');
+            echo json_encode([
+                "code"    => 404,
+                'status'  => 'ERROR',
+                'message' => 'Telefone inválido',
+            ], JSON_THROW_ON_ERROR | 64 | 256);
         }
     }
 

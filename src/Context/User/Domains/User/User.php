@@ -4,51 +4,117 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Context\User\Domains\User;
 
-use Gso\Ws\Shared\ValuesObjects\Cpf;
-use Gso\Ws\Shared\ValuesObjects\DateMysqlToFormatBr;
-use Gso\Ws\Shared\ValuesObjects\Email;
-use Gso\Ws\Shared\ValuesObjects\Senha;
 use JsonException;
 
-final readonly class User
+final class User
 {
     public function __construct(
-        public ?int $codUsuario = null,
-        public ?Cpf $cpf = null,
-        public ?string $nome = null,
-        public ?Email $email = null,
-        public ?Senha $senha = null,
-        public ?Senha $senhaExterna = null,
-        public ?DateMysqlToFormatBr $dataCadastro = null,
-        public ?string $image = null,
-        public ?int $excluido = null
+        readonly public ?int $codUsuario = null,
+        private ?UserAuth $userAuth = null,
+        private ?Profile $profile = null,
+        private ?Account $account = null,
+        readonly public ?int $excluded = null,
     ) {
+    }
+
+    public function getCodUsuario(): ?int
+    {
+        return $this->codUsuario;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function getAccount(): ?Account
+    {
+        return $this->account;
+    }
+
+    public function getUserAuth(): ?UserAuth
+    {
+        return $this->userAuth;
     }
 
     /**
      * @throws JsonException
      */
-    public static function userSerialize(
-        ?int $codUsuario,
-        ?string $cpf,
-        ?string $nome,
-        ?string $email,
-        ?string $senha,
-        ?string $senhaExterna,
-        ?string $dataCadastro,
-        ?string $image,
-        ?int $excluido,
+    public function signInUserAuth(
+        $email,
+        $pass,
+        $passExternal,
+        $dateCreation,
+        $excluded
     ): self {
-        return new User(
-            $codUsuario,
-            new Cpf($cpf),
-            $nome,
-            new Email($email),
-            new Senha($senha),
-            new Senha($senhaExterna),
-            new DateMysqlToFormatBr($dataCadastro),
-            $image,
-            $excluido
+        $this->userAuth = UserAuth::userAuthSerialize(
+            $email,
+            $pass,
+            $passExternal,
+            $dateCreation,
+            $excluded
         );
+
+        return $this;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function addProfile(
+        $role,
+        $dateGranted,
+        $dateExpires,
+        $grantedByUser,
+        $excluded
+    ): self {
+        $this->profile = Profile::profileSerialize(
+            $role,
+            $dateGranted,
+            $dateExpires,
+            $grantedByUser,
+            $excluded
+        );
+
+        return $this;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function addAccount(
+        $nome,
+        $email,
+        $cpf,
+        $phone,
+        $image,
+        $logradouro,
+        $numero,
+        $cep,
+        $complemento,
+        $bairro,
+        $cidade,
+        $estado,
+        $excluded,
+    ): self {
+        $this->account = Account::accountSerialize(
+            $nome,
+            $email,
+            $cpf,
+            $phone,
+            $image,
+            $excluded
+        )->addAddress(
+            $logradouro,
+            $numero,
+            $cep,
+            $complemento,
+            $bairro,
+            $cidade,
+            $estado,
+            $excluded
+        );
+
+        return $this;
     }
 }

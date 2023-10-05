@@ -6,9 +6,9 @@ namespace Gso\Ws\Shared\ValuesObjects;
 
 use RuntimeException;
 
-final class Senha
+final readonly class Pass
 {
-    public function __construct(public readonly ?string $senha = null)
+    public function __construct(public ?string $senha = null)
     {
         try {
             if (null !== $this->senha) {

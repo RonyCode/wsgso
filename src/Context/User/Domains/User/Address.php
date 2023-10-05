@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Gso\Ws\Context\User\Domains\User;
 
 use Gso\Ws\Shared\ValuesObjects\Cep;
+use JsonException;
 
 final readonly class Address
 {
@@ -16,6 +17,32 @@ final readonly class Address
         public ?string $bairro = null,
         public ?string $cidade = null,
         public ?string $estado = null,
+        public ?int $excluded = null,
     ) {
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public static function addressSerialize(
+        ?string $logradouro,
+        ?string $numero,
+        ?string $cep,
+        ?string $complemento,
+        ?string $bairro,
+        ?string $cidade,
+        ?string $estado,
+        ?int $excluded
+    ): self {
+        return new Address(
+            $logradouro,
+            $numero,
+            new Cep($cep),
+            $complemento,
+            $bairro,
+            $cidade,
+            $estado,
+            $excluded
+        );
     }
 }
