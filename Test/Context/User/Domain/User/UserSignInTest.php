@@ -1,6 +1,6 @@
 <?php
 
-namespace Context\User\Domain\User;
+namespace Gso\Ws\Test\Context\User\Domain\User;
 
 require __DIR__ . '/../../../../../vendor/autoload.php';
 include __DIR__ . '/../../../../../config/config.php';
@@ -29,29 +29,56 @@ class UserSignInTest extends TestCase
      */
     public function testSignInUser(): void
     {
-//        $dotenv = Dotenv::createUnsafeImmutable('../../../../../');
-//        $dotenv->load();
-//
-//        $adduser = (new UserRepositoryMemory())->adicionar(
-//            User::userSerialize(
-//                123,
-//                '01680562169',
-//                'ronyanderson',
-//                'ronyanderson@gmail.com',
-//                '1234567a',
-//                null,
-//                '2020-01-01',
-//                '',
-//                0
-//            )
-//        );
-//
+        $dotenv = Dotenv::createUnsafeImmutable('../../../../../');
+        $dotenv->load();
+
+        $adduser =
+            (new User())
+                ->addAccount(
+                    25,
+                    3,
+                    'denis',
+                    'ronyanderson@gmail.com',
+                    '01680562169',
+                    '63981270951',
+                    '',
+                    0
+                )->addProfile(
+                    'admin',
+                    '2023-01-01',
+                    '2023-01-01',
+                    22,
+                    0
+                )->addAddress(
+                    'RUA DA SAUDADE',
+                    '123',
+                    '77060046',
+                    'CASA',
+                    'CENTRO',
+                    'SAO PAULO',
+                    'SP',
+                    0
+                )->addUserLogin(
+                    1,
+                    'ronyanderson@gmail.com',
+                    '1234567a',
+                    null,
+                    '2023-01-01',
+                    0
+                )->userSignIn(
+                    'ronyanderson@gmail.com',
+                    '1234567a',
+                );
+
+
+        var_dump($adduser);
+
 //        $inputBoundary = new InputBoundaryUserSignIn(
-//            $adduser[0]->email,
-//            $adduser[0]->senha,
-//            $adduser[0]->nome,
-//            $adduser[0]->image,
-//            0
+//            $adduser->getUserAuth()->email,
+//            $adduser->getUserAuth()->password,
+//            $adduser->getUserAuth()->passwordExternal,
+//            $adduser->getAccount()->image,
+//            $adduser->getAccount()->excluded
 //        );
 //
 //        $output = (new UserSignIn(
@@ -63,39 +90,12 @@ class UserSignInTest extends TestCase
 //            ),
 //            new PublishEvents(),
 //        ))->execute($inputBoundary);
-//        $this->assertSame('ronyanderson@gmail.com', (string) $adduser[0]->email);
+//        $this->assertSame('ronyanderson@gmail.com', (string)$adduser[0]->email);
 //
 //        $result = (new UserPresentationRepository())->outPut($output);
 //        $this->assertEquals(202, $result['code']);
-//    }
-
-        $userAuth = UserAuth::userAuthSerialize()->signIn('ronyanderson@gmail.com', '1234567a');
-
-//        $account = Account::accountSerialize(
-//            33,
-//            22,
-//            'denis',
-//            'ronyanderson@gmail.com',
-//            '01680562169',
-//            '63981270951',
-//            '',
-//            0,
-//        );
-//        $teste   = new User(
-//            123,
-//            22,
-//            33,
-//            Profile::profileSerialize(
-//                'admin',
-//                '2023-01-01',
-//                '2023-01-01',
-//                22,
-//                0
-//            ),
-//            0,
-//            0
-//        );
-        var_dump($userAuth);
-
+//
+//
+//        var_dump($adduser);
     }
 }

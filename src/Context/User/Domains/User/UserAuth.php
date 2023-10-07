@@ -49,4 +49,9 @@ final readonly class UserAuth implements UserAuthRepositoryInterface
     {
         return (new UserAuthRepositoryMemory())->signIn($email, $password);
     }
+
+    public function getUserAuth(): self
+    {
+        return $this    ;
+    }
 }
