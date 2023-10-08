@@ -12,20 +12,26 @@ final class User
         readonly public ?int $id = null,
         private ?int $userAuthId = null,
         private ?int $accountId = null,
-        private ?Profile $profile = null,
+        private ?int $profileId = null,
         readonly public ?int $excluded = null,
     ) {
     }
 
-    public function getId(): ?int
+    public function getUserAuthId(): ?int
     {
-        return $this->id;
+        return $this->userAuthId;
     }
 
-    public function getProfile(): ?Profile
+    public function getAccountId(): ?int
     {
-        return $this->profile;
+        return $this->accountId;
     }
+
+    public function getProfileId(): ?int
+    {
+        return $this->profileId;
+    }
+
 
     public function getAccount(): ?Account
     {
@@ -46,19 +52,21 @@ final class User
      * @throws JsonException
      */
     public function addProfile(
-        $role,
-        $dateGranted,
-        $dateExpires,
-        $grantedByUser,
-        $excluded
+        ?int $id = null,
+        ?string $role = null,
+        ?string $dateGranted = null,
+        ?string $dateExpires = null,
+        ?int $grantedByUser = null,
+        ?int $excluded = null
     ): self {
-        $this->profile = Profile::profileSerialize(
+        $this->profileId = Profile::profileSerialize(
+            $id,
             $role,
             $dateGranted,
             $dateExpires,
             $grantedByUser,
             $excluded
-        );
+        )->id;
 
         return $this;
     }

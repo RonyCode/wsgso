@@ -18,13 +18,13 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
     ) {
     }
 
-    public function selectTokenByCodUsuario(int $codusuario): Token
+    public function selectTokenByCodUsuario(int $idUser): Token
     {
         try {
             $stmt = $this->globalConnection->conn()->prepare(
-                'SELECT * FROM TOKEN WHERE cod_usuario = :codUsuario AND excluido = 0'
+                'SELECT * FROM token WHERE id_user = :idUser AND excluded = 0'
             );
-            $stmt->bindValue(':codUsuario', $codusuario, \PDO::PARAM_INT);
+            $stmt->bindValue(':idUser', $idUser, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 == $stmt->rowCount()) {
                 return new Token();
@@ -39,7 +39,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
     public function saveTokenUsuario(Token $tokenManagerModel): Token
     {
         try {
-            if ($tokenManagerModel->codToken) {
+            if ($tokenManagerModel->id) {
                 return $this->updateToken($tokenManagerModel);
             }
 
@@ -53,15 +53,15 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
     {
         try {
             $tokenManagerModel = new Token(
-                $data['cod_token'],
-                $data['cod_usuario'],
+                $data['id'],
+                $data['id_user'],
                 $data['token'],
                 $data['refresh_token'],
-                $data['data_criacao'],
-                $data['data_expirar'],
-                $data['excluido'],
+                $data['date_criation'],
+                $data['date_expires'],
+                $data['excluded'],
             );
-            if (!$tokenManagerModel->codUsuario) {
+            if (! $tokenManagerModel->idUser) {
                 throw new \RuntimeException();
             }
 
@@ -78,20 +78,19 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
         try {
             $stmt = $this->globalConnection
                 ->conn()->prepare(
-                    'INSERT INTO TOKEN (cod_usuario, token, refresh_token,data_criacao,data_expirar, excluido) 
-                            VALUES (:codUsuario,:token,:refreshToken,:dataCriacao,:dataExpirar,:excluido)'
-                )
-            ;
-            $stmt->bindValue(':codUsuario', $tokenManagerModel->codUsuario, \PDO::PARAM_INT);
+                    'INSERT INTO token ( id_user, token, refresh_token, date_criation, date_expires, excluded) 
+                            VALUES (:idUser,:token,:refreshToken,:dateCriation,:dateExpires,:excluded)'
+                );
+            $stmt->bindValue(':idUser', $tokenManagerModel->id, \PDO::PARAM_INT);
             $stmt->bindValue(':token', $tokenManagerModel->token);
             $stmt->bindValue(':refreshToken', $tokenManagerModel->refreshToken);
-            $stmt->bindValue(':dataCriacao', $tokenManagerModel->dataCriacao, \PDO::PARAM_INT);
-            $stmt->bindValue(':dataExpirar', $tokenManagerModel->dataExpirar, \PDO::PARAM_INT);
-            $stmt->bindValue(':excluido', $tokenManagerModel->excluido, \PDO::PARAM_INT);
+            $stmt->bindValue(':dateCriation', $tokenManagerModel->dateCriation, \PDO::PARAM_INT);
+            $stmt->bindValue(':dateExpires', $tokenManagerModel->dateExpires, \PDO::PARAM_INT);
+            $stmt->bindValue(':excluded', $tokenManagerModel->excluded, \PDO::PARAM_INT);
             $stmt->execute();
 
-            return $this->selectTokenByCodUsuario($tokenManagerModel->codUsuario);
-        } catch (\RuntimeException|\JsonException) {
+            return $this->selectTokenByCodUsuario((int)$this->globalConnection->conn()->lastInsertId());
+        } catch (\RuntimeException | \JsonException) {
             $this->responseCatchError('Não foi possível salvar token!');
         }
     }
@@ -101,24 +100,23 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
         try {
             $stmt = $this->globalConnection
                 ->conn()->prepare(
-                    'UPDATE TOKEN  SET
+                    'UPDATE token  SET
                 token = :token, 
-                data_criacao = :dataCriacao,  
-                data_expirar = :dataExpirar 
-                WHERE  cod_token = :codToken'
-                )
-            ;
+                date_criation = :dataCriacao,  
+                date_expires = :dataExpirar 
+                WHERE  id = :codToken'
+                );
 
-            $stmt->bindValue(':codToken', $tokenManagerModel->codToken, \PDO::PARAM_INT);
+            $stmt->bindValue(':codToken', $tokenManagerModel->id, \PDO::PARAM_INT);
             $stmt->bindValue(':token', $tokenManagerModel->token);
-            $stmt->bindValue(':dataCriacao', $tokenManagerModel->dataCriacao, \PDO::PARAM_INT);
-            $stmt->bindValue(':dataExpirar', $tokenManagerModel->dataExpirar, \PDO::PARAM_INT);
+            $stmt->bindValue(':dataCriacao', $tokenManagerModel->dateCriation, \PDO::PARAM_INT);
+            $stmt->bindValue(':dataExpirar', $tokenManagerModel->dateExpires, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 >= $stmt->rowCount()) {
                 throw new \RuntimeException();
             }
 
-            return $this->selectTokenByCodUsuario($tokenManagerModel->codUsuario);
+            return $this->selectTokenByCodUsuario($tokenManagerModel->idUser);
         } catch (\RuntimeException) {
             $this->responseCatchError('Não foi possível atualizar token!');
         }

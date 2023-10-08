@@ -9,8 +9,10 @@ use Gso\Ws\Context\User\App\UseCases\UserExternal\SignInUserExternal\SignInUserE
 use Gso\Ws\Context\User\Domains\User\Events\LogUserSignIn;
 use Gso\Ws\Context\User\Domains\User\Events\UserSignIn as UserSignInEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Token;
+use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
@@ -21,9 +23,8 @@ final class UserSignIn
     use ResponseError;
 
     public function __construct(
-        public readonly UserRepositoryInterface $usuarioAuthRepository,
+        public readonly UserAuthRepositoryInterface $usuarioAuthRepository,
         public readonly TokenUserRepositoryInterface $tokenManagerRepository,
-        public readonly SignInUserExternal $usuarioExternoAuthCase,
         public readonly PublishEvents $publishEvents,
     ) {
     }
@@ -32,56 +33,56 @@ final class UserSignIn
     {
         try {
             //            SE LOGADO SISTEMA INTERNO
-            $usuarioLogado = $this->usuarioAuthRepository->login(
+
+
+            $usuarioLogado = $this->usuarioAuthRepository->signIn(
                 $inputValues->email,
-                $inputValues->senha
+                $inputValues->password
             );
 
-            //            SE LOGADO SISTEMA EXTERNO (GOOGLE, GITHUB. ETC)
-            if (empty($usuarioLogado->codUsuario) && 1 === $inputValues->isUserExterno) {
-                $inputBoundaryUsuarioExterno = new InputBoundaryUserExternal(
+            $usuarioByEmail = $this->usuarioAuthRepository->getUsuarioByEmail($inputValues->email);
+
+            if (empty($usuarioLogado->id) && empty($usuarioByEmail->id) && 1 === $inputValues->isUserExternal) {
+                $newObjUsuario = UserAuth::userAuthSerialize(
+                    null,
                     $inputValues->email,
-                    $inputValues->senha,
-                    $inputValues->nome,
-                    $inputValues->image,
-                    $inputValues->isUserExterno
+                    $inputValues->password,
+                    $inputValues->isUserExternal,
+                    date('Y-m-d H:i:s'),
+                    0
                 );
 
-                $usuarioExternoLogado = $this->usuarioExternoAuthCase->execute($inputBoundaryUsuarioExterno);
+                // CREATE  NEW USER EXTERNAL
+                $usuarioLogado = $this->usuarioAuthRepository->saveNewUsuarioAuth($newObjUsuario);
             }
 
-            if (
-                (empty($usuarioLogado) || null == $usuarioLogado->codUsuario) &&
-                (empty($usuarioExternoLogado) || null == $usuarioExternoLogado->codUsuario)
-            ) {
+
+            if (null === $usuarioLogado->id) {
                 throw new \RuntimeException('Usuario ou senha inválido');
             }
 
             $token = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
-                'cod_usuario'  => $usuarioLogado->codUsuario ?? $usuarioExternoLogado->codUsuario,
-                'nome'         => $usuarioLogado->nome ?? $usuarioExternoLogado->nome,
-                'email'        => $usuarioLogado->email ?? $usuarioExternoLogado->email,
-                'image'        => $usuarioLogado->image ?? $usuarioExternoLogado->image,
+                'id'           => $usuarioLogado->id,
+                'email'        => $usuarioLogado->email,
                 'access_token' => true,
             ]);
 
 
             $refreshToken = (new JwtHandler(3600 * 12))->jwtEncode(getenv('ISS'), [
-                'cod_usuario'  => $usuarioLogado->codUsuario ?? $usuarioExternoLogado->codUsuario,
+                'id'           => $usuarioLogado->id,
                 'access_token' => false,
             ]);
 
             $dataToken = (new JwtHandler())->jwtDecode($token);
-            $usuarioLogado->codUsuario ?
-                $codUsuarioFiltrado = $usuarioLogado->codUsuario :
-                $codUsuarioFiltrado = $usuarioExternoLogado->codUsuario;
+
 
             // VERIFY IF EXISTS TOKEN BY CODUSUARIO IF NO SAVE NEW TOKEN
-            $objTokenSalved = $this->tokenManagerRepository->selectTokenByCodUsuario((int)$codUsuarioFiltrado);
+            $objTokenSalved = $this->tokenManagerRepository->selectTokenByCodUsuario((int)$usuarioLogado->id);
+
 
             $objTokenModel = new Token(
-                $objTokenSalved->codToken ?: null,
-                $objTokenSalved->codUsuario ?: $codUsuarioFiltrado,
+                $objTokenSalved->id ?: null,
+                $objTokenSalved->idUser ?: null,
                 $token,
                 $refreshToken,
                 $dataToken->iat,
@@ -89,32 +90,29 @@ final class UserSignIn
                 0,
             );
 
-                $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
 
+                $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
             $this->publishEvents->addListener(new LogUserSignIn());
             $this->publishEvents->publish(
                 new UserSignInEvent(
-                    $usuarioLogado->email ?? $usuarioExternoLogado->email
+                    $usuarioLogado->email
                 )
             );
 
 
             return new OutputBoundaryUserSignIn(
-                $usuarioLogado->codUsuario ?? $usuarioExternoLogado->codUsuario,
-                $usuarioLogado->cpf ?? $usuarioExternoLogado->cpf,
-                $usuarioLogado->nome ?? $usuarioExternoLogado->nome,
-                $usuarioLogado->email ?? $usuarioExternoLogado->email,
-                $usuarioLogado->senha ?? $usuarioExternoLogado->senha,
-                $usuarioLogado->dataCadastro ?? $usuarioExternoLogado->dataCadastro,
-                $usuarioLogado->image ?? $usuarioExternoLogado->image,
+                $usuarioLogado->id,
+                $usuarioLogado->email,
+                $usuarioLogado->password,
+                $usuarioLogado->dateCriation,
                 $objTokenModel->token,
                 $objTokenModel->refreshToken,
-                $objTokenModel->dataCriacao,
-                $objTokenModel->dataExpirar,
-                $usuarioLogado->excluido,
+                $objTokenModel->dateCriation,
+                $objTokenModel->dateExpires,
+                $usuarioLogado->excluded,
             );
-        } catch (RuntimeException) {
-            $this->responseCatchError('Usuário não encontrado', 400);
+        } catch (RuntimeException $e) {
+            $this->responseCatchError($e->getMessage(), 400);
         }
     }
 }

@@ -60,19 +60,6 @@ class UserRepositoryMemory implements UserRepositoryInterface
      */
     public function login(string $email, string $senha): User
     {
-        $this->adicionar(
-            User::userSerialize(
-                123,
-                '01680562169',
-                'ronyanderson',
-                'ronyanderson@gmail.com',
-                '1234567a',
-                null,
-                '2020-01-01',
-                '',
-                0
-            )
-        );
         (new TokenUserMemoryRepository())->saveTokenUsuario(
             new Token(
                 null,
@@ -103,10 +90,5 @@ class UserRepositoryMemory implements UserRepositoryInterface
         }
 
         return $userFiltered[0];
-    }
-
-    public function login(string $email, string $senha): User
-    {
-        // TODO: Implement login() method.
     }
 }

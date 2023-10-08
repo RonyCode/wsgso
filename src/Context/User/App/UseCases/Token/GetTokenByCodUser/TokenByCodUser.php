@@ -22,40 +22,41 @@ class TokenByCodUser
     public function handle(InputBoundaryTokenByCodUsuario $inputValues): OutputBoundaryTokenByCodUsuario
     {
         try {
-            $token = str_replace('+', '.', $inputValues->token);
+            $token        = str_replace('+', '.', $inputValues->token);
             $tokenDecoded = (new JwtHandler())->jwtDecode($token);
-            if (is_array($tokenDecoded) || empty($tokenDecoded)) {
+            if (is_array($tokenDecoded)) {
                 throw new \RuntimeException('Refresh token expirado ou inválido');
             }
-            $tokenSalvo = $this->tokenRepository->selectTokenByCodUsuario($tokenDecoded->data->cod_usuario);
+            $tokenSalvo = $this->tokenRepository->selectTokenByCodUsuario($tokenDecoded->data->id_user);
 
             $verifyRefreshToken = (new JwtHandler())->jwtDecode(
                 $tokenSalvo->refreshToken
             );
 
+
             //            Se refresh token vencido retorna um erro para realizar novo login
             if (
                 is_array($verifyRefreshToken)
-                && 1 === $tokenSalvo->excluido
+                && 1 === $tokenSalvo->excluded
                 && $tokenSalvo->token === $tokenDecoded->data->token
             ) {
                 throw new \RuntimeException('Refresh token expirado ou inválido');
             }
-            $usuario = $this->usuarioAuthRepository->getUsuarioById($tokenSalvo->codUsuario);
+            $usuario = $this->usuarioAuthRepository->getUsuarioById($tokenSalvo->idUser);
+
 
             //           Refresh token valido devolve novo acess-token com 15 min
             $tokenNovo = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
-                'cod_usuario' => $usuario->codUsuario,
-                'nome' => $usuario->nome,
-                'email' => $usuario->email,
-                'image' => $usuario->image,
+                'id_user'      => $usuario->id,
+                'email'        => $usuario->email,
                 'access_token' => true,
             ]);
 
             $tokenRefreshed = (new JwtHandler(1200))->jwtDecode($tokenNovo);
-            $objToken = new Token(
-                $tokenSalvo->codToken,
-                $tokenSalvo->codUsuario,
+
+            $objToken       = new Token(
+                $tokenSalvo->id,
+                $tokenSalvo->idUser,
                 $tokenNovo,
                 $tokenSalvo->refreshToken,
                 $tokenRefreshed->iat,
@@ -65,19 +66,19 @@ class TokenByCodUser
 
             $novoToken = $this->tokenRepository->saveTokenUsuario($objToken);
 
-            if (!$novoToken) {
+            if (! $novoToken) {
                 throw new RuntimeException('Não foi possível salvar novo access-token!');
             }
 
             //            se tudo certo retorna mesmo objeto que foi salvo
             $outPutBoundary = new OutputBoundaryTokenByCodUsuario(
-                $objToken->codToken,
-                $objToken->codUsuario,
+                $objToken->id,
+                $objToken->idUser,
                 $objToken->token,
                 $objToken->refreshToken,
-                $objToken->dataCriacao,
-                $objToken->dataExpirar,
-                $objToken->excluido
+                $objToken->dateCriation,
+                $objToken->dateExpires,
+                $objToken->excluded
             );
         } catch (\RuntimeException $e) {
             $this->responseCatchError($e->getMessage());

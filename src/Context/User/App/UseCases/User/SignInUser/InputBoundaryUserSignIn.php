@@ -6,10 +6,10 @@ readonly class InputBoundaryUserSignIn
 {
     public function __construct(
         public string $email,
-        public string $senha,
-        public ?string $nome = null,
-        public ?string $image = null,
-        public ?int $isUserExterno = null
+        public string $password,
+        public ?int $isUserExternal = null,
+        public ?string $dateCriation = null,
+        public ?int $excluded = null
     ) {
     }
 }

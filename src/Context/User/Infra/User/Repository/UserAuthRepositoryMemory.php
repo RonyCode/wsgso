@@ -111,4 +111,22 @@ class UserAuthRepositoryMemory implements UserAuthRepositoryInterface
 
         return array_values($userAuthFiltered)[0];
     }
+
+    public function getUsuarioByEmail(string $email): UserAuth
+    {
+        $userFiltered = array_filter(
+            $this->usersAuth,
+            static fn(UserAuth $user) => $user->email === $email
+        );
+
+        if (count($userFiltered) === 0) {
+            throw new UserNotFound(new Email('teste@example.com'));
+        }
+
+        if (count($userFiltered) > 1) {
+            throw new \RuntimeException();
+        }
+
+        return $userFiltered[0];
+    }
 }

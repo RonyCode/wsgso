@@ -13,7 +13,11 @@ use Gso\Ws\Context\User\Domains\User\Account;
 use Gso\Ws\Context\User\Domains\User\Profile;
 use Gso\Ws\Context\User\Domains\User\User;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
+use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserMemoryRepository;
+use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepositoryMemory;
 use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserRepositoryMemory;
 use Gso\Ws\Shared\Event\PublishEvents;
@@ -33,7 +37,8 @@ class UserSignInTest extends TestCase
         $dotenv->load();
 
         $adduser =
-            (new User())
+            (new User()
+            )
                 ->addAccount(
                     25,
                     3,
@@ -44,6 +49,7 @@ class UserSignInTest extends TestCase
                     '',
                     0
                 )->addProfile(
+                    1,
                     'admin',
                     '2023-01-01',
                     '2023-01-01',
@@ -70,32 +76,41 @@ class UserSignInTest extends TestCase
                     '1234567a',
                 );
 
+        $obj    = $adduser->getUserAuth()::userAuthSerialize(
+            1,
+            'ronyanderson@gmail.com',
+            '1234567a',
+            null,
+            '2023-01-01',
+            0
+        );
+        $objAcc = $adduser->getAccount()::accountSerialize(
+            2,
+            $adduser->getUserAuth()->id,
+            'denis',
+            'ronyanderson@gmail.com',
+            '01680562169',
+            '63981270951',
+            '',
+            0
+        );
 
-        var_dump($adduser);
+        $inputBoundary = new InputBoundaryUserSignIn(
+            $obj->email,
+            $obj->password,
+            0,
+            date('Y-m-d H:i:s'),
+            $objAcc->excluded
+        );
 
-//        $inputBoundary = new InputBoundaryUserSignIn(
-//            $adduser->getUserAuth()->email,
-//            $adduser->getUserAuth()->password,
-//            $adduser->getUserAuth()->passwordExternal,
-//            $adduser->getAccount()->image,
-//            $adduser->getAccount()->excluded
-//        );
-//
-//        $output = (new UserSignIn(
-//            new UserRepositoryMemory(),
-//            new TokenUserMemoryRepository(),
-//            new SignInUserExternal(
-//                new UserRepositoryMemory(),
-//                new TokenUserMemoryRepository()
-//            ),
-//            new PublishEvents(),
-//        ))->execute($inputBoundary);
-//        $this->assertSame('ronyanderson@gmail.com', (string)$adduser[0]->email);
-//
-//        $result = (new UserPresentationRepository())->outPut($output);
-//        $this->assertEquals(202, $result['code']);
-//
-//
-//        var_dump($adduser);
+        $globalConnection = new GlobalConnection();
+        $output           = (new UserSignIn(
+            new UserAuthRepository($globalConnection),
+            new TokenUserRepository($globalConnection),
+            new PublishEvents(),
+        ))->execute($inputBoundary);
+        $this->assertSame('ronyanderson@gmail.com', (string)$obj->email);
+        $result = (new UserPresentationRepository())->outPut($output);
+        $this->assertEquals(202, $result['code']);
     }
 }

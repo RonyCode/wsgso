@@ -7,13 +7,13 @@ namespace Gso\Ws\Context\User\Domains\User;
 final readonly class Token
 {
     public function __construct(
-        public ?int $codToken = null,
-        public ?int $codUsuario = null,
+        public ?int $id = null,
+        public ?int $idUser = null,
         public ?string $token = null,
         public ?string $refreshToken = null,
-        public ?int $dataCriacao = null,
-        public ?int $dataExpirar = null,
-        public ?int $excluido = null,
+        public ?int $dateCriation = null,
+        public ?int $dateExpires = null,
+        public ?int $excluded = null,
     ) {
     }
 }

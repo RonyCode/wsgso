@@ -13,6 +13,7 @@ use JsonException;
 final readonly class Profile
 {
     public function __construct(
+        public ?int $id = null,
         public ?string $role = null,
         public ?DateMysqlToFormatBr $dateGranted = null,
         public ?DateMysqlToFormatBr $dateExpires = null,
@@ -25,13 +26,15 @@ final readonly class Profile
      * @throws JsonException
      */
     public static function profileSerialize(
-        string $role,
-        ?string $dateGranted,
-        ?string $dateExpires,
-        ?int $grantedByUser,
-        ?int $excluded
+        ?int $id = null,
+        ?string $role = null,
+        ?string $dateGranted = null,
+        ?string $dateExpires = null,
+        ?int $grantedByUser = null,
+        ?int $excluded = null
     ): self {
         return new Profile(
+            $id,
             (RoleProfile::from($role))->name,
             new DateMysqlToFormatBr($dateGranted),
             new DateMysqlToFormatBr($dateExpires),

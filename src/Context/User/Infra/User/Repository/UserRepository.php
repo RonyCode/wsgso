@@ -47,7 +47,7 @@ final class UserRepository implements UserRepositoryInterface
     public function saveNewUsuarioAuth(User $usuario): User
     {
         try {
-            if ($usuario->codUsuario) {
+            if ($usuario->id) {
                 return $this->updateUserAuthLogin($usuario);
             }
 
@@ -57,28 +57,6 @@ final class UserRepository implements UserRepositoryInterface
         }
     }
 
-    public function loginUsuarioExterno(string $email, string $senha): User
-    {
-        try {
-            $stmt = $this->globalConnection->conn()->prepare(
-                'SELECT * FROM USUARIO_AUTH WHERE EMAIL = :email'
-            );
-            $stmt->bindValue(':email', $email, \PDO::PARAM_STR_CHAR);
-            $stmt->execute();
-            if (0 === $stmt->rowCount()) {
-                throw new \RuntimeException();
-            }
-            $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
-
-            if (! (new PassHandleUserService())->verifyPassUser($senha, (string)$objUsuario->senhaExterna)) {
-                throw new \RuntimeException();
-            }
-
-            return $objUsuario;
-        } catch (RuntimeException) {
-            return new User();
-        }
-    }
 
     public function getUsuarioById(int $codUsuario): User
     {

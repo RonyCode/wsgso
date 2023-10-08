@@ -28,46 +28,43 @@ final class UsuarioAuthController
                 empty($request->getParsedBody()['email'])
                 && empty(
                     $request->getParsedBody()['senha']
-                )) {
+                )
+            ) {
                 throw new \RuntimeException('Parâmetros ausentes');
             }
 
             // PEGA OS HTTPs
-            $email = htmlentities($request->getParsedBody()['email']);
-            $senha = htmlentities($request->getParsedBody()['senha']);
-            $nome = htmlentities($request->getParsedBody()['nome']);
-            $image = htmlentities($request->getParsedBody()['image']);
-            $isUserExterno = $request->getParsedBody()['is_user_externo'];
+            $email         = htmlentities($request->getParsedBody()['email']);
+            $senha         = htmlentities($request->getParsedBody()['senha']);
+            $isUserExternal = $request->getParsedBody()['is_user_external'];
 
-            $inputBoundary = new InputBoundaryUserSignIn($email, $senha, $nome, $image, $isUserExterno);
-            $output = $this->usuarioAuthCase->execute($inputBoundary);
+            $inputBoundary = new InputBoundaryUserSignIn($email, $senha, $isUserExternal);
+            $output        = $this->usuarioAuthCase->execute($inputBoundary);
 
             if (null === $output->codUsuario) {
                 return throw new \RuntimeException('Usuário ou senha incorreto, tente novamente', 256 | 64);
             }
 
             $result = $this->usuarioAuthPresentation->outPut($output);
-            $token = $result['data']['token'];
+            $token  = $result['data']['token'];
             $result = json_encode($result, JSON_THROW_ON_ERROR | 64 | 256);
             $response->getBody()->write($result);
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withHeader('Authorization', $token)
-                ->withStatus(202)
-            ;
+                ->withStatus(202);
         } catch (\RuntimeException $e) {
             $result = [
-                'status' => 'failure',
-                'code' => 401,
+                'status'  => 'failure',
+                'code'    => 401,
                 'message' => $e->getMessage(),
             ];
             $response->getBody()->write(json_encode($result, JSON_THROW_ON_ERROR | 64 | 256));
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
-                ->withStatus(401)
-            ;
+                ->withStatus(401);
         }
     }
 }
