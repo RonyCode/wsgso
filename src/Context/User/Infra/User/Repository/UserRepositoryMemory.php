@@ -4,13 +4,9 @@ namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Exception;
 use Gso\Ws\Context\User\Domains\User\Exceptions\UserNotFound;
-use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
-use Gso\Ws\Context\User\Domains\User\Profile;
 use Gso\Ws\Context\User\Domains\User\Token;
 use Gso\Ws\Context\User\Domains\User\User;
-use Gso\Ws\Context\User\Domains\User\UserAuth;
-use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserMemoryRepository;
 use Gso\Ws\Shared\ValuesObjects\Email;
 
 class UserRepositoryMemory implements UserRepositoryInterface

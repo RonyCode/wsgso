@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Context\User\App\UseCases\User\SignInUser;
 
-use Gso\Ws\Context\User\App\UseCases\UserExternal\SignInUserExternal\InputBoundaryUserExternal;
-use Gso\Ws\Context\User\App\UseCases\UserExternal\SignInUserExternal\SignInUserExternal;
-use Gso\Ws\Context\User\Domains\User\Events\LogUserSignIn;
-use Gso\Ws\Context\User\Domains\User\Events\UserSignIn as UserSignInEvent;
+use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
-use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Token;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Shared\Event\PublishEvents;
@@ -91,14 +87,11 @@ final class UserSignIn
             );
 
 
-                $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
-            $this->publishEvents->addListener(new LogUserSignIn());
+//            $this->publishEvents->addListener(new LogUserSignedEvent());
             $this->publishEvents->publish(
-                new UserSignInEvent(
-                    $usuarioLogado->email
-                )
+                new UserSignInEvent($usuarioLogado->email)
             );
-
+                $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
 
             return new OutputBoundaryUserSignIn(
                 $usuarioLogado->id,

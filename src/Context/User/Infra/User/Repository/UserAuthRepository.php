@@ -4,7 +4,7 @@ namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
-use Gso\Ws\Context\User\Infra\Interfaces\GlobalConnectionInterface;
+use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\services\PassHandleUserService;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;

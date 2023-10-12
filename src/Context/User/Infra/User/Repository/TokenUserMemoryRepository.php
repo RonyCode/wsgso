@@ -1,6 +1,6 @@
 <?php
 
-namespace Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel;
+namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Exceptions\TokenNotFound;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
@@ -19,16 +19,16 @@ class TokenUserMemoryRepository implements TokenUserRepositoryInterface
         return $this->token[0];
     }
 
-    public function selectTokenByCodUsuario(int $codusuario): Token
+    public function selectTokenByCodUsuario(int $idUser): Token
     {
-        $this->saveTokenUsuario(new Token(null, $codusuario));
+        $this->saveTokenUsuario(new Token(null, $idUser));
         $tokenFiltered = array_filter(
             $this->token,
-            static fn(Token $token) => $token->codUsuario === $codusuario
+            static fn(Token $token) => $token->codUsuario === $idUser
         );
 
         if (count($tokenFiltered) === 0) {
-            throw new TokenNotFound($codusuario);
+            throw new TokenNotFound($idUser);
         }
 
         if (count($tokenFiltered) > 1) {

@@ -2,7 +2,7 @@
 
 namespace Gso\Ws\Context\User\Infra\Connection;
 
-use Gso\Ws\Context\User\Infra\Interfaces\GlobalConnectionInterface;
+use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 
 class GlobalConnection implements GlobalConnectionInterface
 {

@@ -2,6 +2,8 @@
 
 namespace Gso\Ws\Shared\Event;
 
+use Gso\Ws\Shared\Event\interface\EventInterface;
+
 class PublishEvents
 {
     private array $listeners = [];
@@ -11,7 +13,7 @@ class PublishEvents
         $this->listeners[] = $listener;
     }
 
-    public function publish(Event $event): void
+    public function publish(EventInterface $event): void
     {
         /** @var ListenerEvent $listener */
         foreach ($this->listeners as $listener) {

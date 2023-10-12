@@ -1,19 +1,19 @@
 <?php
 
 
-use Gso\Ws\Context\User\Domains\User\Events\LogUserSignIn;
+use Gso\Ws\Context\User\Domains\User\Events\LogUserSignedEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
-use Gso\Ws\Context\User\Infra\Interfaces\GlobalConnectionInterface;
+use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\Interfaces\InterfacesPresentation\TokenByCodUsuarioPresentationInterface;
-use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserRepository;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
+use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
-use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
 use Gso\Ws\Shared\Event\PublishEvents;
+use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
 use Psr\Container\ContainerInterface;
@@ -65,7 +65,7 @@ return [
     // ==============================================================
     // INJECT DEPENDENCY
     // ==============================================================
-    LogUserSignIn::class => static function (ContainerInterface $container) {
+    LogUserSignedEvent::class => static function (ContainerInterface $container) {
         return $container->get(PublishEvents::class);
     },
 

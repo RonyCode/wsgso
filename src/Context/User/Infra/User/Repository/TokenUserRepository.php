@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel;
+namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Token;
-use Gso\Ws\Context\User\Infra\Interfaces\GlobalConnectionInterface;
+use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Web\Helper\ResponseError;
 
 final class TokenUserRepository implements TokenUserRepositoryInterface

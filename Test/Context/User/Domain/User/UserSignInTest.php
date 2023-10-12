@@ -8,23 +8,13 @@ include __DIR__ . '/../../../../../config/config.php';
 use Dotenv\Dotenv;
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignIn;
-use Gso\Ws\Context\User\App\UseCases\UserExternal\SignInUserExternal\SignInUserExternal;
-use Gso\Ws\Context\User\Domains\User\Account;
-use Gso\Ws\Context\User\Domains\User\Profile;
 use Gso\Ws\Context\User\Domains\User\User;
-use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
-use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserMemoryRepository;
-use Gso\Ws\Context\User\Infra\Repositories\RepositoriesModel\TokenUserRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
-use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepositoryMemory;
-use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
-use Gso\Ws\Context\User\Infra\User\Repository\UserRepositoryMemory;
 use Gso\Ws\Shared\Event\PublishEvents;
-use Gso\Ws\Shared\ValuesObjects\Cep;
-use Gso\Ws\Shared\ValuesObjects\Phone;
+use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use PHPUnit\Framework\TestCase;
-
 
 class UserSignInTest extends TestCase
 {

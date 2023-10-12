@@ -1,6 +1,6 @@
 <?php
 
-namespace Gso\Ws\Context\User\Infra\Interfaces;
+namespace Gso\Ws\Context\User\Infra\Connection\Interfaces;
 
 use PDO;
 

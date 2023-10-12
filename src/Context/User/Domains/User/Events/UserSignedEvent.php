@@ -2,10 +2,10 @@
 
 namespace Gso\Ws\Context\User\Domains\User\Events;
 
-use Gso\Ws\Shared\Event\Event;
+use Gso\Ws\Shared\Event\interface\EventInterface;
 use Gso\Ws\Shared\ValuesObjects\Email;
 
-class UserSignIn implements Event
+class UserSignedEvent implements EventInterface
 {
     private \DateTimeImmutable $moment;
 
@@ -24,8 +24,13 @@ class UserSignIn implements Event
         return $this->moment;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return get_object_vars($this);
+    }
+
+    public function eventData($data): void
+    {
+        $data->email = $this->emailUser();
     }
 }

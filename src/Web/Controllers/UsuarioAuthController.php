@@ -6,8 +6,8 @@ namespace Gso\Ws\Web\Controllers;
 
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignIn;
-use Gso\Ws\Context\User\Infra\User\Repository\UserPresentationRepository;
 use Gso\Ws\Web\Helper\ResponseError;
+use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

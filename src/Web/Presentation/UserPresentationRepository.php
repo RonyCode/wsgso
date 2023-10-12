@@ -1,9 +1,12 @@
 <?php
 
-namespace Gso\Ws\Context\User\Infra\User\Repository;
+namespace Gso\Ws\Web\Presentation;
 
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\OutputBoundaryUserSignIn;
+use Gso\Ws\Context\User\Domains\User\Events\LogUserSignedEvent;
+use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
+use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
@@ -15,9 +18,18 @@ class UserPresentationRepository implements UserPresentationInterface
     {
         try {
                 $data->codUsuario ?? throw new \RuntimeException();
+            $publishEvents      = new PublishEvents();
+            $logUserSignedEvent = new LogUserSignedEvent();
+
+            $publishEvents->addListener($logUserSignedEvent);
+            $publishEvents->publish(
+                new UserSignInEvent(
+                    $data->email
+                )
+            );
 
             return [
-                'data'    => [
+                'data' => [
                     'cod_usuario'        => $data->codUsuario,
                     'email'              => $data->email,
                     'token'              => $data->token,
