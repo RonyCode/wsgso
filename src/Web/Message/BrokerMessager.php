@@ -9,25 +9,23 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class BrokerMessager
 {
-    private $channel;
-    private $connection;
+    private ?AMQPChannel $channel;
+    private ?AMQPStreamConnection $connection;
+
 
     /**
      * @throws Exception
      */
-    public function __construct(
-        public readonly ?bool $passive = null,
-        public readonly ?bool $durable = null,
-        public readonly ?bool $exclusive = null,
-        public readonly ?bool $autoDelete = null,
-    ) {
+    public function __construct()
+    {
         $this->connection = new AMQPStreamConnection(
             getenv('BROKER_HOST'),
             getenv('BROKER_PORT'),
             getenv('BROKER_NAME'),
             getenv('BROKER_PASS')
         );
-        $this->channel    = $this->connection->channel();
+
+        $this->channel = $this->connection->channel();
     }
 
     public function sentMessageBroker(
@@ -36,14 +34,6 @@ class BrokerMessager
         ?string $message = null
     ): void {
         try {
-            $this->channel->queue_declare(
-                $queueName ?? 'Default',
-                $this->passive ?? false,
-                $this->durable ?? false,
-                $this->exclusive ?? false,
-                $this->autoDelete ?? false
-            );
-
             $this->channel->basic_publish(
                 new AMQPMessage($message ?: 'Hello World!'),
                 $exchange ?: '',
@@ -59,6 +49,28 @@ class BrokerMessager
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function addQueue(
+        string $nameQueue = null,
+        bool $passive = false,
+        bool $durable = false,
+        bool $exclusive = false,
+        bool $autoDelete = false,
+    ): self {
+        $this->channel = $this->connection->channel();
+        $this->channel->queue_declare(
+            $nameQueue ?? 'Default',
+            $passive,
+            $durable,
+            $exclusive,
+            $autoDelete
+        );
+
+        return $this;
+    }
+
     public function consumeMessageBroker(
         ?string $queueName = null,
         ?string $consumerTag = null,
@@ -68,37 +80,37 @@ class BrokerMessager
         ?bool $noWait = null
     ): void {
         try {
-            $this->channel->queue_declare(
-                $queueName ?? 'Default',
-                $this->passive ?? false,
-                $this->durable ?? false,
-                $this->exclusive ?? false,
-                $this->autoDelete ?? false
-            );
-
             echo " [*] Waiting for messages. To exit press CTRL+C\n";
-
-            $callback = function ($msg) {
-                echo ' [x] Received ', $msg->body, "\n";
-            };
-
+            $this->channel->queue_declare('teste', false, false, false, false);
             $this->channel->basic_consume(
                 $queueName,
                 $consumerTag ?? '',
                 $noLocal ?? false,
-                $noAck ?? true,
+                $noAck ?? false,
                 $exclusive ?? false,
                 $noWait ?? false,
-                $callback
+                function ($message) {
+                    echo ' [x] Received ', json_decode($message->body, true);
+                    $channel = $message->delivery_info['channel'];
+                    $channel->basic_ack($message->delivery_info['delivery_tag']);
+                }
             );
-            while ($this->channel->is_open()) {
-                echo 'test';
-//                $this->channel->wait();
+            while (count($this->channel->callbacks)) {
+                $this->channel->wait();
             }
             $this->channel->close();
             $this->connection->close();
         } catch (Exception $e) {
             echo 'Error: ', $e->getMessage(), "\n";
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function closeConnection(): void
+    {
+        $this->channel->close();
+        $this->connection->close();
     }
 }

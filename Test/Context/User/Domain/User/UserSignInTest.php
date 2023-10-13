@@ -13,6 +13,7 @@ use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
 use Gso\Ws\Shared\Event\PublishEvents;
+use Gso\Ws\Web\Message\BrokerConsumerMessager;
 use Gso\Ws\Web\Message\BrokerMessager;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use PHPUnit\Framework\TestCase;
@@ -21,6 +22,7 @@ class UserSignInTest extends TestCase
 {
     /**
      * @throws \JsonException
+     * @throws \Exception
      */
     public function testSignInUser(): void
     {
@@ -28,10 +30,51 @@ class UserSignInTest extends TestCase
         $dotenv->load();
 
 
-//        $broker = new BrokerMessager(false, true);
-//        $broker->sentMessageBroker('teste', '', 'teste de loggin com class borker');
-        $brokerConsumer = new BrokerMessager(null, true);
-        $brokerConsumer->consumeMessageBroker('teste', '', false, true, false, false);
+        $broker = new BrokerMessager();
+//        $broker
+//            ->addQueue('teste')
+//            ->sentMessageBroker(
+//                'teste',
+//                '',
+//                'teste de loggin com class borker id ' . random_int(
+//                    0,
+//                    99
+//                )
+//            );
+        $broker->consumeMessageBroker('teste', '', false, true, false, false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //        $adduser =
