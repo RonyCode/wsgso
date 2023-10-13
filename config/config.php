@@ -7,6 +7,10 @@ return static function (App $app) {
     $dotenv->load();
 
 
+    #   CONFIG OF MESSAGE BROKER (RABBIT MQ)
+
+    putenv("ISS={$_SERVER['DOCUMENT_ROOT']}");
+
 //    // CONFIG OF DATABASE
 //    putenv('DBDRIVE=mysql');
 //    putenv('DBHOST=localhost');
@@ -31,4 +35,6 @@ return static function (App $app) {
     putenv('ROOT=' . dirname(getcwd(), 1));
     putenv('DIR_IMG=' . getenv('ROOT') . '/app/storage/photos');
     putenv("ISS={$_SERVER['DOCUMENT_ROOT']}");
+
+    define('VARIAVEL', getenv('NOME_DA_VARIAVEL'));
 };
