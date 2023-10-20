@@ -1,21 +1,26 @@
 <?php
 
-
 use Gso\Ws\Context\User\Domains\User\Events\LogUserSignedEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
-use Gso\Ws\Context\User\Infra\Interfaces\InterfacesPresentation\TokenByCodUsuarioPresentationInterface;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
 use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
 use Gso\Ws\Shared\Event\PublishEvents;
+use Gso\Ws\Web\Message\Consumer;
+use Gso\Ws\Web\Message\QueueAMQP;
+use Gso\Ws\Web\Message\interface\RabbitMQInterface;
+use Gso\Ws\Web\Message\ProducerCommand;
+use Gso\Ws\Web\Message\repository\RabbitMQRepository;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
+use PhpAmqpLib\Connection\AbstractConnection;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -57,7 +62,7 @@ return [
         );
     },
 
-    BasePathMiddleware::class => function (ContainerInterface $container) {
+    BasePathMiddleware::class      => function (ContainerInterface $container) {
         return new BasePathMiddleware($container->get(App::class));
     },
 
@@ -65,10 +70,9 @@ return [
     // ==============================================================
     // INJECT DEPENDENCY
     // ==============================================================
-    LogUserSignedEvent::class => static function (ContainerInterface $container) {
+    LogUserSignedEvent::class      => static function (ContainerInterface $container) {
         return $container->get(PublishEvents::class);
     },
-
 
 
     // ==============================================================
@@ -78,7 +82,7 @@ return [
         return $container->get(UserRepository::class);
     },
 
-    UserAuthRepositoryInterface::class => static function (ContainerInterface $container) {
+    UserAuthRepositoryInterface::class  => static function (ContainerInterface $container) {
         return $container->get(UserAuthRepository::class);
     },
     TokenUserRepositoryInterface::class => static function (ContainerInterface $container) {
@@ -89,18 +93,24 @@ return [
     // ==============================================================
     // INTERFACES PRESENTATION  GSO
     // ==============================================================
-    TokenByCodUsuarioPresentationInterface::class => static function (ContainerInterface $container) {
-        return $container->get(TokenUserRepository::class);
-    },
-    UserPresentationInterface::class => static function (ContainerInterface $container) {
+    UserPresentationInterface::class    => static function (ContainerInterface $container) {
         return $container->get(UserPresentationRepository::class);
     },
 
 
+    // ==============================================================
+    // RABBITMQ INJECTION  GSO
+    // ==============================================================
 
-    // ==============================================================
-    // ANOTHER INTERFACES  GSO
-    // ==============================================================
+    RabbitMQInterface::class => static function (ContainerInterface $container) {
+        return $container->get(RabbitMQRepository::class);
+    },
+
+
+// ==============================================================
+// ANOTHER INTERFACES  GSO
+// ==============================================================
+
     GlobalConnectionInterface::class => static function (ContainerInterface $container) {
         return $container->get(GlobalConnection::class);
     },

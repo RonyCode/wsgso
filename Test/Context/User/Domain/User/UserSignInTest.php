@@ -15,8 +15,18 @@ use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
 use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Web\Message\BrokerConsumerMessager;
 use Gso\Ws\Web\Message\BrokerMessager;
+use Gso\Ws\Web\Message\Consumer;
+use Gso\Ws\Web\Message\QueueAMQP;
+use Gso\Ws\Web\Message\ProducerCommand;
+use Gso\Ws\Web\Message\RabbitTopic;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class UserSignInTest extends TestCase
 {
@@ -30,51 +40,11 @@ class UserSignInTest extends TestCase
         $dotenv->load();
 
 
-        $broker = new BrokerMessager();
-//        $broker
-//            ->addQueue('teste')
-//            ->sentMessageBroker(
-//                'teste',
-//                '',
-//                'teste de loggin com class borker id ' . random_int(
-//                    0,
-//                    99
-//                )
-//            );
-        $broker->consumeMessageBroker('teste', '', false, true, false, false);
+        $broker = new RabbitTopic();
 
+        $broker->emit();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//        $broker->sendMessageAMPQ('email', 'Hello World!');
 
 
 //        $adduser =

@@ -16,7 +16,6 @@ final class TokenAuthController
     use ResponseError;
 
     public function __construct(
-        private readonly TokenPresentation $tokenManagerPresentation,
         private readonly TokenByCodUser $tokenManagerByCodUsuarioCase,
     ) {
     }
@@ -34,7 +33,7 @@ final class TokenAuthController
             $inputBoundary = new InputBoundaryTokenByCodUsuario($tokenUsuario);
             $output = $this->tokenManagerByCodUsuarioCase->handle($inputBoundary);
 
-            if (null === $output->codUsuario) {
+            if (null === $output->idUser) {
                 return throw new \RuntimeException('Erro ao retornar Token, tente novamente', 256 | 64);
             }
 

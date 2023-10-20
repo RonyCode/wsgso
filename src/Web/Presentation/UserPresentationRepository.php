@@ -31,7 +31,7 @@ class UserPresentationRepository implements UserPresentationInterface
             return [
                 'data' => [
                     'cod_usuario'        => $data->codUsuario,
-                    'email'              => $data->email,
+                    'email'              => (string)$data->email,
                     'token'              => $data->token,
                     'refresh_token'      => $data->refreshToken,
                     'data_criacao_token' => $data->dataCriacaoToken,
