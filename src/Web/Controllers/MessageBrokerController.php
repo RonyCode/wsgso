@@ -17,7 +17,7 @@ class MessageBrokerController
     {
         try {
             $queueName = $args['queue_name'];
-            $server = [
+            $server    = [
                 'host' => 'localhost',
                 'port' => 5672,
                 'user' => 'guest',
@@ -27,6 +27,8 @@ class MessageBrokerController
                 Builder::exchange('process.log', $server)->emit("exchange.start", $queueNameReceive);
                 Builder::exchange('process.log', $server)->emit("exchange.finish", $queueNameReceive);
             });
+
+            $response->getBody()->write(json_encode($test));
 
             return $response
                 ->withHeader('Content-Type', 'application/json')

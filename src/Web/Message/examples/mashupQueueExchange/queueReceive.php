@@ -13,5 +13,6 @@ $server = [
 ];
 Builder::queue('queue', $server)->receive(function ($data, $queueName) use ($server) {
     Builder::exchange('process.log', $server)->emit("exchange.start", $queueName);
+    error_log(json_encode($data));
     Builder::exchange('process.log', $server)->emit("exchange.finish", $queueName);
 });
