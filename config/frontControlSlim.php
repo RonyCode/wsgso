@@ -24,7 +24,6 @@ $app->add(
         $routeContext = RouteContext::fromRequest($request);
         $routingResults = $routeContext->getRoutingResults();
         $methods = $routingResults->getAllowedMethods();
-
         return $handler->handle($request)->withHeader('Access-Control-Allow-Methods', implode(',', $methods));
     }
 );
@@ -32,7 +31,7 @@ $app->add(
 
 
 // ADICIONANDO AS ROTAS
-(require __DIR__ . '/../src/Web/Routes/routes.php')($app);
+(require __DIR__ . '/../src/Web/Routes/routesGroup.php')($app);
 
 // ADICIONANDO OS MIDDLEWARES
 (require __DIR__ . '/middleware.php')($app);

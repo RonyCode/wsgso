@@ -17,7 +17,6 @@ class MessageBrokerController
     {
         try {
             $queueName = $args['queue_name'];
-
             $server = [
                 'host' => 'localhost',
                 'port' => 5672,
