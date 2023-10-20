@@ -42,7 +42,7 @@ class AuthMiddleWare
             }
 
             return $handler->handle($request);
-        } catch (\RuntimeException|\JsonException  $e) {
+        } catch (\RuntimeException | \JsonException  $e) {
             $this->responseCatchError('Sem autorização para realizar a operação', 401);
         }
     }
