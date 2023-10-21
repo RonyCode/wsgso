@@ -68,7 +68,7 @@ class Exchange
         );
 
         $queueConf = $this->conf['queue'];
-        list($queue_name, ,) = $channel->queue_declare(
+        [$queue_name, ,] = $channel->queue_declare(
             "",
             $queueConf['passive'],
             $queueConf['durable'],

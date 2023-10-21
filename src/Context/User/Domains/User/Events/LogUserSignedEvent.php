@@ -19,8 +19,8 @@ class LogUserSignedEvent extends ListenerEvent
             'user' => 'guest',
             'pass' => 'guest',
         ];
-        $queue  = Builder::queue('queue', $server);
-        $queue->emit(
+
+        Builder::queue('queue', $server)->emit(
             [
                 "info"  =>
                     'Usuário com email ' . $event->emailUser() . ' logado na data ' . $event->moment()->format(
@@ -28,7 +28,8 @@ class LogUserSignedEvent extends ListenerEvent
                     ),
                 "teste" => true,
                 "sa"    => false,
-            ]
+                "quit"  => true
+            ],
         );
     }
 

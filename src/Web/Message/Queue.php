@@ -9,6 +9,7 @@ class Queue
 {
     private $name;
     private $conf;
+    private string $messageConsumed;
 
     public function __construct($name, $conf)
     {
@@ -56,7 +57,7 @@ class Queue
         $connection->close();
     }
 
-    public function receive(callable $callback): void
+    public function receive(callable $callback): string
     {
         $connection = $this->createConnection();
         $channel    = $connection->channel();
@@ -65,7 +66,7 @@ class Queue
         $consumer = $this->conf['consumer'];
 
         if ($consumer['no_ack'] === false) {
-            $channel->basic_qos(0, 1, 0);
+            $channel->basic_qos(0, 1, 1);
         }
         echo '[' . date('d/m/Y H:i:s') . "] Queue '{$this->name}' initialized \n";
 
@@ -90,5 +91,7 @@ class Queue
 
         $channel->close();
         $connection->close();
+
+        return $this->messageConsumed;
     }
 }

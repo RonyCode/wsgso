@@ -11,8 +11,16 @@ $server = [
     'user' => 'guest',
     'pass' => 'guest',
 ];
-Builder::queue('queue', $server)->receive(function ($data, $queueName) use ($server) {
+
+
+$teste = function ($msg) {
+    echo "<pre>";
+    print_r($msg);
+    echo "</pre>";
+};
+
+Builder::queue('queue', $server)->receive(function ($data, $queueName) use ($server, $teste) {
     Builder::exchange('process.log', $server)->emit("exchange.start", $queueName);
-    error_log(json_encode($data));
+    $teste($data);
     Builder::exchange('process.log', $server)->emit("exchange.finish", $queueName);
 });

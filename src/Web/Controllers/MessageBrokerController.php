@@ -9,6 +9,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class MessageBrokerController
 {
+    private $messagemConsumed;
+
     public function __construct()
     {
     }
@@ -23,12 +25,13 @@ class MessageBrokerController
                 'user' => 'guest',
                 'pass' => 'guest',
             ];
-            Builder::queue($queueName, $server)->receive(function ($data, $queueNameReceive) use ($server) {
-                Builder::exchange('process.log', $server)->emit("exchange.start", $queueNameReceive);
-                Builder::exchange('process.log', $server)->emit("exchange.finish", $queueNameReceive);
+            Builder::queue($queueName, $server)->receive(function ($data, $queueName) use ($server) {
+                Builder::exchange('process.log', $server)->emit("exchange.start", $queueName);
+                $this->messagemConsumed = $this->processMesage($data);
+                Builder::exchange('process.log', $server)->emit("exchange.finish", $queueName);
             });
 
-            $response->getBody()->write(json_encode($test));
+            $response->getBody()->write($this->messagemConsumed);
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -45,5 +48,13 @@ class MessageBrokerController
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(401);
         }
+    }
+
+    /**
+     * @throws \JsonException
+     */
+    public function processMesage($message): string
+    {
+        return $message;
     }
 }
