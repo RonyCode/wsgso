@@ -29,8 +29,6 @@ final class UserSignIn
     {
         try {
             //            SE LOGADO SISTEMA INTERNO
-
-
             $usuarioLogado = $this->usuarioAuthRepository->signIn(
                 $inputValues->email,
                 $inputValues->password
@@ -38,6 +36,8 @@ final class UserSignIn
 
             $usuarioByEmail = $this->usuarioAuthRepository->getUsuarioByEmail($inputValues->email);
 
+
+            //            VERIFICA SE NÃO EXISTE USUÁRIO E SE É EXTERNO ENTÃO CRIA NOVO USUARIO
             if (empty($usuarioLogado->id) && empty($usuarioByEmail->id) && 1 === $inputValues->isUserExternal) {
                 $newObjUsuario = UserAuth::userAuthSerialize(
                     null,
@@ -57,20 +57,22 @@ final class UserSignIn
                 throw new \RuntimeException('Usuario ou senha inválido');
             }
 
+            // CRIA ACCESS TOKEN
             $token = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
                 'id'           => $usuarioLogado->id,
-                'email'        => $usuarioLogado->email,
+                'email'        => (string)$usuarioLogado->email,
                 'access_token' => true,
             ]);
 
-
+            // CRIA REFRESH TOKEN
             $refreshToken = (new JwtHandler(3600 * 12))->jwtEncode(getenv('ISS'), [
                 'id'           => $usuarioLogado->id,
                 'access_token' => false,
             ]);
 
-            $dataToken = (new JwtHandler())->jwtDecode($token);
 
+            //SEPARA TEMPO DE EXPIRAÇÃO TOKEN
+            $dataToken = (new JwtHandler())->jwtDecode($token);
 
             // VERIFY IF EXISTS TOKEN BY CODUSUARIO IF NO SAVE NEW TOKEN
             $objTokenSalved = $this->tokenManagerRepository->selectTokenByCodUsuario((int)$usuarioLogado->id);
@@ -78,7 +80,7 @@ final class UserSignIn
 
             $objTokenModel = new Token(
                 $objTokenSalved->id ?: null,
-                $objTokenSalved->idUser ?: null,
+                $objTokenSalved->idUser ?: $usuarioLogado->id,
                 $token,
                 $refreshToken,
                 $dataToken->iat,
@@ -86,12 +88,11 @@ final class UserSignIn
                 0,
             );
 
-
-//            $this->publishEvents->addListener(new LogUserSignedEvent());
             $this->publishEvents->publish(
                 new UserSignInEvent($usuarioLogado->email)
             );
                 $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
+
 
             return new OutputBoundaryUserSignIn(
                 $usuarioLogado->id,

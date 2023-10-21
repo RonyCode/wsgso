@@ -45,7 +45,7 @@ class TokenByCodUser
             $usuario = $this->usuarioAuthRepository->getUsuarioById($tokenSalvo->idUser);
 
 
-            //           Refresh token valido devolve novo acess-token com 15 min
+            //           Refresh token valido devolve novo access-token com 15 min
             $tokenNovo = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
                 'id_user'      => $usuario->id,
                 'email'        => $usuario->email,

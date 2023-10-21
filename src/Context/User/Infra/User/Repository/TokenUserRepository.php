@@ -81,7 +81,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
                     'INSERT INTO token ( id_user, token, refresh_token, date_criation, date_expires, excluded) 
                             VALUES (:idUser,:token,:refreshToken,:dateCriation,:dateExpires,:excluded)'
                 );
-            $stmt->bindValue(':idUser', $tokenManagerModel->id, \PDO::PARAM_INT);
+            $stmt->bindValue(':idUser', $tokenManagerModel->idUser, \PDO::PARAM_INT);
             $stmt->bindValue(':token', $tokenManagerModel->token);
             $stmt->bindValue(':refreshToken', $tokenManagerModel->refreshToken);
             $stmt->bindValue(':dateCriation', $tokenManagerModel->dateCriation, \PDO::PARAM_INT);

@@ -80,6 +80,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
     private function insertNewUserlogin(UserAuth $usuario): UserAuth
     {
         try {
+            $this->globalConnection->conn()->beginTransaction();
             $usuarioByEmail = $this->getUsuarioByEmail($usuario->email);
             if ($usuarioByEmail->id) {
                 throw new \RuntimeException('Email já cadastrado no sistema!');
@@ -100,6 +101,8 @@ class UserAuthRepository implements UserAuthRepositoryInterface
             $stmt->bindValue(':excluded', $usuario->excluded, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 === $stmt->rowCount()) {
+                $this->globalConnection->conn()->rollBack();
+
                 return new UserAuth();
             }
 
