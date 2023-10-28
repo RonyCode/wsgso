@@ -4,12 +4,15 @@ namespace Gso\Ws\Web\Controllers;
 
 use Gso\Ws\Web\Message\Builder;
 use Gso\Ws\Web\Message\interface\RabbitMQInterface;
+use PhpAmqpLib\Connection\AMQPSSLConnection;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Message\AMQPMessage;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class MessageBrokerController
 {
-    private $messagemConsumed;
+    private Response $responseArg;
 
     public function __construct()
     {
@@ -18,20 +21,23 @@ class MessageBrokerController
     public function __invoke(Request $request, Response $response, array $args): Response
     {
         try {
-            $queueName = $args['queue_name'];
-            $server    = [
+            $this->responseArg = $response;
+            $queueName         = $args['queue_name'];
+            $server            = [
                 'host' => 'localhost',
                 'port' => 5672,
                 'user' => 'guest',
                 'pass' => 'guest',
             ];
-            Builder::queue($queueName, $server)->receive(function ($data, $queueName) use ($server) {
-                Builder::exchange('process.log', $server)->emit("exchange.start", $queueName);
-                $this->messagemConsumed = $this->processMesage($data);
-                Builder::exchange('process.log', $server)->emit("exchange.finish", $queueName);
+
+
+            Builder::queue($queueName, $server)->receive(function ($msg) use ($response) {
+//                var_dump(call_user_func_array($msg, array(2, 4)));
+//                var_dump(json_decode($msg));
+//                $response->getBody()->write(json_encode($msg, JSON_THROW_ON_ERROR | 64 | 256));
             });
 
-            $response->getBody()->write($this->messagemConsumed);
+            exit();
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -39,22 +45,14 @@ class MessageBrokerController
         } catch (\RuntimeException $e) {
             $result = [
                 'status'  => 'failure',
-                'code'    => 401,
+                'code'    => 400,
                 'message' => $e->getMessage(),
             ];
             $response->getBody()->write(json_encode($result, JSON_THROW_ON_ERROR | 64 | 256));
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
-                ->withStatus(401);
+                ->withStatus(400);
         }
-    }
-
-    /**
-     * @throws \JsonException
-     */
-    public function processMesage($message): string
-    {
-        return $message;
     }
 }

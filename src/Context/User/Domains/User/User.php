@@ -33,6 +33,9 @@ final class User
     }
 
 
+    /**
+     * @throws JsonException
+     */
     public function getAccount(): ?Account
     {
         return Account::accountSerialize();

@@ -2,6 +2,14 @@
 
 namespace Gso\Ws\Web\Message;
 
+use AMQPChannel;
+use AMQPConnection;
+use AMQPEnvelope;
+use AMQPExchange;
+use AMQPQueue;
+use AMQPQueueException;
+use Exception;
+use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -9,7 +17,9 @@ class Queue
 {
     private $name;
     private $conf;
-    private string $messageConsumed;
+    private $consumed;
+    private $arrayTest = [];
+
 
     public function __construct($name, $conf)
     {
@@ -17,6 +27,10 @@ class Queue
         $this->conf = $conf;
     }
 
+
+    /**
+     * @throws \Exception
+     */
     private function createConnection(): AMQPStreamConnection
     {
         $server = $this->conf['server'];
@@ -24,7 +38,7 @@ class Queue
         return new AMQPStreamConnection($server['host'], $server['port'], $server['user'], $server['pass']);
     }
 
-    private function declareQueue($channel)
+    private function declareQueue($channel): void
     {
         $conf = $this->conf['queue'];
         $channel->queue_declare(
@@ -39,6 +53,7 @@ class Queue
 
     /**
      * @throws \JsonException
+     * @throws \Exception
      */
     public function emit($data = null): void
     {
@@ -57,18 +72,27 @@ class Queue
         $connection->close();
     }
 
-    public function receive(callable $callback): string
+    /**
+     * @throws \ErrorException
+     * @throws Exception
+     */
+    public function receive(callable $callback)
     {
         $connection = $this->createConnection();
         $channel    = $connection->channel();
 
         $this->declareQueue($channel);
         $consumer = $this->conf['consumer'];
+        [$queue, $messageCount, $consumerCount] = $channel->queue_declare($this->name, true);
 
         if ($consumer['no_ack'] === false) {
-            $channel->basic_qos(0, 1, 1);
+            $channel->basic_qos(null, 1, null);
         }
-        echo '[' . date('d/m/Y H:i:s') . "] Queue '{$this->name}' initialized \n";
+
+        if ($messageCount == 0) {
+            $channel->close();
+            $connection->close();
+        }
 
         $channel->basic_consume(
             $this->name,
@@ -78,20 +102,37 @@ class Queue
             $consumer['exclusive'],
             $consumer['nowait'],
             function ($msg) use ($callback) {
-                $callback($msg->body, $this->name);
+                $this->arrayTest[] = json_decode($msg->body);
+                $result = array_map('unserialize', array_unique(array_map('serialize', $this->arrayTest)));
+                var_dump($result);
+                $callback(
+                    $this->arrayTest,
+                    $this->name
+                );
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-                echo "\n[" . date('d/m/Y H:i:s') . "]  {$this->name}::" . $msg->body, "\n";
+                ++$this->consumed;
             }
         );
-
-
         while (count($channel->callbacks)) {
+            if (
+                $messageCount > 0
+                && $this->consumed >= $messageCount
+            ) {
+                $channel->close();
+
+                break;
+            }
+
             $channel->wait();
         }
 
         $channel->close();
         $connection->close();
+    }
 
-        return $this->messageConsumed;
+    public function processMessageConsumed($msg, $index)
+    {
+        $index['message'][] = $msg;
+        var_dump($index);
     }
 }

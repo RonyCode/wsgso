@@ -12,6 +12,8 @@ $server = [
     'pass' => 'guest',
 ];
 
-Builder::queue('queue.backend', $server)->receive(function ($data) {
+Builder::queue('queue', $server)->receive(function ($data) {
     error_log(json_encode($data));
 });
+
+echo 'done';

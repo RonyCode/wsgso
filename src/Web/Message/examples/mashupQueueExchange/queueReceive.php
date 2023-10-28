@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+use Psr\Http\Message\ResponseInterface as Response;
+use Gso\Ws\Web\Controllers\MessageBrokerController;
 use Gso\Ws\Web\Message\Builder;
 
 require_once __DIR__ . '/../../../../../vendor/autoload.php';
-
 
 $server = [
     'host' => 'localhost',
@@ -13,14 +16,8 @@ $server = [
 ];
 
 
-$teste = function ($msg) {
-    echo "<pre>";
-    print_r($msg);
-    echo "</pre>";
-};
-
-Builder::queue('queue', $server)->receive(function ($data, $queueName) use ($server, $teste) {
+Builder::queue('queue', $server)->receive(function ($msg, $queueName) use ($server) {
     Builder::exchange('process.log', $server)->emit("exchange.start", $queueName);
-    $teste($data);
+    echo $msg;
     Builder::exchange('process.log', $server)->emit("exchange.finish", $queueName);
 });

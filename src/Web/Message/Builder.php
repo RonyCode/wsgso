@@ -4,6 +4,7 @@ namespace Gso\Ws\Web\Message;
 
 class Builder
 {
+    private $messageConsumed;
     private static $defaults = [
         'rpc'      => [
             'queue'    => [
@@ -81,5 +82,22 @@ class Builder
         $conf['server'] = $server;
 
         return new Queue($name, $conf);
+    }
+
+
+    /**
+     * @param mixed $messageConsumed
+     */
+    public function setMessageConsumed(mixed $messageConsumed): void
+    {
+        $this->messageConsumed = $messageConsumed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMessageConsumed()
+    {
+        return $this->messageConsumed;
     }
 }
