@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gso\Ws\Web\Controllers;
 
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignInCase;
 use Gso\Ws\Web\Helper\ResponseError;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,7 +17,7 @@ final class UsuarioAuthController
 
     public function __construct(
         private readonly UserPresentationRepository $usuarioAuthPresentation,
-        private readonly UserSignIn $usuarioAuthCase,
+        private readonly UserSignInCase $usuarioAuthCase,
     ) {
     }
 

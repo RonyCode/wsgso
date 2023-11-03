@@ -3,7 +3,7 @@
 namespace Gso\Ws\Web\Presentation;
 
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\OutputBoundaryUserSignIn;
-use Gso\Ws\Context\User\Domains\User\Events\LogUserSignedEvent;
+use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
 use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
 use Gso\Ws\Shared\Event\PublishEvents;
@@ -19,7 +19,7 @@ class UserPresentationRepository implements UserPresentationInterface
         try {
                 $data->codUsuario ?? throw new \RuntimeException();
             $publishEvents      = new PublishEvents();
-            $logUserSignedEvent = new LogUserSignedEvent();
+            $logUserSignedEvent = new PublishLogUserSigned();
 
             $publishEvents->addListener($logUserSignedEvent);
             $publishEvents->publish(

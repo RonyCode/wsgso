@@ -14,7 +14,7 @@ use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
-final class UserSignIn
+final class UserSignInCase
 {
     use ResponseError;
 
@@ -34,7 +34,7 @@ final class UserSignIn
                 $inputValues->password
             );
 
-            $usuarioByEmail = $this->usuarioAuthRepository->getUsuarioByEmail($inputValues->email);
+            $usuarioByEmail = $this->usuarioAuthRepository->getUserAuthByEmail($inputValues->email);
 
 
             //            VERIFICA SE NÃO EXISTE USUÁRIO E SE É EXTERNO ENTÃO CRIA NOVO USUARIO

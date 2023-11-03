@@ -70,7 +70,7 @@ class UserRepositoryMemory implements UserRepositoryInterface
         return $userFiltered[0];
     }
 
-    public function getUsuarioById(int $codUsuario): User
+    public function getUsuarioAuthById(int $codUsuario): User
     {
         $userFiltered = array_filter(
             $this->users,

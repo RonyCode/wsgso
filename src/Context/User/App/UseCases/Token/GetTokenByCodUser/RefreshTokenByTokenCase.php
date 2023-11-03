@@ -3,31 +3,33 @@
 namespace Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser;
 
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
-use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Token;
 use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
 use http\Exception\RuntimeException;
 
-class TokenByCodUser
+class RefreshTokenByTokenCase
 {
     use ResponseError;
 
     public function __construct(
         private readonly TokenUserRepositoryInterface $tokenRepository,
-        private readonly UserRepositoryInterface $usuarioAuthRepository,
+        private readonly UserAuthRepositoryInterface $usuarioAuthRepository,
     ) {
     }
 
-    public function handle(InputBoundaryTokenByCodUsuario $inputValues): OutputBoundaryTokenByCodUsuario
+    public function execute(InputBoundaryRefreshTokenCase $inputValues): OutputBoundaryRefreshTokenCase
     {
         try {
             $token        = str_replace('+', '.', $inputValues->token);
             $tokenDecoded = (new JwtHandler())->jwtDecode($token);
+
             if (is_array($tokenDecoded)) {
                 throw new \RuntimeException('Refresh token expirado ou inválido');
             }
-            $tokenSalvo = $this->tokenRepository->selectTokenByCodUsuario($tokenDecoded->data->id_user);
+
+            $tokenSalvo = $this->tokenRepository->selectTokenByCodUsuario($tokenDecoded->data->id);
 
             $verifyRefreshToken = (new JwtHandler())->jwtDecode(
                 $tokenSalvo->refreshToken
@@ -42,7 +44,7 @@ class TokenByCodUser
             ) {
                 throw new \RuntimeException('Refresh token expirado ou inválido');
             }
-            $usuario = $this->usuarioAuthRepository->getUsuarioById($tokenSalvo->idUser);
+            $usuario = $this->usuarioAuthRepository->getUserAuthById($tokenSalvo->idUser);
 
 
             //           Refresh token valido devolve novo access-token com 15 min
@@ -54,7 +56,7 @@ class TokenByCodUser
 
             $tokenRefreshed = (new JwtHandler(1200))->jwtDecode($tokenNovo);
 
-            $objToken       = new Token(
+            $objToken = new Token(
                 $tokenSalvo->id,
                 $tokenSalvo->idUser,
                 $tokenNovo,
@@ -71,7 +73,7 @@ class TokenByCodUser
             }
 
             //            se tudo certo retorna mesmo objeto que foi salvo
-            $outPutBoundary = new OutputBoundaryTokenByCodUsuario(
+            $outPutBoundary = new OutputBoundaryRefreshTokenCase(
                 $objToken->id,
                 $objToken->idUser,
                 $objToken->token,

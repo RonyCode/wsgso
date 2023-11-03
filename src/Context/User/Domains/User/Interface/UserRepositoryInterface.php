@@ -6,5 +6,5 @@ use Gso\Ws\Context\User\Domains\User\UserAuth;
 
 interface UserRepositoryInterface
 {
-    public function getUsuarioById(int $codUsuario): UserAuth;
+    public function getUsuarioAuthById(int $codUsuario): UserAuth;
 }

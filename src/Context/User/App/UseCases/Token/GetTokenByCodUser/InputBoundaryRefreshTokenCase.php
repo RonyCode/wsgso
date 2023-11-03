@@ -2,7 +2,7 @@
 
 namespace Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser;
 
-readonly class InputBoundaryTokenByCodUsuario
+readonly class InputBoundaryRefreshTokenCase
 {
     public function __construct(public string $token)
     {

@@ -6,7 +6,7 @@ use Gso\Ws\Shared\Event\interface\EventInterface;
 use Gso\Ws\Shared\Event\ListenerEvent;
 use Gso\Ws\Web\Message\Builder;
 
-class LogUserSignedEvent extends ListenerEvent
+class PublishLogUserSigned extends ListenerEvent
 {
     /**
      * @throws \JsonException

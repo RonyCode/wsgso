@@ -53,7 +53,7 @@ class UserAuthRepositoryMemory implements UserAuthRepositoryInterface
      * @return UserAuth
      */
 
-    public function getUsuarioById(int $codUsuario): UserAuth
+    public function getUserAuthById(int $codUsuario): UserAuth
     {
         $userFiltered = array_filter(
             $this->usersAuth,
@@ -112,7 +112,7 @@ class UserAuthRepositoryMemory implements UserAuthRepositoryInterface
         return array_values($userAuthFiltered)[0];
     }
 
-    public function getUsuarioByEmail(string $email): UserAuth
+    public function getUserAuthByEmail(string $email): UserAuth
     {
         $userFiltered = array_filter(
             $this->usersAuth,

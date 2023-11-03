@@ -7,7 +7,7 @@ include __DIR__ . '/../../../../../config/config.php';
 
 use Dotenv\Dotenv;
 use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignInCase;
 use Gso\Ws\Context\User\Domains\User\User;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
@@ -115,7 +115,7 @@ class UserSignInTest extends TestCase
 //        );
 //
 //        $globalConnection = new GlobalConnection();
-//        $output           = (new UserSignIn(
+//        $output           = (new UserSignInCase(
 //            new UserAuthRepository($globalConnection),
 //            new TokenUserRepository($globalConnection),
 //            new PublishEvents(),

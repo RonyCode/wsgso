@@ -58,7 +58,7 @@ final class UserRepository implements UserRepositoryInterface
     }
 
 
-    public function getUsuarioById(int $codUsuario): User
+    public function getUsuarioAuthById(int $codUsuario): User
     {
         try {
             $stmt = $this->globalConnection->conn()->prepare(
@@ -124,7 +124,7 @@ final class UserRepository implements UserRepositoryInterface
                 return new User();
             }
 
-            return $this->getUsuarioById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getUsuarioAuthById((int)$this->globalConnection->conn()->lastInsertId());
         } catch (RuntimeException) {
             $this->responseCatchError('Novo usuário não pôde ser salvo');
         }
@@ -146,7 +146,7 @@ final class UserRepository implements UserRepositoryInterface
                 throw new \RuntimeException();
             }
 
-            return $this->getUsuarioById($usuario->codUsuario);
+            return $this->getUsuarioAuthById($usuario->codUsuario);
         } catch (RuntimeException) {
             //            $this->responseCatchError("Usuário ou senha não encontrados!");
 

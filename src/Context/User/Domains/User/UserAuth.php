@@ -4,6 +4,7 @@ namespace Gso\Ws\Context\User\Domains\User;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
+use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepositoryMemory;
 use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
@@ -15,6 +16,8 @@ use JsonException;
 
 final readonly class UserAuth
 {
+    private UserAuthRepositoryInterface $authRepository;
+
     public function __construct(
         public ?int $id = null,
         public ?Email $email = null,
@@ -49,18 +52,11 @@ final readonly class UserAuth
 
     public function signIn(?string $email, ?string $password): self
     {
-        $conex = new GlobalConnection();
-
-        return (new UserAuthRepository($conex))->signIn($email, $password);
+        return $this->authRepository->signIn($email, $password);
     }
 
-    public function getUserAuth(): self
+    public function getUserAuthByEmail(string $email): self
     {
-        return $this;
-    }
-
-    public function getUsuarioByEmail(string $email): UserAuth
-    {
-        return $this;
+        return $this->authRepository->getUserAuthByEmail($email);
     }
 }

@@ -4,6 +4,7 @@ namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
+use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\services\PassHandleUserService;
 use Gso\Ws\Web\Helper\ResponseError;
@@ -13,9 +14,12 @@ class UserAuthRepository implements UserAuthRepositoryInterface
 {
     use ResponseError;
 
-    public function __construct(
-        private readonly GlobalConnectionInterface $globalConnection,
-    ) {
+    private readonly GlobalConnection $globalConnection;
+
+
+    public function __construct()
+    {
+        $this->globalConnection = new GlobalConnection();
     }
 
     public function signIn(string $email, string $password): UserAuth
@@ -30,7 +34,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 throw new \RuntimeException();
             }
             $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
-            if (! (new PassHandleUserService())->verifyPassUser($password, (string)$objUsuario->password)) {
+            if ( ! (new PassHandleUserService())->verifyPassUser($password, (string)$objUsuario->password)) {
                 throw new \RuntimeException();
             }
 
@@ -42,7 +46,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
         }
     }
 
-    public function getUsuarioByEmail(string $email): UserAuth
+    public function getUserAuthByEmail(string $email): UserAuth
     {
         try {
             $stmt = $this->globalConnection->conn()->prepare(
@@ -81,7 +85,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
     {
         try {
             $this->globalConnection->conn()->beginTransaction();
-            $usuarioByEmail = $this->getUsuarioByEmail($usuario->email);
+            $usuarioByEmail = $this->getUserAuthByEmail($usuario->email);
             if ($usuarioByEmail->id) {
                 throw new \RuntimeException('Email já cadastrado no sistema!');
             }
@@ -106,7 +110,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 return new UserAuth();
             }
 
-            return $this->getUsuarioById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getUserAuthById((int)$this->globalConnection->conn()->lastInsertId());
         } catch (RuntimeException) {
             $this->responseCatchError('Novo usuário não pôde ser salvo ou email já cadastrado');
         }
@@ -136,7 +140,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 throw new \RuntimeException();
             }
 
-            return $this->getUsuarioById($usuario->id);
+            return $this->getUserAuthById($usuario->id);
         } catch (RuntimeException) {
             //            $this->responseCatchError("Usuário ou senha não encontrados!");
 
@@ -144,7 +148,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
         }
     }
 
-    public function getUsuarioById(int $id): UserAuth
+    public function getUserAuthById(int $id): UserAuth
     {
         try {
             $stmt = $this->globalConnection->conn()->prepare(
@@ -179,8 +183,9 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 $data['date_criation'],
                 $data['excluded'],
             );
-        } catch (\RuntimeException | \JsonException) {
+        } catch (\RuntimeException|\JsonException) {
             return new UserAUth();
         }
     }
+
 }

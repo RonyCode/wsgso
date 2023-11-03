@@ -2,7 +2,7 @@
 
 namespace Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser;
 
-readonly class OutputBoundaryTokenByCodUsuario
+readonly class OutputBoundaryRefreshTokenCase
 {
     public function __construct(
         public ?int $id = null,
