@@ -7,7 +7,6 @@ namespace Gso\Ws\Web\Controllers;
 use Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser\InputBoundaryTokenByCodUsuario;
 use Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser\TokenByCodUser;
 use Gso\Ws\Web\Helper\ResponseError;
-use Gso\Ws\Web\Presentation\TokenPresentation;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
