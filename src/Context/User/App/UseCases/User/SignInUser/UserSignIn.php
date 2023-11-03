@@ -89,7 +89,7 @@ final class UserSignIn
             );
 
             $this->publishEvents->publish(
-                new UserSignInEvent($usuarioLogado->email)
+                new UserSignInEvent($usuarioLogado->email, $usuarioLogado->id)
             );
                 $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
 

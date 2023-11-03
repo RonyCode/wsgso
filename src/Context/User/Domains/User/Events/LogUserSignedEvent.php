@@ -20,17 +20,17 @@ class LogUserSignedEvent extends ListenerEvent
             'pass' => 'guest',
         ];
 
-        $num = random_int('1', '100');
+        $num = random_int('1', '1000');
 
         //Evento com mensagem registrada no RABBITMQ
         Builder::queue('queue', $server)->emit(
             [
                 "info"  =>
                     'Usuário com email ' . $event->emailUser() . ' logado na data ' . $event->moment()->format(
-                        'd/m/Y'
+                        'd/m/Y H:i:s'
                     ),
                 "email" => (string)$event->emailUser(),
-                "code"  => $num,
+                "id"  => $event->idUser(),
             ],
         );
     }

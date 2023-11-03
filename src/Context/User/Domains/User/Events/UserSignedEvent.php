@@ -9,7 +9,7 @@ class UserSignedEvent implements EventInterface
 {
     private \DateTimeImmutable $moment;
 
-    public function __construct(readonly public Email $email)
+    public function __construct(readonly public Email $email, readonly public int $idUser)
     {
         $this->moment = new \DateTimeImmutable();
     }
@@ -17,6 +17,11 @@ class UserSignedEvent implements EventInterface
     public function emailUser(): Email
     {
         return $this->email;
+    }
+
+    public function idUser(): int
+    {
+        return $this->idUser;
     }
 
     public function moment(): \DateTimeImmutable

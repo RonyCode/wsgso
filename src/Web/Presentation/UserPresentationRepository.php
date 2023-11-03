@@ -24,7 +24,8 @@ class UserPresentationRepository implements UserPresentationInterface
             $publishEvents->addListener($logUserSignedEvent);
             $publishEvents->publish(
                 new UserSignInEvent(
-                    $data->email
+                    $data->email,
+                    $data->codUsuario
                 )
             );
 
