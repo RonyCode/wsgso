@@ -13,6 +13,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 class MessageBrokerController
 {
     private Response $responseArg;
+    private $message = [];
 
     public function __construct()
     {
@@ -32,12 +33,9 @@ class MessageBrokerController
 
 
             Builder::queue($queueName, $server)->receive(function ($msg) use ($response) {
-//                var_dump(call_user_func_array($msg, array(2, 4)));
-//                var_dump(json_decode($msg));
-//                $response->getBody()->write(json_encode($msg, JSON_THROW_ON_ERROR | 64 | 256));
+                $this->message = $msg;
             });
-
-            exit();
+            $response->getBody()->write(json_encode($this->message, JSON_THROW_ON_ERROR | 64 | 256));
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
@@ -54,5 +52,24 @@ class MessageBrokerController
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(400);
         }
+    }
+
+    public function removeDuplicateKeys($key, $data)
+    {
+        $_data = array();
+
+        foreach ($data as $v) {
+            if (isset($_data[$v[$key]])) {
+                // found duplicate
+                continue;
+            }
+            // remember unique item
+            $_data[$v[$key]] = $v;
+        }
+        // if you need a zero-based array
+        // otherwise work with $_data
+        $data = array_values($_data);
+
+        return $data;
     }
 }

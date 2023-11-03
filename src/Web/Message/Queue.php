@@ -94,6 +94,7 @@ class Queue
             $connection->close();
         }
 
+
         $channel->basic_consume(
             $this->name,
             '',
@@ -102,9 +103,7 @@ class Queue
             $consumer['exclusive'],
             $consumer['nowait'],
             function ($msg) use ($callback) {
-                $this->arrayTest[] = json_decode($msg->body);
-                $result = array_map('unserialize', array_unique(array_map('serialize', $this->arrayTest)));
-                var_dump($result);
+                $this->arrayTest['message'][] = json_decode($msg->body, true, 512, JSON_THROW_ON_ERROR);
                 $callback(
                     $this->arrayTest,
                     $this->name
@@ -113,6 +112,7 @@ class Queue
                 ++$this->consumed;
             }
         );
+
         while (count($channel->callbacks)) {
             if (
                 $messageCount > 0
@@ -130,9 +130,10 @@ class Queue
         $connection->close();
     }
 
-    public function processMessageConsumed($msg, $index)
+    public function teste($data)
     {
-        $index['message'][] = $msg;
-        var_dump($index);
+        $array[] = $data;
+
+        return $data;
     }
 }
