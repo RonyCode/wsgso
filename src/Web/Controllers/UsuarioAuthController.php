@@ -36,7 +36,7 @@ final class UsuarioAuthController
             // PEGA OS HTTPs
             $email         = htmlentities($request->getParsedBody()['email']);
             $senha         = htmlentities($request->getParsedBody()['senha']);
-            $isUserExternal = $request->getParsedBody()['is_user_external'];
+            $isUserExternal = $request->getParsedBody()['is_user_external'] ?? 0;
 
             $inputBoundary = new InputBoundaryUserSignIn($email, $senha, $isUserExternal);
             $output        = $this->usuarioAuthCase->execute($inputBoundary);
