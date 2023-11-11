@@ -31,7 +31,7 @@ try {
 
     //Recipients
     $mail->setFrom(getenv('FROM_EMAIL_MAIL'), getenv('FROM_NAME_MAIL'));
-    $mail->addAddress(getenv('USER_MAIL'), 'Joe User');     //Add a recipient
+    $mail->addAddress('ronypc@outlook.com');     //Add a recipient
 
 
     //Attachments
@@ -43,7 +43,7 @@ try {
     $mail->CharSet = 'UTF-8';//Set email format to HTML
     $mail->Subject = getenv('FROM_NAME_MAIL');
     $mail->Body    = getenv('ALT_BODY');
-    $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+    $mail->AltBody = getenv('ALT_BODY');
 
     $mail->send();
     echo 'Message has been sent';
