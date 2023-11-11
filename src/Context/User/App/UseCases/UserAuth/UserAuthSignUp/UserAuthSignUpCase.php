@@ -25,32 +25,20 @@ class UserAuthSignUpCase
             $usuarioByEmail = $this->usuarioAuthRepository->getUserAuthByEmail($inputValues->email);
 
 
-            //            VERIFICA SE NÃO EXISTE USUÁRIO E SE É EXTERNO ENTÃO CRIA NOVO USUARIO
-            if (empty($usuarioByEmail) && empty($usuarioByEmail->id) && 1 === $inputValues->isUserExternal) {
+            //            VERIFICA SE JÁ EXISTE USUÁRIO CADASTRADO
+            if (! empty($usuarioByEmail->id)) {
+                throw new RuntimeException('Usuário com email já cadastrado!');
             }
 
 
-            if (null === $usuarioLogado->id) {
-                throw new \RuntimeException('Usuario ou senha inválido');
-            }
-
-            // CRIA ACCESS TOKEN
-            $token = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
-                'id'           => $usuarioLogado->id,
-                'email'        => (string)$usuarioLogado->email,
-                'access_token' => true,
-            ]);
-
-            // CRIA REFRESH TOKEN
-            $refreshToken = (new JwtHandler(3600 * 12))->jwtEncode(getenv('ISS'), [
-                'id'           => $usuarioLogado->id,
-                'access_token' => false,
+            // CRIA TOKEN PARA CADASTRO POR EMAIL
+            $token = (new JwtHandler(900))->jwtEncode(getenv('ISS'), [
+                'email' => $inputValues->email,
             ]);
 
 
-            //SEPARA TEMPO DE EXPIRAÇÃO TOKEN
-            $dataToken = (new JwtHandler())->jwtDecode($token);
-
+            var_dump($token);
+            exit();
             // VERIFY IF EXISTS TOKEN BY CODUSUARIO IF NO SAVE NEW TOKEN
             $objTokenSalved = $this->tokenManagerRepository->selectTokenByCodUsuario((int)$usuarioLogado->id);
 

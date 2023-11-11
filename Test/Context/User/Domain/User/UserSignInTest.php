@@ -6,13 +6,8 @@ require __DIR__ . '/../../../../../vendor/autoload.php';
 include __DIR__ . '/../../../../../config/config.php';
 
 use Dotenv\Dotenv;
-use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\InputBoundaryUserAuthSignIn;
-use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\UserAuthSignInCase;
-use Gso\Ws\Context\User\Domains\User\User;
-use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
-use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
-use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
-use Gso\Ws\Shared\Event\PublishEvents;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAuthSignIn;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Web\Message\BrokerConsumerMessager;
 use Gso\Ws\Web\Message\BrokerMessager;
 use Gso\Ws\Web\Message\Consumer;

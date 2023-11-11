@@ -4,6 +4,7 @@ namespace Gso\Ws\Web\Controllers;
 
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\InputBoundaryUserAuthSignUp;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
 use Gso\Ws\Web\Helper\ResponseError;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -13,9 +14,12 @@ class UsuarioAuthCadastroController
 {
     use ResponseError;
 
-    public function __construct()
-    {
+    public function __construct(
+        private UserAuthSignUpCase $usuarioAuthCase,
+        private UserPresentationRepository $usuarioAuthPresentation
+    ) {
     }
+
 
     public function __invoke(Request $request, Response $response, array $args): Response
     {
@@ -31,7 +35,7 @@ class UsuarioAuthCadastroController
 
 
             $inputBoundary = new InputBoundaryUserAuthSignUp($email);
-//            $output        = $this->usuarioAuthCase->execute($inputBoundary);
+            $output        = $this->usuarioAuthCase->execute($inputBoundary);
 //
 //            if (null === $output->codUsuario) {
 //                return throw new \RuntimeException('Usuário ou senha incorreto, tente novamente!', 256 | 64);
