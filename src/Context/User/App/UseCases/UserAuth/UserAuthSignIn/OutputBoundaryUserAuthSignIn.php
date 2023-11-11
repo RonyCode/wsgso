@@ -1,13 +1,12 @@
 <?php
 
-namespace Gso\Ws\Context\User\App\UseCases\User\SignInUser;
+namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn;
 
-use Gso\Ws\Shared\ValuesObjects\Cpf;
 use Gso\Ws\Shared\ValuesObjects\DateMysqlToFormatBr;
 use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Shared\ValuesObjects\Pass;
 
-readonly class OutputBoundaryUserSignIn
+final readonly class OutputBoundaryUserAuthSignIn
 {
     public function __construct(
         public ?int $codUsuario = null,

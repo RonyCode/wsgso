@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Web\Controllers;
 
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignInCase;
+use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\InputBoundaryUserAuthSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\UserAuthSignInCase;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
 use Gso\Ws\Web\Helper\ResponseError;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,7 +18,7 @@ final class UsuarioAuthController
 
     public function __construct(
         private readonly UserPresentationRepository $usuarioAuthPresentation,
-        private readonly UserSignInCase $usuarioAuthCase,
+        private readonly UserAuthSignUpCase $userAuthSignUpCase,
     ) {
     }
 
@@ -38,11 +39,11 @@ final class UsuarioAuthController
             $senha         = htmlentities($request->getParsedBody()['senha']);
             $isUserExternal = $request->getParsedBody()['is_user_external'] ?? 0;
 
-            $inputBoundary = new InputBoundaryUserSignIn($email, $senha, $isUserExternal);
+            $inputBoundary = new InputBoundaryUserAuthSignIn($email, $senha, $isUserExternal);
             $output        = $this->usuarioAuthCase->execute($inputBoundary);
 
             if (null === $output->codUsuario) {
-                return throw new \RuntimeException('Usuário ou senha incorreto, tente novamente', 256 | 64);
+                return throw new \RuntimeException('Usuário ou senha incorreto, tente novamente!', 256 | 64);
             }
 
             $result = $this->usuarioAuthPresentation->outPut($output);

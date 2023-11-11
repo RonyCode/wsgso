@@ -2,9 +2,9 @@
 
 namespace Gso\Ws\Context\User\Infra\User\Interface;
 
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\OutputBoundaryUserSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\OutputBoundaryUserAuthSignIn;
 
 interface UserPresentationInterface
 {
-    public function outPut(OutputBoundaryUserSignIn $data): array;
+    public function outPut(OutputBoundaryUserAuthSignIn $data): array;
 }

@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-use Gso\Ws\Web\Controllers\MessageBrokerController;
-use Gso\Ws\Web\Controllers\TokenAuthController;
-use Gso\Ws\Web\Controllers\UsuarioAuthController;
-use Gso\Ws\Web\Middleware\AuthMiddleWare;
 use Gso\Ws\Web\Routes\RouteAuth;
 use Gso\Ws\Web\Routes\RouteServices;
 use Slim\App;

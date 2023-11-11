@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gso\Ws\Context\User\App\UseCases\User\SignInUser;
+namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn;
 
 use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
@@ -14,7 +14,7 @@ use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
-final class UserSignInCase
+final class UserAuthSignInCase
 {
     use ResponseError;
 
@@ -25,7 +25,7 @@ final class UserSignInCase
     ) {
     }
 
-    public function execute(InputBoundaryUserSignIn $inputValues): OutputBoundaryUserSignIn
+    public function execute(InputBoundaryUserAuthSignIn $inputValues): OutputBoundaryUserAuthSignIn
     {
         try {
             //            SE LOGADO SISTEMA INTERNO
@@ -94,7 +94,7 @@ final class UserSignInCase
                 $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
 
 
-            return new OutputBoundaryUserSignIn(
+            return new OutputBoundaryUserAuthSignIn(
                 $usuarioLogado->id,
                 $usuarioLogado->email,
                 $usuarioLogado->password,

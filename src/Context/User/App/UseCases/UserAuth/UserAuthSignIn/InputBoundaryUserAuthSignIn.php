@@ -1,8 +1,8 @@
 <?php
 
-namespace Gso\Ws\Context\User\App\UseCases\User\SignInUser;
+namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn;
 
-readonly class InputBoundaryUserSignIn
+final readonly class InputBoundaryUserAuthSignIn
 {
     public function __construct(
         public string $email,

@@ -2,7 +2,7 @@
 
 namespace Gso\Ws\Web\Presentation;
 
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\OutputBoundaryUserSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\OutputBoundaryUserAuthSignIn;
 use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
 use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
@@ -14,7 +14,7 @@ class UserPresentationRepository implements UserPresentationInterface
 {
     use ResponseError;
 
-    public function outPut(OutputBoundaryUserSignIn $data): array
+    public function outPut(OutputBoundaryUserAuthSignIn $data): array
     {
         try {
                 $data->codUsuario ?? throw new \RuntimeException();

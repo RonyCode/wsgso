@@ -6,8 +6,8 @@ require __DIR__ . '/../../../../../vendor/autoload.php';
 include __DIR__ . '/../../../../../config/config.php';
 
 use Dotenv\Dotenv;
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\InputBoundaryUserSignIn;
-use Gso\Ws\Context\User\App\UseCases\User\SignInUser\UserSignInCase;
+use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\InputBoundaryUserAuthSignIn;
+use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\Domains\User\User;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
@@ -48,7 +48,7 @@ class UserSignInTest extends TestCase
 
 
 //        $adduser =
-//            (new User()
+//            (new UserAuth()
 //            )
 //                ->addAccount(
 //                    25,
@@ -106,7 +106,7 @@ class UserSignInTest extends TestCase
 //            0
 //        );
 //
-//        $inputBoundary = new InputBoundaryUserSignIn(
+//        $inputBoundary = new InputBoundaryUserAuthSignIn(
 //            $obj->email,
 //            $obj->password,
 //            0,
@@ -115,7 +115,7 @@ class UserSignInTest extends TestCase
 //        );
 //
 //        $globalConnection = new GlobalConnection();
-//        $output           = (new UserSignInCase(
+//        $output           = (new UserAuthSignInCase(
 //            new UserAuthRepository($globalConnection),
 //            new TokenUserRepository($globalConnection),
 //            new PublishEvents(),
