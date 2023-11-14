@@ -9,6 +9,8 @@ use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
 require __DIR__ . '/../../../vendor/autoload.php';
+
+
 $dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../../../');
 $dotenv->load();
 
@@ -33,18 +35,24 @@ try {
     $mail->setFrom(getenv('FROM_EMAIL_MAIL'), getenv('FROM_NAME_MAIL'));
     $mail->addAddress('ronypc@outlook.com');     //Add a recipient
 
-
     //Attachments
 //    $mail->addAttachment('/var/tmp/file.tar.gz');         //Add attachments
 //    $mail->addAttachment('/tmp/image.jpg', 'new.jpg');    //Optional name
+
 
     //Content
     $mail->isHTML(true);
     $mail->CharSet = 'UTF-8';//Set email format to HTML
     $mail->Subject = getenv('FROM_NAME_MAIL');
-    $mail->Body    = getenv('ALT_BODY');
     $mail->AltBody = getenv('ALT_BODY');
+//    $mail->Body    = getenv('ALT_BODY');
+    $content = 'dsadasd';
 
+    ob_start();
+    include(__DIR__ . '/../Template/templateEmail.php');
+    $html = ob_get_contents();
+    ob_get_clean();
+    $mail->msgHTML($html);
     $mail->send();
     echo 'Message has been sent';
 } catch (Exception $e) {

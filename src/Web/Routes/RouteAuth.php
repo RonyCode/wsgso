@@ -13,6 +13,6 @@ class RouteAuth
     {
         $app->post('/login', UsuarioAuthController::class);
         $app->get('/refresh-token/{token}', TokenAuthController::class);
-        $app->post('/pre-cadastro', UsuarioAuthCadastroController::class);
+        $app->get('/pre-cadastro/{token}', UsuarioAuthCadastroController::class);
     }
 }

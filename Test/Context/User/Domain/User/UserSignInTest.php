@@ -8,6 +8,8 @@ include __DIR__ . '/../../../../../config/config.php';
 use Dotenv\Dotenv;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAuthSignIn;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
+use Gso\Ws\Shared\ValuesObjects\Email;
+use Gso\Ws\Web\Helper\EmailHandler;
 use Gso\Ws\Web\Message\BrokerConsumerMessager;
 use Gso\Ws\Web\Message\BrokerMessager;
 use Gso\Ws\Web\Message\Consumer;
@@ -34,10 +36,26 @@ class UserSignInTest extends TestCase
         $dotenv = Dotenv::createUnsafeImmutable('../../../../../');
         $dotenv->load();
 
+        $email        = new Email('ronyandersonpc@gmail.com');
+        $emaillHandle = new EmailHandler();
 
-        $broker = new RabbitTopic();
+        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9+eyJpc3MiOiIvaG9tZS9yb255L3dlYi9nc28tYmFja2FuZCIsImF1ZCI6Ii9ob21lL3Jvbnkvd2ViL2dzby1iYWNrYW5kIiwiaWF0IjoxNjkzOTU2MjM0LCJleHAiOjE2OTM5NTc0MzQsImRhdGEiOnsiY29kX3VzdWFyaW8iOjEsIm5vbWUiOiJSb255IHRlc3RlIiwiZW1haWwiOnt9LCJpbWFnZSI6Imh0dHA6Ly9nc29hcGkubG9jYWxob3N0L2ltZy9hdmF0YXIuc3ZnIiwiYWNjZXNzX3Rva2VuIjp0cnVlfX0+pP0Vu3jNFn5Q8JyhwsXwOLYYXFXOEBgzNJTZCE0Oys';
+        $tituloEmail    = "Confirmação de Cadastro";
+        $messageContent =
+            "Email para confirmação de cadastro, por favor clique no link para finalizar seu cadastro.";
+        $linkEmail      = getenv('URL_DEVELOPMENT') . '/api/auth/pre-cadastro/' . $token;
 
-        $broker->emit();
+        $emaillHandle->sendMessage(
+            $email,
+            $tituloEmail,
+            $messageContent,
+            $linkEmail,
+            true,
+        );
+
+//        $broker = new RabbitTopic();
+//
+//        $broker->emit();
 
 //        $broker->sendMessageAMPQ('email', 'Hello World!');
 

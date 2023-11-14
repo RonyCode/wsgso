@@ -25,13 +25,13 @@ class UsuarioAuthCadastroController
     {
         try {
             if (
-                empty($request->getParsedBody()['email'])
+                empty($args['token'])
             ) {
                 throw new \RuntimeException('Parâmetros ausentes');
             }
 
             // PEGA OS HTTPs
-            $email = htmlentities($request->getParsedBody()['email']);
+            $email = htmlentities($args['token']);
 
 
             $inputBoundary = new InputBoundaryUserAuthSignUp($email);
