@@ -10,6 +10,8 @@ use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use function DI\string;
+
 class UsuarioAuthCadastroController
 {
     use ResponseError;
@@ -25,30 +27,36 @@ class UsuarioAuthCadastroController
     {
         try {
             if (
-                empty($args['token'])
+                empty($request->getParsedBody()['email'])
             ) {
                 throw new \RuntimeException('Parâmetros ausentes');
             }
 
             // PEGA OS HTTPs
-            $email = htmlentities($args['token']);
-
+            $email = htmlentities($request->getParsedBody()['email']);
 
             $inputBoundary = new InputBoundaryUserAuthSignUp($email);
             $output        = $this->usuarioAuthCase->execute($inputBoundary);
-//
-//            if (null === $output->codUsuario) {
-//                return throw new \RuntimeException('Usuário ou senha incorreto, tente novamente!', 256 | 64);
-//            }
-//
-//            $result = $this->usuarioAuthPresentation->outPut($output);
-//            $token  = $result['data']['token'];
-//            $result = json_encode($result, JSON_THROW_ON_ERROR | 64 | 256);
-            $response->getBody()->write(json_encode(['email' => $email]), JSON_THROW_ON_ERROR | 64 | 256);
+
+            if (null === $output->token) {
+                return throw new \RuntimeException('Erro ao cadastrar novo usuário!', 256 | 64);
+            }
+
+            $resut = [
+                "status"  => 'success',
+                "code"    => 200,
+                "data"    => [
+                    "email" => (string)$output->email,
+                    "token" => $output->token
+                ],
+                "message" => 'Cadastrado com sucesso!'
+            ];
+
+            $response->getBody()->write(json_encode($resut), JSON_THROW_ON_ERROR | 64 | 256);
 
             return $response
                 ->withHeader('Content-Type', 'application/json')
-                ->withStatus(202);
+                ->withStatus(200);
         } catch (\RuntimeException $e) {
             $result = [
                 'status'  => 'failure',

@@ -2,7 +2,7 @@
 
 namespace Gso\Ws\Web\Presentation;
 
-use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\OutputBoundaryUserAuthSignIn;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\OutputBoundaryUserAuthSignIn;
 use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
 use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
@@ -30,7 +30,7 @@ class UserPresentationRepository implements UserPresentationInterface
             );
 
             return [
-                'data' => [
+                'data'    => [
                     'cod_usuario'        => $data->codUsuario,
                     'email'              => (string)$data->email,
                     'token'              => $data->token,

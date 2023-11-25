@@ -34,7 +34,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 throw new \RuntimeException();
             }
             $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
-            if ( ! (new PassHandleUserService())->verifyPassUser($password, (string)$objUsuario->password)) {
+            if (! (new PassHandleUserService())->verifyPassUser($password, (string)$objUsuario->password)) {
                 throw new \RuntimeException();
             }
 
@@ -67,7 +67,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
     }
 
 
-    public function saveNewUsuarioAuth(UserAuth $userAuth): UserAuth
+    public function saveNewUserAuth(UserAuth $userAuth): UserAuth
     {
         try {
             if ($userAuth->id) {
@@ -183,9 +183,8 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 $data['date_criation'],
                 $data['excluded'],
             );
-        } catch (\RuntimeException|\JsonException) {
+        } catch (\RuntimeException | \JsonException) {
             return new UserAUth();
         }
     }
-
 }

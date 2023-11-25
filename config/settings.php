@@ -5,16 +5,17 @@ ini_set('display_errors', '1');
 
 // CONFIG DE ERROS
 date_default_timezone_set('America/Araguaina');
-$settings = [];
-$settings['root'] = dirname(__DIR__);
+$settings          = [];
+$settings['root']  = dirname(__DIR__);
 $settings['error'] = [
     'display_error_details' => true,
-    'log_errors' => true,
-    'log_error_details' => true,
+    'log_errors'            => true,
+    'log_error_details'     => true,
 ];
 
 // CORS
 ini_set('allow_url_fopen', true);
+ini_set('date.timezone', 'America/Araguaina');
 date_default_timezone_set('America/Araguaina');
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");

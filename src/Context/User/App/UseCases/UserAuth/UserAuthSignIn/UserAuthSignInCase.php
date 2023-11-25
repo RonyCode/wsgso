@@ -19,7 +19,7 @@ final class UserAuthSignInCase
     use ResponseError;
 
     public function __construct(
-        public readonly UserAuthRepositoryInterface $usuarioAuthRepository,
+        public readonly UserAuthRepositoryInterface $userAuthRepository,
         public readonly TokenUserRepositoryInterface $tokenManagerRepository,
         public readonly PublishEvents $publishEvents,
     ) {
@@ -29,12 +29,12 @@ final class UserAuthSignInCase
     {
         try {
             //            SE LOGADO SISTEMA INTERNO
-            $usuarioLogado = $this->usuarioAuthRepository->signIn(
+            $usuarioLogado = $this->userAuthRepository->signIn(
                 $inputValues->email,
                 $inputValues->password
             );
 
-            $usuarioByEmail = $this->usuarioAuthRepository->getUserAuthByEmail($inputValues->email);
+            $usuarioByEmail = $this->userAuthRepository->getUserAuthByEmail($inputValues->email);
 
 
             //            VERIFICA SE NÃO EXISTE USUÁRIO E SE É EXTERNO ENTÃO CRIA NOVO USUARIO
@@ -49,7 +49,7 @@ final class UserAuthSignInCase
                 );
 
                 // CREATE  NEW USER EXTERNAL
-                $usuarioLogado = $this->usuarioAuthRepository->saveNewUsuarioAuth($newObjUsuario);
+                $usuarioLogado = $this->userAuthRepository->saveNewUserAuth($newObjUsuario);
             }
 
 

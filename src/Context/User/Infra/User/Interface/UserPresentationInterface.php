@@ -2,7 +2,7 @@
 
 namespace Gso\Ws\Context\User\Infra\User\Interface;
 
-use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\OutputBoundaryUserAuthSignIn;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\OutputBoundaryUserAuthSignIn;
 
 interface UserPresentationInterface
 {

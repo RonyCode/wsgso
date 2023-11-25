@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Web\Controllers;
 
-use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\InputBoundaryUserAuthSignIn;
-use Gso\Ws\Context\User\App\UseCases\User\UserAuthSignIn\UserAuthSignInCase;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAuthSignIn;
+use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
 use Gso\Ws\Web\Helper\ResponseError;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
@@ -18,7 +18,7 @@ final class UsuarioAuthController
 
     public function __construct(
         private readonly UserPresentationRepository $usuarioAuthPresentation,
-        private readonly UserAuthSignUpCase $userAuthSignUpCase,
+        private readonly UserAuthSignInCase $userAuthSignInCase,
     ) {
     }
 
@@ -35,12 +35,12 @@ final class UsuarioAuthController
             }
 
             // PEGA OS HTTPs
-            $email         = htmlentities($request->getParsedBody()['email']);
-            $senha         = htmlentities($request->getParsedBody()['senha']);
+            $email          = htmlentities($request->getParsedBody()['email']);
+            $senha          = htmlentities($request->getParsedBody()['senha']);
             $isUserExternal = $request->getParsedBody()['is_user_external'] ?? 0;
 
             $inputBoundary = new InputBoundaryUserAuthSignIn($email, $senha, $isUserExternal);
-            $output        = $this->usuarioAuthCase->execute($inputBoundary);
+            $output        = $this->userAuthSignInCase->execute($inputBoundary);
 
             if (null === $output->codUsuario) {
                 return throw new \RuntimeException('Usuário ou senha incorreto, tente novamente!', 256 | 64);

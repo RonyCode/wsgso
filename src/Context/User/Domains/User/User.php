@@ -32,7 +32,6 @@ final class User
         return $this->profileId;
     }
 
-
     /**
      * @throws JsonException
      */
@@ -43,13 +42,8 @@ final class User
 
     public function getUserAuth(): UserAuth
     {
-        return (new UserAuth())->getUserAuth();
+        return UserAuth::userAuthSerialize();
     }
-
-    /**
-     * @throws JsonException
-     */
-
 
     /**
      * @throws JsonException
@@ -132,7 +126,7 @@ final class User
     /**
      * @throws JsonException
      */
-    public function addUserLogin(
+    public function addUserAuth(
         ?int $idUserAuth = null,
         ?string $email = null,
         ?string $pass = null,

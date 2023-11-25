@@ -3,10 +3,15 @@
 namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Shared\Event\PublishEvents;
+use Gso\Ws\Shared\ValuesObjects\Email;
+use Gso\Ws\Web\Helper\EmailHandler;
 use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
+
+use function DI\string;
 
 class UserAuthSignUpCase
 {
@@ -22,11 +27,9 @@ class UserAuthSignUpCase
     public function execute(InputBoundaryUserAuthSignUp $inputValues): OutputBoundaryUserAuthSignUp
     {
         try {
-            $usuarioByEmail = $this->usuarioAuthRepository->getUserAuthByEmail($inputValues->email);
-
-
+            $userAuthFounded = $this->usuarioAuthRepository->getUserAuthByEmail($inputValues->email);
             //            VERIFICA SE JÁ EXISTE USUÁRIO CADASTRADO
-            if (! empty($usuarioByEmail->id)) {
+            if (! empty($userAuthFounded->id)) {
                 throw new RuntimeException('Usuário com email já cadastrado!');
             }
 
@@ -37,38 +40,32 @@ class UserAuthSignUpCase
             ]);
 
 
-            var_dump($token);
-            exit();
-            // VERIFY IF EXISTS TOKEN BY CODUSUARIO IF NO SAVE NEW TOKEN
-            $objTokenSalved = $this->tokenManagerRepository->selectTokenByCodUsuario((int)$usuarioLogado->id);
+            //PREPARA TOKEN PARA ENVIAR COM URL VALIDA AO EMAIL
+            $tokenReplaced = str_replace('.', '+', $token);
+
+            // MONTA E ENVIA EMAIL
+            $emaillHandle   = new EmailHandler();
+            $tituloEmail    = "Confirmação de Cadastro";
+            $messageContent =
+                "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.";
+            $linkEmail      = getenv('URL_FRONTEND') . '/cadastro-usuario/' . $tokenReplaced;
+
+            $emailDestination = new Email($inputValues->email);
+            $result           = $emaillHandle->sendMessage(
+                $emailDestination,
+                $tituloEmail,
+                $messageContent,
+                $linkEmail,
+                true,
+            );
+            if (! $result) {
+                throw new RuntimeException('Erro ao enviar email!');
+            }
 
 
-            $objTokenModel = new Token(
-                $objTokenSalved->id ?: null,
-                $objTokenSalved->idUser ?: $usuarioLogado->id,
+            return new OutputBoundaryUserAuthSignUp(
+                (new Email($inputValues->email)),
                 $token,
-                $refreshToken,
-                $dataToken->iat,
-                $dataToken->exp,
-                0,
-            );
-
-            $this->publishEvents->publish(
-                new UserSignInEvent($usuarioLogado->email, $usuarioLogado->id)
-            );
-                $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
-
-
-            return new OutputBoundaryUserAuthSignIn(
-                $usuarioLogado->id,
-                $usuarioLogado->email,
-                $usuarioLogado->password,
-                $usuarioLogado->dateCriation,
-                $objTokenModel->token,
-                $objTokenModel->refreshToken,
-                $objTokenModel->dateCriation,
-                $objTokenModel->dateExpires,
-                $usuarioLogado->excluded,
             );
         } catch (RuntimeException $e) {
             $this->responseCatchError($e->getMessage(), 400);

@@ -6,9 +6,6 @@ use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
-use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepositoryMemory;
-use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
-use Gso\Ws\Context\User\Infra\User\Repository\UserRepositoryMemory;
 use Gso\Ws\Shared\ValuesObjects\DateMysqlToFormatBr;
 use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Shared\ValuesObjects\Pass;
@@ -17,6 +14,7 @@ use JsonException;
 final readonly class UserAuth
 {
     private UserAuthRepositoryInterface $authRepository;
+
 
     public function __construct(
         public ?int $id = null,
@@ -47,16 +45,5 @@ final readonly class UserAuth
             new DateMysqlToFormatBr($dateCriation) ?? null,
             $excluded ?? null,
         );
-    }
-
-
-    public function signIn(?string $email, ?string $password): self
-    {
-        return $this->authRepository->signIn($email, $password);
-    }
-
-    public function getUserAuthByEmail(string $email): self
-    {
-        return $this->authRepository->getUserAuthByEmail($email);
     }
 }

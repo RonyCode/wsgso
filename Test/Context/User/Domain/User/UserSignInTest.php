@@ -36,10 +36,12 @@ class UserSignInTest extends TestCase
         $dotenv = Dotenv::createUnsafeImmutable('../../../../../');
         $dotenv->load();
 
-        $email        = new Email('ronyandersonpc@gmail.com');
+        $email        = new Email('ronypc@outlook.com');
         $emaillHandle = new EmailHandler();
 
-        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9+eyJpc3MiOiIvaG9tZS9yb255L3dlYi9nc28tYmFja2FuZCIsImF1ZCI6Ii9ob21lL3Jvbnkvd2ViL2dzby1iYWNrYW5kIiwiaWF0IjoxNjkzOTU2MjM0LCJleHAiOjE2OTM5NTc0MzQsImRhdGEiOnsiY29kX3VzdWFyaW8iOjEsIm5vbWUiOiJSb255IHRlc3RlIiwiZW1haWwiOnt9LCJpbWFnZSI6Imh0dHA6Ly9nc29hcGkubG9jYWxob3N0L2ltZy9hdmF0YXIuc3ZnIiwiYWNjZXNzX3Rva2VuIjp0cnVlfX0+pP0Vu3jNFn5Q8JyhwsXwOLYYXFXOEBgzNJTZCE0Oys';
+        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9+
+        eyJpc3MiOiIvaG9tZS9yb255L3dlYi9nc28tYmFja2FuZCIsImF1ZCI6Ii9ob21lL3Jvbnkvd2ViL2dzby1iYWNrYW5kIiwiaWF0IjoxNjkzOTU2MjM0LCJleHAiOjE2OTM5NTc0MzQsImRhdGEiOnsiY29kX3VzdWFyaW8iOjEsIm5vbWUiOiJSb255IHRlc3RlIiwiZW1haWwiOnt9LCJpbWFnZSI6Imh0dHA6Ly9nc29hcGkubG9jYWxob3N0L2ltZy9hdmF0YXIuc3ZnIiwiYWNjZXNzX3Rva2VuIjp0cnVlfX0
+        +pP0Vu3jNFn5Q8JyhwsXwOLYYXFXOEBgzNJTZCE0Oys';
         $tituloEmail    = "Confirmação de Cadastro";
         $messageContent =
             "Email para confirmação de cadastro, por favor clique no link para finalizar seu cadastro.";

@@ -16,13 +16,12 @@ class EmailHandler
     {
         $dotenv = Dotenv::createUnsafeImmutable(__DIR__ . '/../../../');
         $dotenv->load();
-
         //Create an instance; passing `true` enables exceptions
         $this->mail = new PHPMailer(true);
 
         try {
             //Server settings
-            $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $this->mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
             $this->mail->isSMTP();                                            //Send using SMTP
             $this->mail->Host       = getenv('HOST_MAIL');              //Set the SMTP server to send through
             $this->mail->SMTPAuth   = true;                                   //Enable SMTP authentication
@@ -44,7 +43,6 @@ class EmailHandler
             $this->mail->CharSet = 'UTF-8';//Set email format to HTML
             $this->mail->Subject = getenv('FROM_NAME_MAIL');
             $this->mail->AltBody = 'teste';
-            echo 'Message has been sent';
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: { $this->mail->ErrorInfo}";
         }
@@ -56,7 +54,7 @@ class EmailHandler
         string $message,
         string $link,
         bool $linkEnable = false
-    ) {
+    ): bool {
         try {
             $this->mail->addAddress($emailDestination);     //Add a recipient
             $tituloTemplate     = $titulo;
@@ -69,9 +67,12 @@ class EmailHandler
             ob_get_clean();
             $this->mail->msgHTML($html);
             $this->mail->send();
-            echo 'Message has been sent';
+
+            return true;
         } catch (Exception $e) {
             echo "Message could not be sent. Mailer Error: { $this->mail->ErrorInfo}";
+
+            return false;
         }
     }
 }
