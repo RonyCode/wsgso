@@ -17,10 +17,11 @@ class MessageBrokerController
         try {
             $queueName = $args['queue_name'];
             $server    = [
-                'host' => 'localhost',
-                'port' => 5672,
-                'user' => 'guest',
-                'pass' => 'guest',
+                'host'  => 'localhost',
+                'port'  => 5672,
+                'user'  => 'guest',
+                'pass'  => 'guest',
+                'vhost' => '/'
             ];
 
             Builder::queue($queueName, $server)->receive(function ($msg) {

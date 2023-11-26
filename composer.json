@@ -30,13 +30,14 @@
     "php-di/slim-bridge": "dev-master",
     "ext-http": "*",
     "ext-pdo": "*",
+    "ext-amqp": "*",
+
     "firebase/php-jwt": "dev-main",
     "vlucas/phpdotenv": "^5.5@dev",
     "php-amqplib/php-amqplib": "^3.5",
     "ramsey/uuid": "5.x-dev",
     "joshtronic/php-loremipsum": "dev-master",
     "symfony/console": "7.0.x-dev",
-    "ext-amqp": "*",
     "phpmailer/phpmailer": "dev-master"
   },
   "require-dev": {

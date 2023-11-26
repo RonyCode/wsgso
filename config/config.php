@@ -14,7 +14,7 @@ return static function (App $app) {
 //    // CONFIG OF DATABASE
 //    putenv('DBDRIVE=mysql');
 //    putenv('DBHOST=localhost');
-//    putenv('DBNAME=gsoBackHomologacao');
+//    putenv('DBNAME=wsgsoHomologacao');
 //    putenv('DBUSER=root');
 //    putenv('DBPASS=170286P@ra');
 //

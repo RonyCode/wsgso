@@ -88,9 +88,6 @@ final class UserAuthSignInCase
                 0,
             );
 
-            $this->publishEvents->publish(
-                new UserSignInEvent($usuarioLogado->email, $usuarioLogado->id)
-            );
                 $this->tokenManagerRepository->saveTokenUsuario($objTokenModel) ?? throw new \RuntimeException();
 
 

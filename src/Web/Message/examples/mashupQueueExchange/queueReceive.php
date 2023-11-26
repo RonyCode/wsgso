@@ -9,15 +9,12 @@ use Gso\Ws\Web\Message\Builder;
 require_once __DIR__ . '/../../../../../vendor/autoload.php';
 
 $server = [
-    'host' => 'localhost',
+    'host' => '127.0.0.1',
     'port' => 5672,
     'user' => 'guest',
     'pass' => 'guest',
 ];
 
-
-Builder::queue('queue', $server)->receive(function ($msg, $queueName) use ($server) {
-    Builder::exchange('process.log', $server)->emit("exchange.start", $queueName);
-    echo $msg;
-    Builder::exchange('process.log', $server)->emit("exchange.finish", $queueName);
+Builder::queue('queue', $server)->receive(function ($msg) {
+    var_dump($msg);
 });

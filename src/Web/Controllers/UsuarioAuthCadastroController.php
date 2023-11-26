@@ -5,6 +5,10 @@ namespace Gso\Ws\Web\Controllers;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\InputBoundaryUserAuthSignUp;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
+use Gso\Ws\Context\User\Domains\User\Events\UserSendedEmailSignUp;
+use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent;
+use Gso\Ws\Shared\Event\PublishEvents;
+use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Web\Helper\ResponseError;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,8 +21,8 @@ class UsuarioAuthCadastroController
     use ResponseError;
 
     public function __construct(
-        private UserAuthSignUpCase $usuarioAuthCase,
-        private UserPresentationRepository $usuarioAuthPresentation
+        private readonly UserAuthSignUpCase $usuarioAuthCase,
+        private readonly UserPresentationRepository $usuarioAuthPresentation
     ) {
     }
 
@@ -36,6 +40,7 @@ class UsuarioAuthCadastroController
             $email = htmlentities($request->getParsedBody()['email']);
 
             $inputBoundary = new InputBoundaryUserAuthSignUp($email);
+
             $output        = $this->usuarioAuthCase->execute($inputBoundary);
 
             if (null === $output->token) {
@@ -49,7 +54,7 @@ class UsuarioAuthCadastroController
                     "email" => (string)$output->email,
                     "token" => $output->token
                 ],
-                "message" => 'Cadastrado com sucesso!'
+                "message" => 'Email enviado com sucesso!'
             ];
 
             $response->getBody()->write(json_encode($resut), JSON_THROW_ON_ERROR | 64 | 256);

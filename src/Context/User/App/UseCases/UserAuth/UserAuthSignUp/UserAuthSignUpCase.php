@@ -2,6 +2,10 @@
 
 namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp;
 
+use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
+use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
+use Gso\Ws\Context\User\Domains\User\Events\UserSendedEmailSignUp;
+use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Shared\Event\PublishEvents;
@@ -33,7 +37,6 @@ class UserAuthSignUpCase
                 throw new RuntimeException('Usuário com email já cadastrado!');
             }
 
-
             // CRIA TOKEN PARA CADASTRO POR EMAIL
             $token = (new JwtHandler(900))->jwtEncode(getenv('ISS'), [
                 'email' => $inputValues->email,
@@ -50,8 +53,15 @@ class UserAuthSignUpCase
                 "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.";
             $linkEmail      = getenv('URL_FRONTEND') . '/cadastro-usuario/' . $tokenReplaced;
 
+
             $emailDestination = new Email($inputValues->email);
-            $result           = $emaillHandle->sendMessage(
+
+            $publishEvents = new PublishEvents();
+//            $publishEvents->addListener(new PublishEmailSendedSignUpUserAuth());
+//            $publishEvents->publish(new UserSendedEmailSignUp(new Email($inputValues->email)));
+
+
+            $result = $emaillHandle->sendMessage(
                 $emailDestination,
                 $tituloEmail,
                 $messageContent,

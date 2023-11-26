@@ -2,14 +2,7 @@
 
 namespace Gso\Ws\Web\Message;
 
-use AMQPChannel;
-use AMQPConnection;
-use AMQPEnvelope;
-use AMQPExchange;
-use AMQPQueue;
-use AMQPQueueException;
 use Exception;
-use PhpAmqpLib\Connection\AMQPSSLConnection;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 

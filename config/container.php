@@ -1,5 +1,6 @@
 <?php
 
+use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
 use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
@@ -68,6 +69,10 @@ return [
     // INJECT DEPENDENCY EVENTS
     // ==============================================================
     PublishLogUserSigned::class => static function (ContainerInterface $container) {
+        return $container->get(PublishEvents::class);
+    },
+
+    PublishEmailSendedSignUpUserAuth::class => static function (ContainerInterface $container) {
         return $container->get(PublishEvents::class);
     },
 
