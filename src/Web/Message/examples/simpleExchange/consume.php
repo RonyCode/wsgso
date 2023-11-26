@@ -18,7 +18,7 @@ $callback = function ($msg, $queueName) {
 };
 
 $channel->basic_consume(
-    'queue',
+    'email',
     '',
     false,
     true,

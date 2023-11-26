@@ -57,8 +57,8 @@ class UserAuthSignUpCase
             $emailDestination = new Email($inputValues->email);
 
             $publishEvents = new PublishEvents();
-//            $publishEvents->addListener(new PublishEmailSendedSignUpUserAuth());
-//            $publishEvents->publish(new UserSendedEmailSignUp(new Email($inputValues->email)));
+            $publishEvents->addListener(new PublishEmailSendedSignUpUserAuth());
+            $publishEvents->publish(new UserSendedEmailSignUp(new Email($inputValues->email)));
 
 
             $result = $emaillHandle->sendMessage(

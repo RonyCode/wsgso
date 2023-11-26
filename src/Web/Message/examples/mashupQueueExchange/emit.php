@@ -10,7 +10,7 @@ $server = [
     'user' => 'guest',
     'pass' => 'guest',
 ];
-$queue  = Builder::queue('email_sended', $server);
+$queue  = Builder::queue('email', $server);
 
 $queue->emit(["aaa" => 1]);
 $queue->emit(["aaa" => 2]);
