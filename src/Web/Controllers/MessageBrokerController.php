@@ -34,9 +34,9 @@ class MessageBrokerController
                 ->withStatus(202);
         } catch (\RuntimeException | Exception $e) {
             $result = [
-                'status'  => 'failure',
-                'code'    => 400,
-                'message' => $e->getMessage(),
+                'status'   => 'failure',
+                'code'     => 400,
+                'messages' => $e->getMessage(),
             ];
             $response->getBody()->write(json_encode($result, JSON_THROW_ON_ERROR | 64 | 256));
 

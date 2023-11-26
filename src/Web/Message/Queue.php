@@ -8,10 +8,10 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class Queue
 {
-    private $name;
-    private $conf;
-    private $consumed;
-    private $arrayTest = [];
+    private string $name;
+    private array $conf;
+    private int $consumed = 0;
+    private array $arrayMessages = [];
 
 
     public function __construct($name, $conf)
@@ -96,9 +96,9 @@ class Queue
             $consumer['exclusive'],
             $consumer['nowait'],
             function ($msg) use ($callback) {
-                $this->arrayTest['message'][] = json_decode($msg->body, true, 512, JSON_THROW_ON_ERROR);
+                $this->arrayMessages['messages'][] = json_decode($msg->body, true, 512, JSON_THROW_ON_ERROR);
                 $callback(
-                    $this->arrayTest,
+                    $this->arrayMessages,
                     $this->name
                 );
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);

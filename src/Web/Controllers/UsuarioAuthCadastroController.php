@@ -5,6 +5,7 @@ namespace Gso\Ws\Web\Controllers;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\InputBoundaryUserAuthSignUp;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
+use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
 use Gso\Ws\Context\User\Domains\User\Events\UserSendedEmailSignUp;
 use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent;
 use Gso\Ws\Shared\Event\PublishEvents;
@@ -41,11 +42,12 @@ class UsuarioAuthCadastroController
 
             $inputBoundary = new InputBoundaryUserAuthSignUp($email);
 
-            $output        = $this->usuarioAuthCase->execute($inputBoundary);
+            $output = $this->usuarioAuthCase->execute($inputBoundary);
 
             if (null === $output->token) {
                 return throw new \RuntimeException('Erro ao cadastrar novo usuário!', 256 | 64);
             }
+
 
             $resut = [
                 "status"  => 'success',

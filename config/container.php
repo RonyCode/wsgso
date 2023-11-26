@@ -60,7 +60,7 @@ return [
         );
     },
 
-    BasePathMiddleware::class      => function (ContainerInterface $container) {
+    BasePathMiddleware::class           => function (ContainerInterface $container) {
         return new BasePathMiddleware($container->get(App::class));
     },
 
@@ -68,19 +68,19 @@ return [
     // ==============================================================
     // INJECT DEPENDENCY EVENTS
     // ==============================================================
-    PublishLogUserSigned::class => static function (ContainerInterface $container) {
-        return $container->get(PublishEvents::class);
-    },
-
-    PublishEmailSendedSignUpUserAuth::class => static function (ContainerInterface $container) {
-        return $container->get(PublishEvents::class);
-    },
+//    PublishLogUserSigned::class => static function (ContainerInterface $container) {
+//        return $container->get(PublishEvents::class);
+//    },
+//
+//    PublishEmailSendedSignUpUserAuth::class => static function (ContainerInterface $container) {
+//        return $container->get(PublishEvents::class);
+//    },
 
 
     // ==============================================================
     // INTERFACES DOMAINS GSO
     // ==============================================================
-    UserRepositoryInterface::class => static function (ContainerInterface $container) {
+    UserRepositoryInterface::class      => static function (ContainerInterface $container) {
         return $container->get(UserRepository::class);
     },
     UserAuthRepositoryInterface::class  => static function (ContainerInterface $container) {
@@ -97,7 +97,7 @@ return [
     UserPresentationInterface::class    => static function (ContainerInterface $container) {
         return $container->get(UserPresentationRepository::class);
     },
-    TokenPresentationInterface::class     => static function (ContainerInterface $container) {
+    TokenPresentationInterface::class   => static function (ContainerInterface $container) {
         return $container->get(TokenManagerPresentation::class);
     },
 

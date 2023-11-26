@@ -22,7 +22,7 @@ class PublishEmailSendedSignUpUserAuth extends ListenerEvent
 
 
         //Evento com mensagem registrada no RABBITMQ
-        Builder::queue('emailEnviado', $server)->emit(
+        Builder::queue('email-sended', $server)->emit(
             [
                 "message" =>
                     'Email ' . $event->emailUser() . ' enviado na data ' . $event->moment()->format(
