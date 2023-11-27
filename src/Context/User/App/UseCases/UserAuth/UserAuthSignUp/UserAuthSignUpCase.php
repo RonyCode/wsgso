@@ -51,7 +51,7 @@ class UserAuthSignUpCase
             $tituloEmail    = "Confirmação de Cadastro";
             $messageContent =
                 "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.";
-            $linkEmail      = getenv('URL_FRONTEND') . '/cadastro-usuario?token=' . $tokenReplaced;
+            $linkEmail      = getenv('URL_FRONTEND') . '/cadastro-usuario/' . $tokenReplaced;
 
             $publishEvents = new PublishEvents();
             $publishEvents->addListener(new PublishEmailSendedSignUpUserAuth());
