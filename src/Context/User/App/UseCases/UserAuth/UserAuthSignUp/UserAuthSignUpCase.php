@@ -50,7 +50,8 @@ class UserAuthSignUpCase
             $emaillHandle   = new EmailHandler();
             $tituloEmail    = "Confirmação de Cadastro";
             $messageContent =
-                "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.";
+                "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.
+                 Este link expira em 15 minutos.";
             $linkEmail      = getenv('URL_FRONTEND') . '/cadastro-usuario/' . $tokenReplaced;
 
             $publishEvents = new PublishEvents();
