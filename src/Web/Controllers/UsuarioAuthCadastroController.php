@@ -2,6 +2,7 @@
 
 namespace Gso\Ws\Web\Controllers;
 
+use Fiber;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\InputBoundaryUserAuthSignUp;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
@@ -11,15 +12,22 @@ use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent;
 use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Web\Helper\ResponseError;
+use Gso\Ws\Web\Message\Builder;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use React\EventLoop\Loop;
+use React\Promise\Deferred;
 
 use function DI\string;
+use function React\Async\async;
+use function React\Async\await;
 
 class UsuarioAuthCadastroController
 {
     use ResponseError;
+
+    private $output;
 
     public function __construct(
         private readonly UserAuthSignUpCase $usuarioAuthCase,
@@ -45,7 +53,7 @@ class UsuarioAuthCadastroController
             $output = $this->usuarioAuthCase->execute($inputBoundary);
 
             if (null === $output->token) {
-                return throw new \RuntimeException('Erro ao cadastrar novo usuário!', 256 | 64);
+                throw new \RuntimeException('Erro ao cadastrar novo usuário!', 256 | 64);
             }
 
 

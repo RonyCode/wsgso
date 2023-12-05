@@ -123,10 +123,16 @@ class Queue
         $connection->close();
     }
 
-    public function teste($data)
+    public function teste()
     {
-        $array[] = $data;
+        $connection = $this->createConnection();
+        $channel    = $connection->channel();
+        [$queue, $messageCount, $consumerCount] = $channel->queue_declare($this->name, true);
 
-        return $data;
+        var_dump($queue);
+        var_dump($consumerCount);
+        var_dump($messageCount);
+
+        return $messageCount;
     }
 }

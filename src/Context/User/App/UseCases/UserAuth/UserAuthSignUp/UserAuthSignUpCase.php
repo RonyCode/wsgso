@@ -3,19 +3,14 @@
 namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp;
 
 use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
-use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
 use Gso\Ws\Context\User\Domains\User\Events\UserSendedEmailSignUp;
-use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
-use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Web\Helper\EmailHandler;
 use Gso\Ws\Web\Helper\JwtHandler;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
-
-use function DI\string;
 
 class UserAuthSignUpCase
 {
@@ -34,7 +29,8 @@ class UserAuthSignUpCase
             $userAuthFounded = $this->usuarioAuthRepository->getUserAuthByEmail($inputValues->email);
             //            VERIFICA SE JÁ EXISTE USUÁRIO CADASTRADO
             if (! empty($userAuthFounded->id)) {
-                throw new RuntimeException('Usuário com email já cadastrado!');
+                http_response_code(400);
+                throw new RuntimeException('Usuário com email já cadastrado!', 256 | 64);
             }
 
             // CRIA TOKEN PARA CADASTRO POR EMAIL
@@ -46,20 +42,21 @@ class UserAuthSignUpCase
             //PREPARA TOKEN PARA ENVIAR COM URL VALIDA AO EMAIL
             $tokenReplaced = str_replace('.', '+', $token);
 
-            // MONTA E ENVIA EMAIL
-            $emaillHandle   = new EmailHandler();
-            $tituloEmail    = "Confirmação de Cadastro";
-            $messageContent =
-                "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.
-                 Este link expira em 15 minutos.";
-            $linkEmail      = getenv('URL_FRONTEND') . '/cadastro-usuario/' . $tokenReplaced;
 
+            //CRIA EVENTO E ENVIA MENSAGEM PARA RABBITMQ
             $publishEvents = new PublishEvents();
             $publishEvents->addListener(new PublishEmailSendedSignUpUserAuth());
             $publishEvents->publish(new UserSendedEmailSignUp(new Email($inputValues->email)));
 
             fastcgi_finish_request();
 
+            // MONTA E ENVIA EMAIL
+            $emaillHandle     = new EmailHandler();
+            $tituloEmail      = "Confirmação de Cadastro";
+            $messageContent   =
+                "Email para confirmação de cadastro, por favor clique no link abaixo para finalizar seu cadastro.
+                Este link expira em 15 minutos.";
+            $linkEmail        = getenv('URL_FRONTEND') . '/cadastro-usuario/' . $tokenReplaced;
             $emailDestination = new Email($inputValues->email);
             $result           = $emaillHandle->sendMessage(
                 $emailDestination,

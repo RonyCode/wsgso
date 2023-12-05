@@ -6,6 +6,8 @@ require __DIR__ . '/../../../../../vendor/autoload.php';
 include __DIR__ . '/../../../../../config/config.php';
 
 use Dotenv\Dotenv;
+use Exception;
+use Fiber;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAuthSignIn;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Shared\ValuesObjects\Email;
@@ -20,10 +22,20 @@ use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use React\EventLoop\Loop;
+use React\Http\Browser;
+use React\Http\HttpServer;
+use React\Promise\Deferred;
+use React\Socket\SocketServer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function React\Async\async;
+use function React\Async\await;
+use function React\Async\delay;
 
 class UserSignInTest extends TestCase
 {
@@ -35,33 +47,41 @@ class UserSignInTest extends TestCase
     {
         $dotenv = Dotenv::createUnsafeImmutable('../../../../../');
         $dotenv->load();
-
-        $email        = new Email('ronypc@outlook.com');
-        $emaillHandle = new EmailHandler();
-
-        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9+
-        eyJpc3MiOiIvaG9tZS9yb255L3dlYi9nc28tYmFja2FuZCIsImF1ZCI6Ii9ob21lL3Jvbnkvd2ViL2dzby1iYWNrYW5kIiwiaWF0IjoxNjkzOTU2MjM0LCJleHAiOjE2OTM5NTc0MzQsImRhdGEiOnsiY29kX3VzdWFyaW8iOjEsIm5vbWUiOiJSb255IHRlc3RlIiwiZW1haWwiOnt9LCJpbWFnZSI6Imh0dHA6Ly9nc29hcGkubG9jYWxob3N0L2ltZy9hdmF0YXIuc3ZnIiwiYWNjZXNzX3Rva2VuIjp0cnVlfX0
-        +pP0Vu3jNFn5Q8JyhwsXwOLYYXFXOEBgzNJTZCE0Oys';
-        $tituloEmail    = "Confirmação de Cadastro";
-        $messageContent =
-            "Email para confirmação de cadastro, por favor clique no link para finalizar seu cadastro.";
-        $linkEmail      = getenv('URL_DEVELOPMENT') . '/api/auth/pre-cadastro/' . $token;
-
-        $emaillHandle->sendMessage(
-            $email,
-            $tituloEmail,
-            $messageContent,
-            $linkEmail,
-            true,
-        );
-
-//        $broker = new RabbitTopic();
 //
-//        $broker->emit();
+//        $email        = new Email('ronypc@outlook.com');
+//        $emaillHandle = new EmailHandler();
+//
+//        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9+
+//        eyJpc3MiOiIvaG9tZS9yb255L3dlYi9nc28tYmFja2FuZCIsImF1ZCI6Ii9ob21lL3Jvbnkvd2ViL2dzby1iYWNrYW5kIiwiaWF0IjoxNjkzOTU2MjM0LCJleHAiOjE2OTM5NTc0MzQsImRhdGEiOnsiY29kX3VzdWFyaW8iOjEsIm5vbWUiOiJSb255IHRlc3RlIiwiZW1haWwiOnt9LCJpbWFnZSI6Imh0dHA6Ly9nc29hcGkubG9jYWxob3N0L2ltZy9hdmF0YXIuc3ZnIiwiYWNjZXNzX3Rva2VuIjp0cnVlfX0
+//        +pP0Vu3jNFn5Q8JyhwsXwOLYYXFXOEBgzNJTZCE0Oys';
+//        $tituloEmail    = "Confirmação de Cadastro";
+//        $messageContent =
+//            "Email para confirmação de cadastro, por favor clique no link para finalizar seu cadastro.";
+//        $linkEmail      = getenv('URL_DEVELOPMENT') . '/api/auth/pre-cadastro/' . $token;
+//
+//        $emaillHandle->sendMessage(
+//            $email,
+//            $tituloEmail,
+//            $messageContent,
+//            $linkEmail,
+//            true,
+//        );
 
-//        $broker->sendMessageAMPQ('email', 'Hello World!');
+
+// $ composer require react/http react/socket # install example using Composer
+// $ php example.php # run example on command line, requires no additional web server
 
 
+        $http = new HttpServer(function (Psr\Http\Message\ServerRequestInterface $request) {
+            return React\Http\Message\Response::plaintext(
+                "Hello World!\n"
+            );
+        });
+
+        $socket = new SocketServer('127.0.0.1:80');
+        $http->listen($socket);
+
+        echo "Server running at http://wsgso.localhost" . PHP_EOL;
 //        $adduser =
 //            (new UserAuth()
 //            )

@@ -38,7 +38,13 @@
     "ramsey/uuid": "5.x-dev",
     "joshtronic/php-loremipsum": "dev-master",
     "symfony/console": "7.0.x-dev",
-    "phpmailer/phpmailer": "dev-master"
+    "phpmailer/phpmailer": "dev-master",
+    "react/async": "^4.1.0",
+    "react/event-loop": "^1.4.0",
+    "react/http": "1.x-dev",
+    "react/socket": "^1.14",
+    "react/promise": "^3",
+    "react/promise-timer": "^1.10"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
