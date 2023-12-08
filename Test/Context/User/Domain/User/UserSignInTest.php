@@ -71,17 +71,6 @@ class UserSignInTest extends TestCase
 // $ composer require react/http react/socket # install example using Composer
 // $ php example.php # run example on command line, requires no additional web server
 
-
-        $http = new HttpServer(function (Psr\Http\Message\ServerRequestInterface $request) {
-            return React\Http\Message\Response::plaintext(
-                "Hello World!\n"
-            );
-        });
-
-        $socket = new SocketServer('127.0.0.1:80');
-        $http->listen($socket);
-
-        echo "Server running at http://wsgso.localhost" . PHP_EOL;
 //        $adduser =
 //            (new UserAuth()
 //            )

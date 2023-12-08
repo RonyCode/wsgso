@@ -29,7 +29,7 @@ class RefreshTokenByTokenCase
                 throw new \RuntimeException('Refresh token expirado ou inválido');
             }
 
-            $tokenSalvo = $this->tokenRepository->selectTokenByCodUsuario($tokenDecoded->data->id);
+            $tokenSalvo = $this->tokenRepository->selectTokenByCodUsuario($tokenDecoded->data->id_user);
 
             $verifyRefreshToken = (new JwtHandler())->jwtDecode(
                 $tokenSalvo->refreshToken
@@ -50,7 +50,7 @@ class RefreshTokenByTokenCase
             //           Refresh token valido devolve novo access-token com 15 min
             $tokenNovo = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
                 'id_user'      => $usuario->id,
-                'email'        => $usuario->email,
+                'email'        => (string)$usuario->email,
                 'access_token' => true,
             ]);
 

@@ -53,7 +53,7 @@ class UsuarioAuthCadastroController
             $output = $this->usuarioAuthCase->execute($inputBoundary);
 
             if (null === $output->token) {
-                throw new \RuntimeException('Erro ao cadastrar novo usuário!', 256 | 64);
+                throw new \RuntimeException('Erro ao cadastrar novo usuário, !', 256 | 64);
             }
 
 

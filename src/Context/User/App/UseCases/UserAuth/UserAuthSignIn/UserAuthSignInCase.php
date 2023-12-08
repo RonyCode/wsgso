@@ -59,14 +59,14 @@ final class UserAuthSignInCase
 
             // CRIA ACCESS TOKEN
             $token = (new JwtHandler(1200))->jwtEncode(getenv('ISS'), [
-                'id'           => $usuarioLogado->id,
+                'id_user'      => $usuarioLogado->id,
                 'email'        => (string)$usuarioLogado->email,
                 'access_token' => true,
             ]);
 
             // CRIA REFRESH TOKEN
             $refreshToken = (new JwtHandler(3600 * 12))->jwtEncode(getenv('ISS'), [
-                'id'           => $usuarioLogado->id,
+                'id_user'      => $usuarioLogado->id,
                 'access_token' => false,
             ]);
 
