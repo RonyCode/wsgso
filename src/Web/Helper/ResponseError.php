@@ -21,7 +21,6 @@ trait ResponseError
         int $code = 400
     ): false|string {
         http_response_code($code);
-
         exit(
             json_encode(
                 [

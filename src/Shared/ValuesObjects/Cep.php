@@ -19,6 +19,8 @@ final class Cep
                 'status'  => 'ERROR',
                 'message' => 'Cep inválido',
             ], JSON_THROW_ON_ERROR | 64 | 256);
+            exit();
+
         }
     }
 

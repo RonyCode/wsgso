@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Context\User\Domains\User;
 
-use Gso\Ws\Shared\ValuesObjects\Cpf;
+use Gso\Ws\Context\User\Domains\User\Enums\RoleProfile;
 use Gso\Ws\Shared\ValuesObjects\DateMysqlToFormatBr;
-use Gso\Ws\Shared\ValuesObjects\Email;
-use Gso\Ws\Shared\ValuesObjects\Phone;
 use JsonException;
 
 final readonly class Profile
@@ -17,7 +15,7 @@ final readonly class Profile
         public ?string $role = null,
         public ?DateMysqlToFormatBr $dateGranted = null,
         public ?DateMysqlToFormatBr $dateExpires = null,
-        public ?int $grantedByUser = null,
+        public ?int $grantedByIdUser = null,
         public ?int $excluded = null
     ) {
     }
@@ -30,7 +28,7 @@ final readonly class Profile
         ?string $role = null,
         ?string $dateGranted = null,
         ?string $dateExpires = null,
-        ?int $grantedByUser = null,
+        ?int $grantedByIdUser = null,
         ?int $excluded = null
     ): self {
         return new Profile(
@@ -38,7 +36,7 @@ final readonly class Profile
             (RoleProfile::from($role))->name,
             new DateMysqlToFormatBr($dateGranted),
             new DateMysqlToFormatBr($dateExpires),
-            $grantedByUser,
+            $grantedByIdUser,
             $excluded
         );
     }

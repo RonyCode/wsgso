@@ -12,7 +12,7 @@ use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class UsuarioAuthController
+final class UserAuthController
 {
     use ResponseError;
 

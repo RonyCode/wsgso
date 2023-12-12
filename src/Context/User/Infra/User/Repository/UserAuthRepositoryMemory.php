@@ -129,4 +129,10 @@ class UserAuthRepositoryMemory implements UserAuthRepositoryInterface
 
         return $userFiltered[0];
     }
+
+    #[\Override] public function saveNewUserAuth(UserAuth $userAuth): UserAuth
+    {
+        // TODO: Implement saveNewUserAuth() method.
+        return $userAuth;
+    }
 }

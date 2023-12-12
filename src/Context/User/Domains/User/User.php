@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Context\User\Domains\User;
 
+use AllowDynamicProperties;
 use JsonException;
 
-final class User
+#[AllowDynamicProperties] final class User
 {
     public function __construct(
         readonly public ?int $id = null,
         private ?int $userAuthId = null,
+        private ?int $addressId = null,
         private ?int $accountId = null,
         private ?int $profileId = null,
         readonly public ?int $excluded = null,
@@ -20,6 +22,11 @@ final class User
     public function getUserAuthId(): ?int
     {
         return $this->userAuthId;
+    }
+
+    public function getUserAddressId(): ?int
+    {
+        return $this->addressId;
     }
 
     public function getAccountId(): ?int
@@ -40,6 +47,9 @@ final class User
         return Account::accountSerialize();
     }
 
+    /**
+     * @throws JsonException
+     */
     public function getUserAuth(): UserAuth
     {
         return UserAuth::userAuthSerialize();
@@ -58,7 +68,7 @@ final class User
     ): self {
         $this->profileId = Profile::profileSerialize(
             $id,
-            $role,
+            mb_strtolower($role),
             $dateGranted,
             $dateExpires,
             $grantedByUser,
@@ -73,7 +83,6 @@ final class User
      */
     public function addAccount(
         ?int $id = null,
-        ?int $userId = null,
         ?string $nome = null,
         ?string $email = null,
         ?string $cpf = null,
@@ -83,7 +92,6 @@ final class User
     ): self {
         $this->accountId = Account::accountSerialize(
             $id,
-            $userId,
             $nome,
             $email,
             $cpf,
@@ -100,6 +108,7 @@ final class User
      * @throws JsonException
      */
     public function addAddress(
+        ?int $id = null,
         ?string $logradouro = null,
         ?string $numero = null,
         ?string $cep = null,
@@ -107,9 +116,11 @@ final class User
         ?string $bairro = null,
         ?string $cidade = null,
         ?string $estado = null,
+        ?string $shortName = null,
         ?int $excluded = null
     ): self {
-        (new Account())->addAddress(
+        $this->addressId = Address::addressSerialize(
+            $id,
             $logradouro,
             $numero,
             $cep,
@@ -117,8 +128,9 @@ final class User
             $bairro,
             $cidade,
             $estado,
+            $shortName,
             $excluded
-        );
+        )->id;
 
         return $this;
     }
@@ -130,7 +142,7 @@ final class User
         ?int $idUserAuth = null,
         ?string $email = null,
         ?string $pass = null,
-        ?string $passExternal = null,
+        ?int $isUserExternal = null,
         ?string $dateCriation = null,
         ?int $excluded = null,
     ): self {
@@ -138,25 +150,9 @@ final class User
             $idUserAuth,
             $email,
             $pass,
-            $passExternal,
+            $isUserExternal,
             $dateCriation,
             $excluded
-        )->id;
-
-        return $this;
-    }
-
-
-    /**
-     * @throws JsonException
-     */
-    public function userSignIn(
-        ?string $email = null,
-        ?string $password = null,
-    ): self {
-        $this->userAuthId = (new UserAuth())->signIn(
-            $email,
-            $password
         )->id;
 
         return $this;

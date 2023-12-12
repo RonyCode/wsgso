@@ -1,8 +1,8 @@
 <?php
 
-namespace Gso\Ws\Context\User\Domains\User;
+namespace Gso\Ws\Context\User\Domains\User\Enums;
 
-enum RoleProfile : string
+enum RoleProfile: string
 {
     case USER = 'user';
     case MANAGER = 'manager';

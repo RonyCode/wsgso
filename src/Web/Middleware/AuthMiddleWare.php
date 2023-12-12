@@ -38,12 +38,12 @@ class AuthMiddleWare
             $responseDecode = (new JwtHandler())->jwtDecode($token);
 
             if (is_array($responseDecode) || false === $responseDecode->data->access_token) {
-                throw new \RuntimeException();
+                throw new \RuntimeException('Token Inválido ou expirado');
             }
 
             return $handler->handle($request);
         } catch (\RuntimeException | \JsonException  $e) {
-            $this->responseCatchError('Sem autorização para realizar a operação', 401);
+            $result = $this->responseCatchError($e->getMessage(), 401);
         }
     }
 }

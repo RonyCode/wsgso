@@ -1,6 +1,6 @@
 <?php
 
-namespace Gso\Ws\Context\User\App\UseCases\User\UserAuthSave;
+namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSave;
 
 class InputBoundaryUserSave
 {

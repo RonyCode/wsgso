@@ -2,9 +2,9 @@
 
 namespace Gso\Ws\Context\User\Domains\User\Interface;
 
-use Gso\Ws\Context\User\Domains\User\UserAuth;
+use Gso\Ws\Context\User\Domains\User\User;
 
 interface UserRepositoryInterface
 {
-    public function getUsuarioAuthById(int $codUsuario): UserAuth;
+    public function saveNewUser(User $user): User;
 }

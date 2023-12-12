@@ -3,9 +3,6 @@
 namespace Gso\Ws\Context\User\Domains\User;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
-use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
-use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
-use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
 use Gso\Ws\Shared\ValuesObjects\DateMysqlToFormatBr;
 use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Shared\ValuesObjects\Pass;

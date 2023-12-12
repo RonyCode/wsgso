@@ -14,9 +14,12 @@ final class Cpf
     public function __construct(?string $cpf = null)
     {
         try {
-            if (($cpf !== null && $cpf !== '') && ! $this->validaCPF($cpf)) {
-                throw new \RuntimeException();
+            if (($cpf !== null && $cpf !== '')) {
+                if (! $this->validaCPF($cpf)) {
+                    throw new \RuntimeException();
+                }
             }
+            $this->cpf = $cpf;
         } catch (RuntimeException) {
             echo json_encode([
                 "code"    => 404,

@@ -1,18 +1,21 @@
 <?php
 
-use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
-use Gso\Ws\Context\User\Domains\User\Events\PublishLogUserSigned;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Interface\UserAccountRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Interface\UserAddressRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Interface\UserProfileRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\Interface\TokenPresentationInterface;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
 use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\UserAccountRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\UserAddressRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAuthRepository;
+use Gso\Ws\Context\User\Infra\User\Repository\UserProfileRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
-use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Web\Message\interface\RabbitMQInterface;
 use Gso\Ws\Web\Message\repository\RabbitMQRepository;
 use Gso\Ws\Web\Presentation\TokenManagerPresentation;
@@ -66,18 +69,6 @@ return [
 
 
     // ==============================================================
-    // INJECT DEPENDENCY EVENTS
-    // ==============================================================
-//    PublishLogUserSigned::class => static function (ContainerInterface $container) {
-//        return $container->get(PublishEvents::class);
-//    },
-//
-//    PublishEmailSendedSignUpUserAuth::class => static function (ContainerInterface $container) {
-//        return $container->get(PublishEvents::class);
-//    },
-
-
-    // ==============================================================
     // INTERFACES DOMAINS GSO
     // ==============================================================
     UserRepositoryInterface::class      => static function (ContainerInterface $container) {
@@ -90,14 +81,26 @@ return [
         return $container->get(TokenUserRepository::class);
     },
 
+    UserAddressRepositoryInterface::class => static function (ContainerInterface $container) {
+        return $container->get(UserAddressRepository::class);
+    },
+
+    UserAccountRepositoryInterface::class => static function (ContainerInterface $container) {
+        return $container->get(UserAccountRepository::class);
+    },
+
+    UserProfileRepositoryInterface::class => static function (ContainerInterface $container) {
+        return $container->get(UserProfileRepository::class);
+    },
+
 
     // ==============================================================
     // INTERFACES PRESENTATION  GSO
     // ==============================================================
-    UserPresentationInterface::class    => static function (ContainerInterface $container) {
+    UserPresentationInterface::class      => static function (ContainerInterface $container) {
         return $container->get(UserPresentationRepository::class);
     },
-    TokenPresentationInterface::class   => static function (ContainerInterface $container) {
+    TokenPresentationInterface::class     => static function (ContainerInterface $container) {
         return $container->get(TokenManagerPresentation::class);
     },
 

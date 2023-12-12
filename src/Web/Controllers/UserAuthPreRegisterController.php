@@ -2,28 +2,14 @@
 
 namespace Gso\Ws\Web\Controllers;
 
-use Fiber;
-use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\InputBoundaryUserAuthSignUp;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
-use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
-use Gso\Ws\Context\User\Domains\User\Events\UserSendedEmailSignUp;
-use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent;
-use Gso\Ws\Shared\Event\PublishEvents;
-use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Web\Helper\ResponseError;
-use Gso\Ws\Web\Message\Builder;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use React\EventLoop\Loop;
-use React\Promise\Deferred;
 
-use function DI\string;
-use function React\Async\async;
-use function React\Async\await;
-
-class UsuarioAuthCadastroController
+class UserAuthPreRegisterController
 {
     use ResponseError;
 

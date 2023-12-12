@@ -176,4 +176,9 @@ final class UserRepository implements UserRepositoryInterface
             return new User();
         }
     }
+
+    #[\Override] public function saveNewUser(User $user): User
+    {
+        // TODO: Implement saveNewUser() method.
+    }
 }

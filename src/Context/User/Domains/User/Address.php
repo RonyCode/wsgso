@@ -10,13 +10,15 @@ use JsonException;
 final readonly class Address
 {
     public function __construct(
-        public ?string $logradouro = null,
-        public ?string $numero = null,
-        public ?Cep $cep = null,
-        public ?string $complemento = null,
-        public ?string $bairro = null,
-        public ?string $cidade = null,
-        public ?string $estado = null,
+        public ?int $id = null,
+        public ?string $address = null,
+        public ?string $number = null,
+        public ?Cep $zipCode = null,
+        public ?string $complement = null,
+        public ?string $district = null,
+        public ?string $city = null,
+        public ?string $state = null,
+        public ?string $shortName = null,
         public ?int $excluded = null,
     ) {
     }
@@ -25,23 +27,27 @@ final readonly class Address
      * @throws JsonException
      */
     public static function addressSerialize(
-        ?string $logradouro,
-        ?string $numero,
-        ?string $cep,
-        ?string $complemento,
-        ?string $bairro,
-        ?string $cidade,
-        ?string $estado,
-        ?int $excluded
+        ?int $id = null,
+        ?string $address = null,
+        ?string $number = null,
+        ?string $zipCode = null,
+        ?string $complement = null,
+        ?string $district = null,
+        ?string $city = null,
+        ?string $state = null,
+        ?string $shortName = null,
+        ?int $excluded = null
     ): self {
         return new Address(
-            $logradouro,
-            $numero,
-            new Cep($cep),
-            $complemento,
-            $bairro,
-            $cidade,
-            $estado,
+            $id,
+            $address,
+            $number,
+            new Cep($zipCode),
+            $complement,
+            $district,
+            $city,
+            $state,
+            $shortName,
             $excluded
         );
     }
