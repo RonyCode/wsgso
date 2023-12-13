@@ -8,19 +8,23 @@ use Gso\Ws\Web\Helper\ResponseError;
 
 final class DateMysqlToFormatBr
 {
-    public function __construct(private ?string $date = null)
+    private ?string $date;
+
+    public function __construct(?string $date = null)
     {
         try {
             if (null !== $date && '' !== $date) {
                 if (! $this->dateBr($date)) {
-                    throw new \RuntimeException('Formato de data deve seguir exatamente este formato 9999-99-99');
+                    throw new \DomainException('Formato de data deve seguir exatamente este formato 9999-99-99');
                 }
+                $this->date = $date;
             }
-        } catch (\RuntimeException $e) {
+        } catch (\DomainException $e) {
             echo json_encode([
                 "status"  => "ERROR",
                 "message" => $e->getMessage()
             ], JSON_THROW_ON_ERROR);
+            exit();
         }
     }
 

@@ -23,21 +23,14 @@ final readonly class Profile
     /**
      * @throws JsonException
      */
-    public static function profileSerialize(
-        ?int $id = null,
-        ?string $role = null,
-        ?string $dateGranted = null,
-        ?string $dateExpires = null,
-        ?int $grantedByIdUser = null,
-        ?int $excluded = null
-    ): self {
-        return new Profile(
-            $id,
-            (RoleProfile::from($role))->name,
-            new DateMysqlToFormatBr($dateGranted),
-            new DateMysqlToFormatBr($dateExpires),
-            $grantedByIdUser,
-            $excluded
-        );
+    public function __clone(): void
+    {
+        $this->dateGranted = new DateMysqlToFormatBr($this->dateGranted);
+        $this->dateExpires = new DateMysqlToFormatBr($this->dateExpires);
+    }
+
+    public function serializeProfile(): Profile
+    {
+        return clone $this;
     }
 }

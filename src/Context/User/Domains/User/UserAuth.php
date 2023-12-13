@@ -15,32 +15,27 @@ final readonly class UserAuth
 
     public function __construct(
         public ?int $id = null,
-        public ?Email $email = null,
-        public ?Pass $password = null,
+        public ?string $email = null,
+        public ?string $password = null,
         public ?int $isUserExternal = null,
-        public ?DateMysqlToFormatBr $dateCriation = null,
+        public ?string $dateCriation = null,
         public ?int $excluded = null,
     ) {
     }
 
+
     /**
      * @throws JsonException
      */
-    public static function userAuthSerialize(
-        ?int $id = null,
-        ?string $email = null,
-        ?string $pass = null,
-        ?int $isUserExternal = null,
-        ?string $dateCriation = null,
-        ?int $excluded = null,
-    ): self {
-        return new UserAuth(
-            $id ?? null,
-            new Email($email) ?? null,
-            new Pass($pass) ?? null,
-            $isUserExternal ?? null,
-            new DateMysqlToFormatBr($dateCriation) ?? null,
-            $excluded ?? null,
-        );
+    public function __clone()
+    {
+        $this->email        = new Email($this->email);
+        $this->password     = new Pass($this->password);
+        $this->dateCriation = new DateMysqlToFormatBr($this->dateCriation);
+    }
+
+    public function serializeUserAuth(): UserAuth|static
+    {
+        return clone $this;
     }
 }

@@ -1,32 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Gso\Ws\Shared\ValuesObjects;
 
-use Gso\Ws\Web\Helper\ResponseError;
-use RuntimeException;
+use DomainException;
 
 final class Cep
 {
-    public function __construct(public ?string $cep = null)
+    public function __construct(private ?string $cep = null)
     {
         try {
-            if (($this->cep !== null && $this->cep !== '') && ! $this->validaCep($cep)) {
-                throw new \RuntimeException();
+            if (($cep !== null && $cep !== '') && ! $this->validaCep($cep)) {
+                throw new \DomainException();
             }
-        } catch (RuntimeException) {
+        } catch (DomainException) {
             echo json_encode([
                 "code"    => 404,
                 'status'  => 'ERROR',
                 'message' => 'Cep inválido',
             ], JSON_THROW_ON_ERROR | 64 | 256);
             exit();
-
         }
     }
 
-    public function validaCep($cep = null): bool
+    public function validaCep(?string $cep = null): bool
     {
-        return preg_match('/^[0-9]{8}$/', $cep);
+        return preg_match('/^[0-9]{5}\-?[0-9]{3}$/', $cep) === 1;
     }
 
     public function __toString(): string

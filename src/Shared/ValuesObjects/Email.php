@@ -15,8 +15,8 @@ final class Email
     {
         try {
             if (null !== $email && '' !== $email) {
-                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new DomainException('Email is not valid');
+                if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new DomainException();
                 }
 
                 $this->email = $email;
@@ -27,6 +27,7 @@ final class Email
                 'status'  => 'ERROR',
                 'message' => 'Formato de email nâo suportado',
             ], JSON_THROW_ON_ERROR | 64 | 256);
+            exit();
         }
     }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Shared\ValuesObjects;
 
+use DomainException;
 use RuntimeException;
 
 final readonly class Pass
@@ -13,14 +14,15 @@ final readonly class Pass
         try {
             if (null !== $this->senha && '' !== $this->senha) {
                 if (! $this->validatePass($this->senha)) {
-                    throw new RuntimeException();
+                    throw new \DomainException();
                 }
             }
-        } catch (RuntimeException) {
+        } catch (DomainException) {
             echo json_encode([
                 "status"  => "ERROR",
                 "message" => "senha deve conter no mínimo 8 caracteres e ao menos 1 letra "
             ], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | 64);
+            exit();
         }
     }
 

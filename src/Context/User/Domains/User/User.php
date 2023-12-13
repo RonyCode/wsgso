@@ -11,33 +11,30 @@ use JsonException;
 {
     public function __construct(
         readonly public ?int $id = null,
-        private ?int $userAuthId = null,
-        private ?int $addressId = null,
-        private ?int $accountId = null,
-        private ?int $profileId = null,
+        readonly public ?int $userAuthId = null,
+        readonly public ?Address $address = null,
+        readonly public ?int $accountId = null,
+        readonly public ?int $profileId = null,
         readonly public ?int $excluded = null,
     ) {
     }
 
-    public function getUserAuthId(): ?int
+
+    public function __clone(): void
     {
-        return $this->userAuthId;
+        $this->userAuthId =  clone $this->userAuthId;
+        $this->accountId  =  clone $this->accountId;
+        $this->profileId  =  clone $this->profileId;
     }
 
-    public function getUserAddressId(): ?int
+
+
+
+    public function getUserAddress(): ?Address
     {
-        return $this->addressId;
+        return $this->address;
     }
 
-    public function getAccountId(): ?int
-    {
-        return $this->accountId;
-    }
-
-    public function getProfileId(): ?int
-    {
-        return $this->profileId;
-    }
 
     /**
      * @throws JsonException
@@ -52,7 +49,7 @@ use JsonException;
      */
     public function getUserAuth(): UserAuth
     {
-        return UserAuth::userAuthSerialize();
+        return new UserAuth();
     }
 
     /**
@@ -66,7 +63,9 @@ use JsonException;
         ?int $grantedByUser = null,
         ?int $excluded = null
     ): self {
-        $this->profileId = Profile::profileSerialize(
+
+        $clonde = clone new $this;
+        $clonde->profileId =   Profile::profileSerialize(
             $id,
             mb_strtolower($role),
             $dateGranted,

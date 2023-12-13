@@ -10,6 +10,11 @@ use Exception;
 use Fiber;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAuthSignIn;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
+use Gso\Ws\Context\User\Domains\User\Account;
+use Gso\Ws\Context\User\Domains\User\Address;
+use Gso\Ws\Context\User\Domains\User\UserAuth;
+use Gso\Ws\Shared\ValuesObjects\Cep;
+use Gso\Ws\Shared\ValuesObjects\Cpf;
 use Gso\Ws\Shared\ValuesObjects\Email;
 use Gso\Ws\Web\Helper\EmailHandler;
 use Gso\Ws\Web\Message\BrokerConsumerMessager;
@@ -47,11 +52,28 @@ class UserSignInTest extends TestCase
     {
         $dotenv = Dotenv::createUnsafeImmutable('../../../../../');
         $dotenv->load();
-//
-//        $email        = new Email('ronypc@outlook.com');
+
+
+        $addre =  (new Address(
+            1,
+            'ronya@teste.com',
+            'rony@rony.com',
+            '77060046',
+            '(99) 99999-9999',
+            '2022-01-01',
+            0,
+        ))->serializeAddress();
+//        $userAuth = new Account(1, 'ronya@teste . com', 'rony@rony . com', '016.805.621 - 69', '(
+
+
+//$cpf = new Cep('77060046');
+//$cep = new Cpf('016.805.621 - 69');
+        var_dump($addre);
+//        var_dump($cpf);
+//        $email        = new Email('ronypc@outlook . com');
 //        $emaillHandle = new EmailHandler();
 //
-//        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9+
+//        $token          = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9 +
 //        eyJpc3MiOiIvaG9tZS9yb255L3dlYi9nc28tYmFja2FuZCIsImF1ZCI6Ii9ob21lL3Jvbnkvd2ViL2dzby1iYWNrYW5kIiwiaWF0IjoxNjkzOTU2MjM0LCJleHAiOjE2OTM5NTc0MzQsImRhdGEiOnsiY29kX3VzdWFyaW8iOjEsIm5vbWUiOiJSb255IHRlc3RlIiwiZW1haWwiOnt9LCJpbWFnZSI6Imh0dHA6Ly9nc29hcGkubG9jYWxob3N0L2ltZy9hdmF0YXIuc3ZnIiwiYWNjZXNzX3Rva2VuIjp0cnVlfX0
 //        +pP0Vu3jNFn5Q8JyhwsXwOLYYXFXOEBgzNJTZCE0Oys';
 //        $tituloEmail    = "Confirmação de Cadastro";

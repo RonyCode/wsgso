@@ -4,66 +4,62 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Shared\ValuesObjects;
 
+use DomainException;
 use Gso\Ws\Web\Helper\ResponseError;
 use RuntimeException;
 
 final class Cpf
 {
-    private ?string $cpf;
-
-    public function __construct(?string $cpf = null)
+    public function __construct(private ?string $cpf = null)
     {
         try {
             if (($cpf !== null && $cpf !== '')) {
-                if (! $this->validaCPF($cpf)) {
-                    throw new \RuntimeException();
+                if (! $this->validateCPF($cpf)) {
+                    throw new \DomainException();
                 }
             }
-            $this->cpf = $cpf;
-        } catch (RuntimeException) {
+        } catch (DomainException) {
             echo json_encode([
                 "code"    => 404,
                 'status'  => 'ERROR',
                 'message' => 'Cpf inválido',
             ], JSON_THROW_ON_ERROR | 64 | 256);
+            exit();
         }
     }
 
     public function __toString(): string
     {
-        return $this->cpf ?? '';
+        $cpfSanitarized = preg_replace('/[\D]{0,9}/', '', $this->cpf);
+
+        return $this->cpf = $cpfSanitarized ?? '';
     }
 
-    public function validaCPF(string $cpf = null): bool
+    private function validateCPF($number): bool
     {
-        if (null === $cpf) {
+        $cpf = preg_replace('/[^0-9]/', "", $number);
+
+        if (strlen($cpf) != 11 || preg_match('/([0-9])\1{10}/', $cpf)) {
             return false;
         }
 
-        // Extrai somente os números
-        if ($cpf) {
-            $cpf = preg_replace('/[^0-9]/is', '', $cpf);
+        $number_quantity_to_loop = [9, 10];
 
-            // Verifica se foi informado todos os digitos corretamente
-            if (11 != strlen($cpf)) {
-                return false;
+        foreach ($number_quantity_to_loop as $item) {
+            $sum                    = 0;
+            $number_to_multiplicate = $item + 1;
+
+            for ($index = 0; $index < $item; $index++) {
+                $sum += $cpf[$index] * ($number_to_multiplicate--);
             }
 
-            // Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
-            if (preg_match('/(\d)\1{10}/', $cpf)) {
+            $result = (($sum * 10) % 11);
+
+            if ($cpf[$item] != $result) {
                 return false;
-            }
-            // Faz o calculo para validar o CPF
-            for ($t = 9; $t < 11; ++$t) {
-                for ($d = 0, $c = 0; $c < $t; ++$c) {
-                    $d += $cpf[$c] * (($t + 1) - $c);
-                }
-                $d = ((10 * $d) % 11) % 10;
-                if ($cpf[$c] != $d) {
-                    return false;
-                }
             }
         }
+
 
         return true;
     }
