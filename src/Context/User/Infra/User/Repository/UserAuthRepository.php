@@ -3,29 +3,31 @@
 namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
+use Gso\Ws\Context\User\Domains\User\Profile;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\services\PassHandleUserService;
 use Gso\Ws\Web\Helper\ResponseError;
+use PDO;
 use RuntimeException;
 
 class UserAuthRepository implements UserAuthRepositoryInterface
 {
     use ResponseError;
 
-    private readonly GlobalConnection $globalConnection;
+    private readonly PDO $globalConnection;
 
 
     public function __construct()
     {
-        $this->globalConnection = new GlobalConnection();
+        $this->globalConnection = GlobalConnection::conn();
     }
 
     public function signIn(string $email, string $password): UserAuth
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM user_auth WHERE email = :email'
             );
             $stmt->bindValue(':email', $email, \PDO::PARAM_STR_CHAR);
@@ -34,7 +36,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 throw new \RuntimeException();
             }
             $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
-            if (! (new PassHandleUserService())->verifyPassUser($password, (string)$objUsuario->password)) {
+            if ( ! (new PassHandleUserService())->verifyPassUser($password, (string)$objUsuario->password)) {
                 throw new \RuntimeException();
             }
 
@@ -49,7 +51,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
     public function getUserAuthByEmail(string $email): UserAuth
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM user_auth WHERE email = :email AND excluded = 0'
             );
             $stmt->bindValue(':email', $email);
@@ -84,13 +86,12 @@ class UserAuthRepository implements UserAuthRepositoryInterface
     private function insertNewUserlogin(UserAuth $usuario): UserAuth
     {
         try {
-            $this->globalConnection->conn()->beginTransaction();
             $usuarioByEmail = $this->getUserAuthByEmail($usuario->email);
             if ($usuarioByEmail->id) {
                 throw new \RuntimeException('Email já cadastrado no sistema!');
             }
 
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'INSERT INTO user_auth 
                     (email, password,is_user_external, date_criation,excluded) 
                     VALUES (:email,:password,:isUserExternal,:dataCadastro,:excluded)'
@@ -105,12 +106,10 @@ class UserAuthRepository implements UserAuthRepositoryInterface
             $stmt->bindValue(':excluded', $usuario->excluded, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 === $stmt->rowCount()) {
-                $this->globalConnection->conn()->rollBack();
-
                 return new UserAuth();
             }
 
-            return $this->getUserAuthById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getUserAuthById((int)$this->globalConnection->lastInsertId());
         } catch (RuntimeException) {
             $this->responseCatchError('Novo usuário não pôde ser salvo ou email já cadastrado');
         }
@@ -122,7 +121,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
         try {
             $passEncripted = (new PassHandleUserService())->encodePassUser((string)$usuario->password);
 
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'UPDATE user_auth SET email = :email,
                     password = :password,
                     date_criation = :dataCadastro,
@@ -151,7 +150,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
     public function getUserAuthById(int $id): UserAuth
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM user_auth WHERE id = :id AND excluded = 0'
             );
             $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
@@ -175,7 +174,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 throw new \RuntimeException();
             }
 
-            return UserAuth::userAuthSerialize(
+            return new UserAuth(
                 $data['id'],
                 $data['email'],
                 $data['password'],
@@ -183,7 +182,7 @@ class UserAuthRepository implements UserAuthRepositoryInterface
                 $data['date_criation'],
                 $data['excluded'],
             );
-        } catch (\RuntimeException | \JsonException) {
+        } catch (\RuntimeException|\JsonException) {
             return new UserAUth();
         }
     }

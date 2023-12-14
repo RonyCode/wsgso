@@ -17,7 +17,7 @@ class UserRegisterController
 
     public function __construct(
         private readonly UserRegisterCase $userRegisterCase,
-        private readonly UserPresentationRepository $usuarioAuthPresentation
+        private readonly UserPresentationRepository $userPresentationRepository
     ) {
     }
 
@@ -46,8 +46,8 @@ class UserRegisterController
             $nome           = htmlentities($request->getParsedBody()['nome']);
             $cpf            = htmlentities($request->getParsedBody()['cpf']);
             $endereco       = htmlentities($request->getParsedBody()['endereco']);
-            $complemento       = htmlentities($request->getParsedBody()['complemento']);
-            $sigla       = htmlentities($request->getParsedBody()['sigla']);
+            $complemento    = htmlentities($request->getParsedBody()['complemento']);
+            $sigla          = htmlentities($request->getParsedBody()['sigla']);
             $numero         = htmlentities($request->getParsedBody()['numero']);
             $cep            = htmlentities($request->getParsedBody()['cep']);
             $cidade         = htmlentities($request->getParsedBody()['cidade']);
@@ -79,24 +79,13 @@ class UserRegisterController
 
             $output = $this->userRegisterCase->execute($inputBoundary);
 
-            var_dump($output);
-            exit();
-            if (null === $output->token) {
+            if (null === $output->id) {
                 throw new \RuntimeException('Erro ao cadastrar novo usuário, !', 256 | 64);
             }
 
-
-            $resut = [
-                "status"  => 'success',
-                "code"    => 200,
-                "data"    => [
-                    "email" => (string)$output->email,
-                    "token" => $output->token
-                ],
-                "message" => 'Email enviado com sucesso!'
-            ];
-
-            $response->getBody()->write(json_encode($resut), JSON_THROW_ON_ERROR | 64 | 256);
+            $result = $this->userPresentationRepository->outPut($output);
+            $result = json_encode($result, JSON_THROW_ON_ERROR | 64 | 256);
+            $response->getBody()->write($result);
 
             return $response
                 ->withHeader('Content-Type', 'application/json')

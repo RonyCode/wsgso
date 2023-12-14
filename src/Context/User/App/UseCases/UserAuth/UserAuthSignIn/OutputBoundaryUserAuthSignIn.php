@@ -10,9 +10,9 @@ final readonly class OutputBoundaryUserAuthSignIn
 {
     public function __construct(
         public ?int $codUsuario = null,
-        public ?Email $email = null,
-        public ?Pass $senha = null,
-        public ?DateMysqlToFormatBr $dataCadastro = null,
+        public ?string $email = null,
+        public ?string $senha = null,
+        public ?string $dataCadastro = null,
         public ?string $token = null,
         public ?string $refreshToken = null,
         public ?int $dataCriacaoToken = null,

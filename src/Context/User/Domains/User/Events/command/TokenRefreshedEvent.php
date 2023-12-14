@@ -1,6 +1,6 @@
 <?php
 
-namespace Gso\Ws\Context\User\Domains\User\Events;
+namespace Gso\Ws\Context\User\Domains\User\Events\command;
 
 use Gso\Ws\Shared\Event\interface\EventInterface;
 

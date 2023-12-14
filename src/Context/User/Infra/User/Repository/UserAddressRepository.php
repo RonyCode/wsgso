@@ -17,14 +17,14 @@ use RuntimeException;
 
     public function __construct()
     {
-        $this->globalConnection = new GlobalConnection();
+        $this->globalConnection = GlobalConnection::conn();
     }
 
 
     #[\Override] public function getAllCities(): array
     {
         try {
-            $stmt = $this->globalConnection->conn()->query(
+            $stmt = $this->globalConnection->query(
                 'SELECT * FROM cidade'
             );
             if (0 === $stmt->rowCount()) {
@@ -51,7 +51,7 @@ use RuntimeException;
     #[\Override] public function getAllStates(): array
     {
         try {
-            $stmt = $this->globalConnection->conn()->query(
+            $stmt = $this->globalConnection->query(
                 'SELECT * FROM estado'
             );
             if (0 === $stmt->rowCount()) {
@@ -78,7 +78,7 @@ use RuntimeException;
                 throw new \RuntimeException();
             }
 
-            $address = Address::addressSerialize(
+            $address = new Address(
                 $data['id'] ?? null,
                 $data['address'] ?? null,
                 $data['number'] ?? null,
@@ -100,7 +100,7 @@ use RuntimeException;
     #[\Override] public function getAllCitiesByState(string $state): array
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM cidade WHERE estado = :state',
             );
             $stmt->bindValue(':state', $state);
@@ -138,7 +138,7 @@ use RuntimeException;
     private function insertAddress(Address $address): Address
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 "INSERT INTO user_address 
                 ( address,number, zip_code, complement, district, city, state,short_name,excluded) 
                 VALUES (:address, :number, :zip_code, :complement, :district, :city, :state, :short_name, :excluded)"
@@ -146,7 +146,7 @@ use RuntimeException;
             $this->extracted($stmt, $address);
 
 
-            return $this->getAddressById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getAddressById((int)$this->globalConnection->lastInsertId());
         } catch (\RuntimeException | \JsonException $e) {
             $this->responseCatchError($e->getMessage());
         }
@@ -156,7 +156,7 @@ use RuntimeException;
     private function updateAddress(Address $address)
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 "UPDATE user_address 
                     SET address = :address,number =:number,
                         zip_code = :zipCode,complement = :complement,
@@ -168,7 +168,7 @@ use RuntimeException;
             $this->extracted($stmt, $address);
 
 
-            return $this->getAddressById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getAddressById((int)$this->globalConnection->lastInsertId());
         } catch (\RuntimeException | \JsonException $e) {
             $this->responseCatchError($e->getMessage());
         }
@@ -176,7 +176,7 @@ use RuntimeException;
 
     /**
      * @param false|PDOStatement $stmt
-     * @param Account $account
+     * @param Address $address
      *
      * @return void
      */
@@ -200,7 +200,7 @@ use RuntimeException;
     public function getAddressById(int $id): Address
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM user_address WHERE id = :id AND excluded = 0'
             );
             $stmt->bindValue(':id', $id, \PDO::PARAM_INT);

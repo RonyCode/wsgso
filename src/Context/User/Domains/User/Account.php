@@ -18,6 +18,7 @@ readonly class Account
         public ?string $image = null,
         public ?int $excluded = null,
     ) {
+        clone $this;
     }
 
     /**
@@ -30,7 +31,7 @@ readonly class Account
         $this->phone = new Phone($this->phone);
     }
 
-    public function serializeAccount(): Account|static
+    public function sanitize(): Account|static
     {
         return clone $this;
     }

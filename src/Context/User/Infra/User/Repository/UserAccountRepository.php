@@ -16,7 +16,7 @@ use RuntimeException;
 
     public function __construct()
     {
-        $this->globalConnection = new GlobalConnection();
+        $this->globalConnection = GlobalConnection::conn();
     }
 
 
@@ -37,14 +37,14 @@ use RuntimeException;
     private function insertAccount(Account $account): Account
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'INSERT INTO user_account 
                         ( name, email, cpf, phone, image, excluded) 
                     VALUES ( :name, :email, :cpf, :phone, :image, :excluded)'
             );
             $this->extracted($stmt, $account);
 
-            return $this->getAccountById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getAccountById((int)$this->globalConnection->lastInsertId());
         } catch (\RuntimeException | \JsonException $e) {
             $this->responseCatchError($e->getMessage());
         }
@@ -57,7 +57,7 @@ use RuntimeException;
                 throw new \RuntimeException();
             }
 
-            return Account::accountSerialize(
+            return new Account(
                 $data['id'],
                 $data['name'],
                 $data['email'],
@@ -74,7 +74,7 @@ use RuntimeException;
     public function getAccountById(int $id): Account
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM user_account WHERE id = :id AND excluded = 0'
             );
             $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
@@ -92,7 +92,7 @@ use RuntimeException;
     private function updateAccount(Account $account): Account
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'UPDATE user_account SET 
                     name = :name,
                     email = :email,
@@ -104,7 +104,6 @@ use RuntimeException;
             );
 
             $stmt->bindValue(':id', $account->id);
-            $stmt->bindValue(':idUserAuth', $account->userAuthid);
             $this->extracted($stmt, $account);
 
             return $this->getAccountById($account->id);

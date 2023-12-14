@@ -12,6 +12,7 @@ use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAu
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\Domains\User\Account;
 use Gso\Ws\Context\User\Domains\User\Address;
+use Gso\Ws\Context\User\Domains\User\User;
 use Gso\Ws\Context\User\Domains\User\UserAuth;
 use Gso\Ws\Shared\ValuesObjects\Cep;
 use Gso\Ws\Shared\ValuesObjects\Cpf;
@@ -54,21 +55,30 @@ class UserSignInTest extends TestCase
         $dotenv->load();
 
 
-        $addre =  (new Address(
-            1,
-            'ronya@teste.com',
-            'rony@rony.com',
-            '77060046',
-            '(99) 99999-9999',
+        $user = new User();
+        $user->addProfile(
+            1564,
+            'user',
             '2022-01-01',
-            0,
-        ))->serializeAddress();
+            '2022-01-01',
+            2,
+        );
+
+        var_dump($user);
+//        $addre  = new Account(
+//            1,
+//            'ronya@teste.com',
+//            'rony@rony.com',
+//            '016.805.621-63',
+//            '(99) 99999-9999',
+//            '2022-01-01',
+//            0,
+//        );
 //        $userAuth = new Account(1, 'ronya@teste . com', 'rony@rony . com', '016.805.621 - 69', '(
 
 
 //$cpf = new Cep('77060046');
 //$cep = new Cpf('016.805.621 - 69');
-        var_dump($addre);
 //        var_dump($cpf);
 //        $email        = new Email('ronypc@outlook . com');
 //        $emaillHandle = new EmailHandler();

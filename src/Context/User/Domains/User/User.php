@@ -11,68 +11,80 @@ use JsonException;
 {
     public function __construct(
         readonly public ?int $id = null,
-        readonly public ?int $userAuthId = null,
-        readonly public ?Address $address = null,
-        readonly public ?int $accountId = null,
-        readonly public ?int $profileId = null,
+        private ?int $userAuthId = null,
+        private ?int $accountId = null,
+        private ?int $addressId = null,
+        private ?int $profileId = null,
         readonly public ?int $excluded = null,
     ) {
     }
 
-
-    public function __clone(): void
+    public function getUserAuthId(): ?int
     {
-        $this->userAuthId =  clone $this->userAuthId;
-        $this->accountId  =  clone $this->accountId;
-        $this->profileId  =  clone $this->profileId;
+        return $this->userAuthId;
+    }
+
+    public function getAddressId(): ?int
+    {
+        return $this->addressId;
+    }
+
+    public function getAccountId(): ?int
+    {
+        return $this->accountId;
+    }
+
+    public function getProfileId(): ?int
+    {
+        return $this->profileId;
     }
 
 
-
-
-    public function getUserAddress(): ?Address
+    public function getUserAddressId(): ?int
     {
-        return $this->address;
+        return $this->addressId;
     }
 
-
-    /**
-     * @throws JsonException
-     */
     public function getAccount(): ?Account
     {
-        return Account::accountSerialize();
+        return new Account();
     }
 
-    /**
-     * @throws JsonException
-     */
+    public function getAddress(): ?Address
+    {
+        return new Address();
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return new Profile();
+    }
+
     public function getUserAuth(): UserAuth
     {
         return new UserAuth();
     }
 
+
     /**
      * @throws JsonException
      */
-    public function addProfile(
-        ?int $id = null,
-        ?string $role = null,
-        ?string $dateGranted = null,
-        ?string $dateExpires = null,
-        ?int $grantedByUser = null,
-        ?int $excluded = null
+    public function addUserAuth(
+        ?int $idUserAuth = null,
+        ?string $email = null,
+        ?string $pass = null,
+        ?int $isUserExternal = null,
+        ?string $dateCriation = null,
+        ?int $excluded = null,
     ): self {
-
-        $clonde = clone new $this;
-        $clonde->profileId =   Profile::profileSerialize(
-            $id,
-            mb_strtolower($role),
-            $dateGranted,
-            $dateExpires,
-            $grantedByUser,
+        $this->userAuthId = (new UserAuth(
+            $idUserAuth,
+            $email,
+            $pass,
+            $isUserExternal,
+            $dateCriation,
             $excluded
-        )->id;
+        ))->sanitize()->id;
 
         return $this;
     }
@@ -89,7 +101,7 @@ use JsonException;
         ?string $image = null,
         ?int $excluded = null,
     ): self {
-        $this->accountId = Account::accountSerialize(
+        $this->accountId = (new Account(
             $id,
             $nome,
             $email,
@@ -97,8 +109,7 @@ use JsonException;
             $phone,
             $image,
             $excluded
-        )->id;
-
+        ))->sanitize()->id;
 
         return $this;
     }
@@ -118,7 +129,7 @@ use JsonException;
         ?string $shortName = null,
         ?int $excluded = null
     ): self {
-        $this->addressId = Address::addressSerialize(
+        $this->addressId = (new Address(
             $id,
             $logradouro,
             $numero,
@@ -129,31 +140,42 @@ use JsonException;
             $estado,
             $shortName,
             $excluded
-        )->id;
+        ))->sanitize()->id;
 
         return $this;
     }
 
-    /**
-     * @throws JsonException
-     */
-    public function addUserAuth(
-        ?int $idUserAuth = null,
-        ?string $email = null,
-        ?string $pass = null,
-        ?int $isUserExternal = null,
-        ?string $dateCriation = null,
-        ?int $excluded = null,
+    public function addProfile(
+        ?int $id = null,
+        ?string $role = null,
+        ?string $dateGranted = null,
+        ?string $dateExpires = null,
+        ?int $grantedByUser = null,
+        ?int $excluded = null
     ): self {
-        $this->userAuthId = UserAuth::userAuthSerialize(
-            $idUserAuth,
-            $email,
-            $pass,
-            $isUserExternal,
-            $dateCriation,
+        $this->profileId = (new Profile(
+            $id,
+            mb_strtolower($role),
+            $dateGranted,
+            $dateExpires,
+            $grantedByUser,
             $excluded
-        )->id;
+        ))->sanitize()->id;
 
         return $this;
+    }
+
+    public function saveNewUser(
+        ?UserAuth $userAuth = null,
+        ?Account $account = null,
+        ?Address $address = null,
+        ?Profile $profile = null,
+    ): array {
+        return [
+            'user_auth' => $userAuth,
+            'account'   => $account,
+            'address'   => $address,
+            'profile'   => $profile,
+        ];
     }
 }

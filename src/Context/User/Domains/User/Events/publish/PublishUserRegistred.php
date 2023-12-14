@@ -1,12 +1,14 @@
 <?php
 
-namespace Gso\Ws\Context\User\Domains\User\Events;
+namespace Gso\Ws\Context\User\Domains\User\Events\publish;
 
+use Gso\Ws\Context\User\Domains\User\Events\command\UserRegistredEvent;
+use Gso\Ws\Context\User\Domains\User\Events\command\UserSignedEvent;
 use Gso\Ws\Shared\Event\interface\EventInterface;
 use Gso\Ws\Shared\Event\ListenerEvent;
 use Gso\Ws\Web\Message\Builder;
 
-class PublishLogUserSigned extends ListenerEvent
+class PublishUserRegistred extends ListenerEvent
 {
     /**
      * @throws \JsonException
@@ -22,13 +24,12 @@ class PublishLogUserSigned extends ListenerEvent
 
 
         //Evento com mensagem registrada no RABBITMQ
-        Builder::queue('auth', $server)->emit(
+        Builder::queue('user_registered', $server)->emit(
             [
                 "message" =>
-                    'Usuário com email ' . $event->emailUser() . ' logado na data ' . $event->moment()->format(
+                    'Usuário com ID ' . $event->idUser() . ' registrado na data ' . $event->moment()->format(
                         'd/m/Y H:i:s'
                     ),
-                "email"   => (string)$event->emailUser(),
                 "id"      => $event->idUser(),
             ],
         );
@@ -36,6 +37,6 @@ class PublishLogUserSigned extends ListenerEvent
 
     public function canProcess(EventInterface $event): bool
     {
-        return $event instanceof UserSignedEvent;
+        return $event instanceof UserRegistredEvent;
     }
 }

@@ -21,6 +21,7 @@ final readonly class UserAuth
         public ?string $dateCriation = null,
         public ?int $excluded = null,
     ) {
+        clone $this;
     }
 
 
@@ -34,7 +35,7 @@ final readonly class UserAuth
         $this->dateCriation = new DateMysqlToFormatBr($this->dateCriation);
     }
 
-    public function serializeUserAuth(): UserAuth|static
+    public function sanitize(): UserAuth
     {
         return clone $this;
     }

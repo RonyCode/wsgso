@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn;
 
-use Gso\Ws\Context\User\Domains\User\Events\UserSignedEvent as UserSignInEvent;
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Token;
@@ -39,14 +38,14 @@ final class UserAuthSignInCase
 
             //            VERIFICA SE NÃO EXISTE USUÁRIO E SE É EXTERNO ENTÃO CRIA NOVO USUARIO
             if (empty($usuarioLogado->id) && empty($usuarioByEmail->id) && 1 === $inputValues->isUserExternal) {
-                $newObjUsuario = UserAuth::userAuthSerialize(
+                $newObjUsuario = (new UserAuth(
                     null,
                     $inputValues->email,
                     $inputValues->password,
                     $inputValues->isUserExternal,
                     date('Y-m-d H:i:s'),
                     0
-                );
+                ))->sanitize();
 
                 // CREATE  NEW USER EXTERNAL
                 $usuarioLogado = $this->userAuthRepository->saveNewUserAuth($newObjUsuario);

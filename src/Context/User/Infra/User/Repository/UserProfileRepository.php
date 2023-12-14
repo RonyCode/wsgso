@@ -17,7 +17,7 @@ use RuntimeException;
 
     public function __construct()
     {
-        $this->globalConnection = new GlobalConnection();
+        $this->globalConnection = GlobalConnection::conn();
     }
 
 
@@ -38,14 +38,14 @@ use RuntimeException;
     private function insertProfile(Profile $profile): Profile
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'INSERT INTO user_profile 
                         ( role, date_granted, date_expires, granted_by_iduser, excluded) 
                     VALUES ( :role, :dateGranted, :dateExpires, :idUserGranted, :excluded)'
             );
             $this->extracted($stmt, $profile);
 
-            return $this->getAccountById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getAccountById((int)$this->globalConnection->lastInsertId());
         } catch (\RuntimeException | \JsonException $e) {
             $this->responseCatchError($e->getMessage());
         }
@@ -58,7 +58,7 @@ use RuntimeException;
                 throw new \RuntimeException();
             }
 
-            return Profile::profileSerialize(
+            return new  Profile(
                 $data['id'] ?? null,
                 mb_strtolower($data['role']),
                 $data['date_granted'] ?? null,
@@ -74,7 +74,7 @@ use RuntimeException;
     public function getAccountById(int $id): Profile
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM user_profile WHERE id = :id AND excluded = 0'
             );
             $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
@@ -92,7 +92,7 @@ use RuntimeException;
     private function updateProfile(Profile $profile): Profile
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'UPDATE user_profile SET 
                     role = :role,
                     date_granted = :dateGranted,

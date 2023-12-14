@@ -1,12 +1,13 @@
 <?php
 
-namespace Gso\Ws\Context\User\Domains\User\Events;
+namespace Gso\Ws\Context\User\Domains\User\Events\publish;
 
+use Gso\Ws\Context\User\Domains\User\Events\command\UserSignedEvent;
 use Gso\Ws\Shared\Event\interface\EventInterface;
 use Gso\Ws\Shared\Event\ListenerEvent;
 use Gso\Ws\Web\Message\Builder;
 
-class PublishEmailSendedSignUpUserAuth extends ListenerEvent
+class PublishLogUserSigned extends ListenerEvent
 {
     /**
      * @throws \JsonException
@@ -22,19 +23,20 @@ class PublishEmailSendedSignUpUserAuth extends ListenerEvent
 
 
         //Evento com mensagem registrada no RABBITMQ
-        Builder::queue('email-sended', $server)->emit(
+        Builder::queue('auth', $server)->emit(
             [
                 "message" =>
-                    'Email ' . $event->emailUser() . ' enviado na data ' . $event->moment()->format(
+                    'Usuário com email ' . $event->emailUser() . ' logado na data ' . $event->moment()->format(
                         'd/m/Y H:i:s'
-                    ) . ' verifique sua caixa de entrada',
+                    ),
                 "email"   => (string)$event->emailUser(),
+                "id"      => $event->idUser(),
             ],
         );
     }
 
     public function canProcess(EventInterface $event): bool
     {
-        return $event instanceof UserSendedEmailSignUp;
+        return $event instanceof UserSignedEvent;
     }
 }

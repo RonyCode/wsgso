@@ -3,8 +3,8 @@
 namespace Gso\Ws\Web\Presentation;
 
 use Gso\Ws\Context\User\App\UseCases\Token\GetTokenByCodUser\OutputBoundaryRefreshTokenCase;
-use Gso\Ws\Context\User\Domains\User\Events\PublishTokenRefreshed;
-use Gso\Ws\Context\User\Domains\User\Events\TokenRefreshedEvent;
+use Gso\Ws\Context\User\Domains\User\Events\command\TokenRefreshedEvent;
+use Gso\Ws\Context\User\Domains\User\Events\publish\PublishTokenRefreshed;
 use Gso\Ws\Context\User\Infra\User\Interface\TokenPresentationInterface;
 use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Web\Helper\ResponseError;

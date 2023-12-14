@@ -6,7 +6,7 @@ namespace Gso\Ws\Shared\ValuesObjects;
 
 use DomainException;
 
-final class Cep
+class Cep
 {
     public function __construct(private ?string $cep = null)
     {
@@ -26,6 +26,12 @@ final class Cep
 
     public function validaCep(?string $cep = null): bool
     {
+        if (preg_match('/^[0-9]{5}\-?[0-9]{3}$/', $cep) === 0) {
+            throw new \DomainException('Cep inválido');
+        }
+        $cep       = preg_replace('/\D{0,9}/', '', $cep);
+        $this->cep = $cep;
+
         return preg_match('/^[0-9]{5}\-?[0-9]{3}$/', $cep) === 1;
     }
 

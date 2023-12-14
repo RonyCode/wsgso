@@ -9,6 +9,7 @@ use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\Interface\TokenPresentationInterface;
+use Gso\Ws\Context\User\Infra\User\Interface\UserAuthPresentationInterface;
 use Gso\Ws\Context\User\Infra\User\Interface\UserPresentationInterface;
 use Gso\Ws\Context\User\Infra\User\Repository\TokenUserRepository;
 use Gso\Ws\Context\User\Infra\User\Repository\UserAccountRepository;
@@ -19,6 +20,7 @@ use Gso\Ws\Context\User\Infra\User\Repository\UserRepository;
 use Gso\Ws\Web\Message\interface\RabbitMQInterface;
 use Gso\Ws\Web\Message\repository\RabbitMQRepository;
 use Gso\Ws\Web\Presentation\TokenManagerPresentation;
+use Gso\Ws\Web\Presentation\UserAuthPresentation;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Nyholm\Psr7\Response;
 use Nyholm\Psr7\ServerRequest;
@@ -97,10 +99,14 @@ return [
     // ==============================================================
     // INTERFACES PRESENTATION  GSO
     // ==============================================================
-    UserPresentationInterface::class      => static function (ContainerInterface $container) {
+    UserAuthPresentationInterface::class  => static function (ContainerInterface $container) {
+        return $container->get(UserAuthPresentation::class);
+    },
+
+    UserPresentationInterface::class  => static function (ContainerInterface $container) {
         return $container->get(UserPresentationRepository::class);
     },
-    TokenPresentationInterface::class     => static function (ContainerInterface $container) {
+    TokenPresentationInterface::class => static function (ContainerInterface $container) {
         return $container->get(TokenManagerPresentation::class);
     },
 

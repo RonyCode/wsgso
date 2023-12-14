@@ -6,6 +6,7 @@ namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Interface\UserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\User;
+use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Context\User\Infra\User\services\PassHandleUserService;
 use Gso\Ws\Web\Helper\ResponseError;
@@ -15,138 +16,96 @@ final class UserRepository implements UserRepositoryInterface
 {
     use ResponseError;
 
-    public function __construct(
-        private readonly GlobalConnectionInterface $globalConnection,
-    ) {
+    private \PDO $globalConnection;
+
+    public function __construct()
+    {
+        $this->globalConnection = GlobalConnection::conn();
     }
 
-    public function login(string $email, string $senha): User
+
+    public function saveNewUser(User $user): User
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
-                'SELECT * FROM USUARIO_AUTH WHERE EMAIL = :email'
-            );
-            $stmt->bindValue(':email', $email, \PDO::PARAM_STR_CHAR);
-            $stmt->execute();
-            if (0 === $stmt->rowCount()) {
-                throw new \RuntimeException();
-            }
-            $objUsuario = $this->newObjUsuarioAuth($stmt->fetch());
-            if (! (new PassHandleUserService())->verifyPassUser($senha, (string)$objUsuario->senha)) {
-                throw new \RuntimeException();
+            if ($user->id) {
+                return $this->updateNewUser($user);
             }
 
-            return $objUsuario;
-        } catch (RuntimeException) {
-            //            $this->responseCatchError("Usuário ou senha não encontrados!");
-
-            return new User();
-        }
-    }
-
-    public function saveNewUsuarioAuth(User $usuario): User
-    {
-        try {
-            if ($usuario->id) {
-                return $this->updateUserAuthLogin($usuario);
-            }
-
-            return $this->insertNewUserlogin($usuario);
+            return $this->insertNewUser($user);
         } catch (\RuntimeException) {
             $this->responseCatchError('Não foi possível encontrar usuário!');
         }
     }
 
 
-    public function getUsuarioAuthById(int $codUsuario): User
+    public function getUserById(int $id): User
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
-                'SELECT * FROM USUARIO_AUTH WHERE CODUSUARIO = :codUsuario AND EXCLUIDO = 0'
+            $stmt = $this->globalConnection->prepare(
+                'SELECT * FROM user WHERE id = :codUsuario AND excluded = 0'
             );
-            $stmt->bindValue(':codUsuario', $codUsuario, \PDO::PARAM_INT);
+            $stmt->bindValue(':codUsuario', $id, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 === $stmt->rowCount()) {
                 throw new \RuntimeException();
             }
 
-            return $this->newObjUsuarioAuth($stmt->fetch());
+            return $this->newObjUser($stmt->fetch());
         } catch (RuntimeException) {
-            //            $this->responseCatchError("Usuário ou senha não encontrados!");
-
             return new User();
         }
     }
 
-    public function getUsuarioByEmail(string $email): User
+
+    private function insertNewUser(User $user): User
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
-                'SELECT * FROM USUARIO_AUTH WHERE EMAIL = :email AND EXCLUIDO = 0'
-            );
-            $stmt->bindValue(':email', $email);
-            $stmt->execute();
-            if (0 === $stmt->rowCount()) {
-                throw new \RuntimeException();
-            }
-
-            return $this->newObjUsuarioAuth($stmt->fetch());
-        } catch (RuntimeException) {
-            //            $this->responseCatchError("Usuário ou senha não encontrados!");
-
-            return new User();
-        }
-    }
-
-    private function insertNewUserlogin(User $usuario): User
-    {
-        try {
-            $stmt = $this->globalConnection->conn()->prepare(
-                'INSERT INTO USUARIO_AUTH 
-                    (CODUSUARIO, CPF, NOME, EMAIL, SENHA, SENHAEXTERNA, DATACADASTRO, IMAGE, EXCLUIDO) 
-                    VALUES (:codUsuario,:cpf,:nome,:email,:senha,:senhaExterna,:dataCadastro,:image,:excluido)'
+            $stmt = $this->globalConnection->prepare(
+                'INSERT INTO user 
+                    (id_user_auth, id_account, id_address,id_profile,excluded) 
+                    VALUES (:idUserAuth,:idAccount,:idAddress,:idProfile,:excluded)'
             );
 
-            $passEncripted         = (new PassHandleUserService())->encodePassUser((string)$usuario->senha);
-            $passExternalEncripted = (new PassHandleUserService())->encodePassUser((string)$usuario->senhaExterna);
+            $stmt->bindValue(':idUserAuth', $user->getUserAuthId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':idAccount', $user->getAccountId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':idAddress', $user->getAddressId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':idProfile', $user->getProfileId(), \PDO::PARAM_INT);
+            $stmt->bindValue(':excluded', $user->excluded);
 
-            $stmt->bindValue(':codUsuario', $usuario->codUsuario, \PDO::PARAM_INT);
-            $stmt->bindValue(':cpf', $usuario->cpf, \PDO::PARAM_STR_CHAR);
-            $stmt->bindValue(':nome', $usuario->nome, \PDO::PARAM_STR_CHAR);
-            $stmt->bindValue(':email', $usuario->email, \PDO::PARAM_STR_CHAR);
-            $stmt->bindValue(':senha', $passEncripted);
-            $stmt->bindValue(':senhaExterna', $passExternalEncripted);
-            $stmt->bindValue(':dataCadastro', $usuario->dataCadastro, \PDO::PARAM_STR_CHAR);
-            $stmt->bindValue(':image', $usuario->image, \PDO::PARAM_STR_CHAR);
-            $stmt->bindValue(':excluido', $usuario->excluido, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 === $stmt->rowCount()) {
                 return new User();
             }
 
-            return $this->getUsuarioAuthById((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->getUserById((int)$this->globalConnection->lastInsertId());
         } catch (RuntimeException) {
             $this->responseCatchError('Novo usuário não pôde ser salvo');
         }
     }
 
-    private function updateUserAuthLogin(User $usuario): User
+    private function updateNewUser(User $user): User
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
-                'UPDATE USUARIO_AUTH SET SENHAEXTERNA = :senhaExterna WHERE CODUSUARIO = :codUsuario'
+            $stmt = $this->globalConnection->prepare(
+                'UPDATE user SET 
+                id_user_auth = :idUserAuth, id_account = :idAccount,
+                id_address = :idAddress, id_profile = :idProfile,
+                excluded = :excluded WHERE id = :id'
             );
 
-            $passEncripted = (new PassHandleUserService())->encodePassUser((string)$usuario->senhaExterna);
 
-            $stmt->bindValue(':codUsuario', $usuario->codUsuario, \PDO::PARAM_INT);
-            $stmt->bindValue(':senhaExterna', $passEncripted);
+            $stmt->bindValue(':id', $user->id, \PDO::PARAM_INT);
+            $stmt->bindValue(':idUserAuth', $user->getUserAuth(), \PDO::PARAM_INT);
+            $stmt->bindValue(':idAccount', $user->getAccount(), \PDO::PARAM_INT);
+            $stmt->bindValue(':idAddress', $user->getAddress(), \PDO::PARAM_INT);
+            $stmt->bindValue(':idProfile', $user->getProfile(), \PDO::PARAM_INT);
+            $stmt->bindValue(':excluded', $user->excluded, \PDO::PARAM_INT);
             $stmt->execute();
             if (0 === $stmt->rowCount()) {
                 throw new \RuntimeException();
             }
 
-            return $this->getUsuarioAuthById($usuario->codUsuario);
+            return $this->getUserById($user->id);
         } catch (RuntimeException) {
             //            $this->responseCatchError("Usuário ou senha não encontrados!");
 
@@ -154,31 +113,23 @@ final class UserRepository implements UserRepositoryInterface
         }
     }
 
-    private function newObjUsuarioAuth($data): User
+    private function newObjUser($data): User
     {
         try {
             if (empty($data)) {
                 throw new \RuntimeException();
             }
 
-            return User::userSerialize(
-                $data['CODUSUARIO'],
-                $data['CPF'],
-                $data['NOME'],
-                $data['EMAIL'],
-                $data['SENHA'],
-                $data['SENHAEXTERNA'],
-                $data['DATACADASTRO'],
-                $data['IMAGE'],
-                $data['EXCLUIDO'],
+            return new User(
+                $data['id'],
+                $data['id_user_auth'],
+                $data['id_account'],
+                $data['id_address'],
+                $data['id_profile'],
+                (int)$data['excluded']
             );
         } catch (\RuntimeException | \JsonException) {
             return new User();
         }
-    }
-
-    #[\Override] public function saveNewUser(User $user): User
-    {
-        // TODO: Implement saveNewUser() method.
     }
 }

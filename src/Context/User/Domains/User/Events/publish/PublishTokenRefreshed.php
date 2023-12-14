@@ -1,7 +1,8 @@
 <?php
 
-namespace Gso\Ws\Context\User\Domains\User\Events;
+namespace Gso\Ws\Context\User\Domains\User\Events\publish;
 
+use Gso\Ws\Context\User\Domains\User\Events\command\TokenRefreshedEvent;
 use Gso\Ws\Shared\Event\interface\EventInterface;
 use Gso\Ws\Shared\Event\ListenerEvent;
 use Gso\Ws\Web\Message\Builder;

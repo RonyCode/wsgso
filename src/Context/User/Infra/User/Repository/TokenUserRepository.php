@@ -6,6 +6,7 @@ namespace Gso\Ws\Context\User\Infra\User\Repository;
 
 use Gso\Ws\Context\User\Domains\User\Interface\TokenUserRepositoryInterface;
 use Gso\Ws\Context\User\Domains\User\Token;
+use Gso\Ws\Context\User\Infra\Connection\GlobalConnection;
 use Gso\Ws\Context\User\Infra\Connection\Interfaces\GlobalConnectionInterface;
 use Gso\Ws\Web\Helper\ResponseError;
 
@@ -13,15 +14,17 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
 {
     use ResponseError;
 
-    public function __construct(
-        private readonly GlobalConnectionInterface $globalConnection
-    ) {
+    private readonly \PDO $globalConnection;
+
+    public function __construct()
+    {
+        $this->globalConnection = GlobalConnection::conn();
     }
 
     public function selectTokenByCodUsuario(int $idUser): Token
     {
         try {
-            $stmt = $this->globalConnection->conn()->prepare(
+            $stmt = $this->globalConnection->prepare(
                 'SELECT * FROM token WHERE id_user = :idUser AND excluded = 0'
             );
             $stmt->bindValue(':idUser', $idUser, \PDO::PARAM_INT);
@@ -77,7 +80,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
     {
         try {
             $stmt = $this->globalConnection
-                ->conn()->prepare(
+                ->prepare(
                     'INSERT INTO token ( id_user, token, refresh_token, date_criation, date_expires, excluded) 
                             VALUES (:idUser,:token,:refreshToken,:dateCriation,:dateExpires,:excluded)'
                 );
@@ -89,7 +92,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
             $stmt->bindValue(':excluded', $tokenManagerModel->excluded, \PDO::PARAM_INT);
             $stmt->execute();
 
-            return $this->selectTokenByCodUsuario((int)$this->globalConnection->conn()->lastInsertId());
+            return $this->selectTokenByCodUsuario((int)$this->globalConnection->lastInsertId());
         } catch (\RuntimeException | \JsonException) {
             $this->responseCatchError('Não foi possível salvar token!');
         }
@@ -99,7 +102,7 @@ final class TokenUserRepository implements TokenUserRepositoryInterface
     {
         try {
             $stmt = $this->globalConnection
-                ->conn()->prepare(
+                ->prepare(
                     'UPDATE token  SET
                 token = :token, 
                 date_criation = :dataCriacao,  

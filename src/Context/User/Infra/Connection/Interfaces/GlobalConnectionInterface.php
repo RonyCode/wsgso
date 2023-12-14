@@ -6,5 +6,5 @@ use PDO;
 
 interface GlobalConnectionInterface
 {
-    public function conn(): PDO;
+    public static function conn(): PDO;
 }

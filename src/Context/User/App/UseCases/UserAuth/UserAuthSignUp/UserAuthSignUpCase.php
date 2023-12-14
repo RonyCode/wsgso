@@ -2,8 +2,8 @@
 
 namespace Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp;
 
-use Gso\Ws\Context\User\Domains\User\Events\PublishEmailSendedSignUpUserAuth;
-use Gso\Ws\Context\User\Domains\User\Events\UserSendedEmailSignUp;
+use Gso\Ws\Context\User\Domains\User\Events\command\UserSendedEmailSignUp;
+use Gso\Ws\Context\User\Domains\User\Events\publish\PublishEmailSendedSignUpUserAuth;
 use Gso\Ws\Context\User\Domains\User\Interface\UserAuthRepositoryInterface;
 use Gso\Ws\Shared\Event\PublishEvents;
 use Gso\Ws\Shared\ValuesObjects\Email;

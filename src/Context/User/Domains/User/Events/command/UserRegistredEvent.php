@@ -1,22 +1,24 @@
 <?php
 
-namespace Gso\Ws\Context\User\Domains\User\Events;
+declare(strict_types=1);
+
+namespace Gso\Ws\Context\User\Domains\User\Events\command;
 
 use Gso\Ws\Shared\Event\interface\EventInterface;
-use Gso\Ws\Shared\ValuesObjects\Email;
 
-class UserSendedEmailSignUp implements EventInterface
+class UserRegistredEvent implements EventInterface
 {
     private \DateTimeImmutable $moment;
 
-    public function __construct(readonly public Email $email)
+    public function __construct(readonly public int $idUser)
     {
         $this->moment = new \DateTimeImmutable();
     }
 
-    public function emailUser(): Email
+
+    public function idUser(): int
     {
-        return $this->email;
+        return $this->idUser;
     }
 
     public function moment(): \DateTimeImmutable
@@ -31,6 +33,6 @@ class UserSendedEmailSignUp implements EventInterface
 
     public function eventData($data): void
     {
-        $data->email = $this->emailUser();
+        $data->id = $this->idUser();
     }
 }

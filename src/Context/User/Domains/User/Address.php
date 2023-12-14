@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Gso\Ws\Context\User\Domains\User;
 
 use Gso\Ws\Shared\ValuesObjects\Cep;
+use Gso\Ws\Shared\ValuesObjects\CepTest;
+use Gso\Ws\Web\Helper\ValidateParams;
 
-final readonly class Address
+class Address
 {
+    /**
+     * @throws \JsonException
+     */
     public function __construct(
         public ?int $id = null,
         public ?string $address = null,
@@ -20,6 +25,7 @@ final readonly class Address
         public ?string $shortName = null,
         public ?int $excluded = null,
     ) {
+        clone $this;
     }
 
     /**
@@ -27,9 +33,11 @@ final readonly class Address
      */
     public function __clone(): void
     {
-        $this->zipCode = (string)new Cep($this->zipCode);
+        $this->zipCode = (string)(new Cep($this->zipCode));
     }
-    public function serializeAddress(): Address|static
+
+
+    public function sanitize()
     {
         return clone $this;
     }

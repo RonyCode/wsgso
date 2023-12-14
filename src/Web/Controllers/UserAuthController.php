@@ -7,6 +7,7 @@ namespace Gso\Ws\Web\Controllers;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\InputBoundaryUserAuthSignIn;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignIn\UserAuthSignInCase;
 use Gso\Ws\Context\User\App\UseCases\UserAuth\UserAuthSignUp\UserAuthSignUpCase;
+use Gso\Ws\Context\User\Infra\User\Interface\UserAuthPresentationInterface;
 use Gso\Ws\Web\Helper\ResponseError;
 use Gso\Ws\Web\Presentation\UserPresentationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -17,7 +18,7 @@ final class UserAuthController
     use ResponseError;
 
     public function __construct(
-        private readonly UserPresentationRepository $usuarioAuthPresentation,
+        private readonly UserAuthPresentationInterface $usuarioAuthPresentation,
         private readonly UserAuthSignInCase $userAuthSignInCase,
     ) {
     }
