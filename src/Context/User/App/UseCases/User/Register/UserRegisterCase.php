@@ -95,9 +95,6 @@ final readonly class UserRegisterCase
             );
 
             $result = $this->userRepository->saveNewUser($user);
-            if (empty($result)) {
-                throw new \RuntimeException('Erro ao cadastrar usuario');
-            }
 
             $conn->commit();
 

@@ -26,7 +26,7 @@ class PublishTokenRefreshed extends ListenerEvent
             [
                 "id_user" => $event->idUser(),
                 "info"    =>
-                    'Token foi reativado com sucesso! tempo de expiração:' .
+                    'Token foi reativado com sucesso! tempo de validade:' .
                     $event->dataExpires() . ' requisição feita em: ' .
                     $event->moment()->format('d/m/Y H:i:s'),
             ],

@@ -14,14 +14,11 @@ class AddressStatesGetAllCase
     {
     }
 
-    /*
-     * @return OutputBoundaryAddressCitiesGetAll[]
-     */
+
     public function execute(): array
     {
         try {
             $states = $this->userAddressRepository->getAllStates();
-
 
             foreach ($states as $state) {
                 $statesArray[] = new OutputBoundaryAddressStatesGetAll(
@@ -30,7 +27,6 @@ class AddressStatesGetAllCase
                     $state->shortName,
                 );
             }
-
 
             return $statesArray;
         } catch (RuntimeException $e) {

@@ -15,7 +15,7 @@ class TokenRefreshedEvent implements EventInterface
 
     public function dataExpires(): string
     {
-        return date('m/d/Y H:i:s', $this->dataExpires);
+        return date('d/m/Y H:i:s', $this->dataExpires);
     }
 
     public function idUser(): int

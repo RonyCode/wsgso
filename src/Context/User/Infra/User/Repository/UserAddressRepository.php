@@ -35,7 +35,7 @@ use RuntimeException;
             $cities = $stmt->fetchAll();
 
             foreach ($cities as $city) {
-                $citiesObj[] = $this->newObjUsuarioAddress($city);
+                $citiesObj[] = $this->newObjAddress($city);
             }
 
             return $citiesObj;
@@ -61,7 +61,7 @@ use RuntimeException;
             $states = $stmt->fetchAll();
 
             foreach ($states as $state) {
-                $stateObj[] = $this->newObjUsuarioAddress($state);
+                $stateObj[] = $this->newObjAddress($state);
             }
 
             return $stateObj;
@@ -71,7 +71,7 @@ use RuntimeException;
     }
 
 
-    private function newObjUsuarioAddress($data): Address
+    private function newObjAddress($data): Address
     {
         try {
             if (empty($data)) {
@@ -101,7 +101,7 @@ use RuntimeException;
     {
         try {
             $stmt = $this->globalConnection->prepare(
-                'SELECT * FROM cidade WHERE estado = :state',
+                'SELECT * FROM cidade WHERE state = :state',
             );
             $stmt->bindValue(':state', $state);
             $stmt->execute();
@@ -113,7 +113,7 @@ use RuntimeException;
             $cities = $stmt->fetchAll();
 
             foreach ($cities as $city) {
-                $citiesObj[] = $this->newObjUsuarioAddress($city);
+                $citiesObj[] = $this->newObjAddress($city);
             }
 
             return $citiesObj;
@@ -209,7 +209,7 @@ use RuntimeException;
                 throw new \RuntimeException();
             }
 
-            return $this->newObjUsuarioAddress($stmt->fetch());
+            return $this->newObjAddress($stmt->fetch());
         } catch (RuntimeException) {
             return new Address();
         }
