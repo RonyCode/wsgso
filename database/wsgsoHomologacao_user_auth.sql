@@ -1,0 +1,56 @@
+-- MySQL dump 10.13  Distrib 8.0.35, for Linux (x86_64)
+--
+-- Host: localhost    Database: wsgsoHomologacao
+-- ------------------------------------------------------
+-- Server version	8.0.35
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `user_auth`
+--
+
+DROP TABLE IF EXISTS `user_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_auth` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `email` varchar(200) NOT NULL,
+  `password` text NOT NULL,
+  `is_user_external` int NOT NULL DEFAULT '0',
+  `date_criation` datetime NOT NULL,
+  `excluded` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_auth`
+--
+
+LOCK TABLES `user_auth` WRITE;
+/*!40000 ALTER TABLE `user_auth` DISABLE KEYS */;
+INSERT INTO `user_auth` VALUES (1,'ronyanderson@gmail.com','$argon2i$v=19$m=65536,t=4,p=1$O2qgC/230DzeALzrAwJfEw$3D8y+YVHWgqs+XGFac5dj2yt3aXhkxofBYn80aNLmUE',0,'2023-10-08 12:52:06',0),(8,'ronyandersonpcd@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$ncugSPVTxWk4o0j48yq/bg$4EwfUpGPJPholh1QAg8P1TEOeFnVsOWhYK1bM41KLCo',1,'2023-10-08 15:05:02',0),(9,'ronyandersong@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$YexCMNTFb5zOW7U5/MTVqA$cFxPKJi0sDecAjEx7bmQM+WVFgADya5iqmlZeB7f7hk',1,'2023-10-22 10:04:14',0),(10,'ronyandersongh@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$PWolCoJQ4+y41k8lWz0piQ$1rwJARKCUTE1VpOsOYTDWzl0RckzC9t1BUA5cLilf44',1,'2023-10-22 10:04:25',0),(11,'ronyandersonpc@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$+AjL1pDqNojw021HMgekyg$DvxVQCeADYD7x0eCiTH3sY3t2T9NCrLLICri6ew+aCs',1,'2023-11-05 12:37:34',0),(12,'espaco.educar.palmas@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$PJhJIXq5c+VQ9DNct8TmYA$PZEAHP4p0qWeqQh+bHcW+8kE0C8T0ctcBW1nro4aItE',1,'2023-11-05 22:07:15',0),(13,'ronyandersoncp@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$dKulBKfTA4EnLZNV0xo2og$moNpOF7GyxvKxttk18AD139M9MbMEu4zqg+3xVcCK/8',1,'2023-11-14 09:45:28',0),(14,'gisele.ps.md@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$YO6zdVMIgfecp0u1+MV+JA$Q5df/b/Fq0xyUq5zWmvHA5jQdVAUD2U3e8jr8Ege6GY',1,'2023-11-27 20:58:58',0),(15,'ronypc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$RnPZT9YdCZo9lRAOZDxx2g$ymdtnFnifdebvqyY+abz9jcAVkIyhjv9ml55HLf+jwo',0,'2023-12-12 15:39:08',0),(16,'ronysdadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$ncpP23eUADg6FygNEsXKlg$oqPyGUd91f3VXl/d6rEO1soWHgH68/0fFdAR0VPfzKY',0,'2023-12-12 15:40:10',0),(17,'ronysdsdasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$9KzwHCMnD63+jQDkzkBZ4g$9NJsHvH+INUyNqEI5+AzKplC4/adO/dPpFhzgi3szr4',0,'2023-12-12 15:44:18',0),(18,'ronysdsdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$Fgx8CrWe3XhntUWoUCgpng$A9RWmfGGUCxznn8V3fW8Miz2yaOc/gEeLZBO94oGt8A',0,'2023-12-12 15:44:58',0),(19,'ronysdeeesdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$UD1S8Lq7M0Hq4XuDDYjkaw$K9BMIBZGZaqm4OiX2aDDeDOdgQZk1EQ5xaBj6oIvHIY',0,'2023-12-12 15:51:03',0),(20,'ronyseeedeeesdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$TzIUN/WDFuZ3NLJ7Ah8KdA$OlVB76gJuRsr92hrVs0EpgwHTv4cACaalKIH94vd4hw',0,'2023-12-12 15:52:48',0),(21,'ronysedasdeedeeesdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$cfAzEDn8leJRkFJ2n2IWyw$yRhrE/wDbW1DO9CoObwrWl4PDm2Zc1UakH4UduDSgws',0,'2023-12-12 16:06:57',0),(22,'ronysedddaasdeedeeesdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$KI86f+ntLN73vyzqKtpHVQ$F/TF+Xxkx7gfkpdlUDsYX+g6Z0OjB4gCS5LXhS9Vapc',0,'2023-12-12 16:07:17',0),(23,'ronysddadedddaasdeedeeesdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$nL4Mj6IahWte/Oaj46ycJA$KTkmZ2BfvUYYlINaYvaEOELiJbujIlS9UA5yvPpdXAI',0,'2023-12-12 16:13:53',0),(24,'ronysdadaddadedddaasdeedeeesdddadasddadpc@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$5wdSTzjFcl3qgJTonNPOTA$MH3q/I0CNHVN2hkeOHXc5RX7jixtQp30FzELUNYWdNg',0,'2023-12-12 16:14:36',0),(25,'sdasd@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$eb6C23SXOyHvAAAkawTFgw$yXGuqk0hexY4ypcnBJBR+aSh0k6NzW4E9I6aaVsTO7w',0,'2023-12-12 16:16:49',0),(26,'sdadasd@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$lpEgyAtMVNL2DVZ/ZFUu0Q$J2t06Jud+KgYKFB0Sf7HaJV98JbW09Es4VW7MC7ferY',0,'2023-12-12 16:20:43',0),(27,'sdadddasd@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$22eUWoHnWAmiTKY/QhwWOg$rxzcFgJNVmv63oEthDeEDqnbQr3EL/OiMjSDOwN+N0k',0,'2023-12-12 16:21:34',0),(28,'sdaddaaddasd@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$SeOhB8BjIhWULPrDQkGiqg$/23FmhjfxTkxpkHrhemmhqM4Df+jlttdhBYYVrLp3Sw',0,'2023-12-12 16:22:16',0),(29,'sdaddadasdaaddasd@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$sj2VDh9xAoT4AnogpLGjrg$DjQGGPlTyPptAR87ai34s/gHazXZYg4SYci1m1lIWTI',0,'2023-12-12 16:23:13',0),(30,'sdaddadaddsdaaddasd@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$bAvnoOGYcRM7bUT+DoCItg$UTnc40Vsr4nFvc30ROja1sXw0rLD4PtHzDZO7Ac15hI',0,'2023-12-12 16:24:03',0),(31,'dadas@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$bpaxkPo+9i0sp8rheANo3w$z74H73lTu591EGOV6wp/KI+VP9apewTgj3uNZGcMAvg',0,'2023-12-12 16:24:21',0),(32,'dadads@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$q1V1HXQLVs4ftc/N51NFrw$QTzakAHPPL09vqLNtLu3s8arkipZUvV4BVD0fjx19GA',0,'2023-12-12 16:24:44',0),(33,'dadasaads@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$KK9r4KtdkwTXR3erYpyaEQ$k/CpJzmIEHmlxC88YrvkkLEFPHSu1LOMnCKkWNG3eIg',0,'2023-12-12 16:26:29',0),(34,'dadaseeaads@outlook.com','$argon2id$v=19$m=65536,t=4,p=1$ihrHKNvLzvxyRg70ZgPyEA$xDrTXywCaQf+IwQQJmLycKygoVihXn0Ar2sA71gXB6g',0,'2023-12-12 16:27:05',0),(35,'aaaaddd@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$GwuHu7QvjjFZZLDVP5f4kQ$Wi0aL4EGvgdVk9unVIcfKHGq/PwPEgFal9vq8VjhK5Y',0,'2023-12-14 13:07:48',0),(36,'aaarweaddd@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$7snP/14dxjRrJOSQS+ZyFA$DeSB22Y7XsxqOe/tYBxoRLrjorTRBOL1P2uQN+wlGq0',0,'2023-12-14 13:08:48',0),(37,'aaattrweaddd@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$zMn64hO3fwHquD1/yPlX2g$E63u3YphceqoJ7vDJk8IakwrcYXzIuyOhu8E84TR8gg',0,'2023-12-14 13:09:13',0),(38,'aarerattrweaddd@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$hGRL76U9l18IsGDNLd99vQ$P4+Ejzo3zbAAqfzOrxt0qdvZMUH+dHSF+DvlfQgu/cs',0,'2023-12-14 13:09:41',0),(39,'aarerttattrweaddd@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$yp/aGljLDtw7fUGCHdjMJw$cpnWudu/IfDk3tU/oeRKqUUplFYDoGM3XTrUCsGSkjc',0,'2023-12-14 13:32:26',0),(40,'blabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$5/PI0MeXdBm/Dng1+itM3g$OVB5MyNnfcaIWAyfNBQgIAlWPzFi5hkcxLD/E/oN6GU',0,'2023-12-14 13:55:58',0),(41,'blasdabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$ESBgjgIiZjXAuSGn3Wov0Q$3XuNCLH66YGDCQqc7K4a8FWHHqmCRGU1yk5m/RmSWTk',0,'2023-12-14 13:56:39',0),(43,'blaesdabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$uW5ZyEH8I5jwTBJTOvRNSw$NplTp2Edw4m+ECovZ0PJwyiMUNikESjJN8jHBup8pQk',0,'2023-12-14 13:57:28',0),(51,'bldasaesdabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$qGXuFU0j4g7je8CMpGj31A$AjqJpoJQhzOrSt8zIN8Hd+h4On+M5ojaTih6xcfMdeE',0,'2023-12-14 15:03:39',0),(52,'bldasaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$Mv9t29MFVlHNBN/wL16o8w$syQWn9bpmiMlV86NOVWcwHrhVo89TUS5KqoiePKmICE',0,'2023-12-14 15:07:42',0),(53,'bldaddsaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$gw3cxQ7c0ItCaCwaMe3olA$q00itH2Rl3GDTDUR3oT1V93m+b7mMEzvGZUNpqiFL70',0,'2023-12-14 15:08:48',0),(54,'bldaddddsaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$lnxzscY6AFdQWT6q7w47tg$cIf08nn06E5NVCLrI/iZxOlQr117OB7NMNKwKFpaPvU',0,'2023-12-14 15:10:00',0),(55,'bldaddddddsaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$+0tD3lx/gdkcJWDlFOcWhw$u6loTaRG6Y5l0aS328N5XQthppbIxZdRppu03OecGAA',0,'2023-12-14 15:16:21',0),(56,'bldadddsddddsaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$5GwyLKETncGYDOWw6L/8Fg$yeQIslvV17JAkp522XEe7t0HlQxSh0wBQ5QspmIvFCM',0,'2023-12-14 15:45:18',0),(57,'bldadddddsddddsaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$VOxRBRKyqPvTQS+u5/arxA$sL7yDoRLmj+lGvGpu5oXYpdTLzx99md84CbOUxKLLEk',0,'2023-12-14 15:46:43',0),(58,'bldaddsddddsddddsaesdddabeeela@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$Lh1ubrcc9yby5O28Vt4cYw$Xew+Y+avJsc9EVC/GlSD3RbtFNN8vm2EXBrURnKZ548',0,'2023-12-14 15:51:02',0),(59,'tee@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$ohy58sqfV905bFvO0BPHtQ$Ln/mAqU8cOF2ANYik1oUKrah+nKkJ5LYnU7WOI8sCgw',0,'2023-12-14 15:51:10',0),(60,'teste@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$PG+7UvhbnAALZZazb68M+w$nvoTXpBn0dJbq9hcJEgVpIzvHXTRhxegLfQduY9QqDM',0,'2023-12-14 15:54:33',0),(61,'testsde@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$upQ1HW8yIPsbhpJnjlsGaw$evmZtEXbYb+MKFcXpP1f1WwJzXBnv1YxPp7HeDKPG7M',0,'2023-12-14 16:10:03',0),(62,'testasde@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$D4s7k8kXrrBeypzk4MP1xA$E1/kJ95qtc681oHe2lhDSKGA2QGxY/kSvtMfAyZsHPc',0,'2023-12-14 16:11:40',0),(63,'afse@dadoutlook.com','$argon2id$v=19$m=65536,t=4,p=1$aiKegYoqtcdiBaBQSRl8ow$GqdNgIy6k8Jmp6JyFwdfKD8O2D1fzNR4uhrtAEVsumk',0,'2023-12-14 16:27:12',0),(64,'ronypc@outlodsok.com','$argon2id$v=19$m=65536,t=4,p=1$JbwUiryYuOx5zxM1v9tm9A$ocWDFnpczQbAhFgUsFgiwXl66rZIYcUrsZkSeTE62Yc',0,'2023-12-14 21:23:38',0),(65,'ronyanderssdasdasdonpc@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$zk8pbFuK8UTCFPnDQw8KwA$Hy744GExUM9IP0f7o/Q/4vcIuS7+Di/fZQMCPSaAMvY',0,'2023-12-14 21:25:55',0),(66,'ronyanderssdsdaasdasdonpc@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$kTwk0Vm2WlFnpGFCXSYfNw$3gtkMcihYEv1yLwa+n1gZ8hg5WZqtAbmzDY9kZA3980',0,'2023-12-14 21:27:16',0),(67,'ronyandsdadasdersonpc@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$sLsLANT4/ETvzQGDMIKB9g$N5CO9A8aAnvRIBE5Ed3VF2ewazTi9eMr9Sx23WC3qvY',0,'2023-12-14 21:28:54',0),(68,'ronyandaaasdadasdersonpc@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$iJZ9aiBTC0PWr0SKXoXGSw$8KihXTgBshXFufcw33aOkn73KKN5iJnY6lJK6vul7L8',0,'2023-12-14 21:29:28',0),(69,'gisele_p_@hotmail.com','$argon2id$v=19$m=65536,t=4,p=1$rkC54pbnrVWlb2cCbGU+Cw$orvOHL0WHOzqZ4wlcp9xOFuhUSBcgOmykmKq/oUDeW8',0,'2023-12-14 21:30:36',0),(70,'ronyanderaaaasonpc@gmail.com','$argon2id$v=19$m=65536,t=4,p=1$YSLb+c28bNh4s8m5kosFfw$VwU/ha4Syw4KqvLS0AR7/9nBJQ2Zx4bCUuP6CoUy/2c',0,'2023-12-15 00:13:06',0);
+/*!40000 ALTER TABLE `user_auth` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-12-21 18:35:52

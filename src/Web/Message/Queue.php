@@ -129,9 +129,6 @@ class Queue
         $channel    = $connection->channel();
         [$queue, $messageCount, $consumerCount] = $channel->queue_declare($this->name, true);
 
-        var_dump($queue);
-        var_dump($consumerCount);
-        var_dump($messageCount);
 
         return $messageCount;
     }
