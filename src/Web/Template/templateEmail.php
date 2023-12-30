@@ -22,7 +22,7 @@
             <table role="presentation"
                    style="width:602px;border-collapse:collapse;border:1px solid #cccccc;border-spacing:0;text-align:left;">
                 <tr>
-                    <td align="center" style="background:#70bbd9;">
+                    <td align="center" style="background:#1C1917;">
                         <img src="https://uploaddeimagens.com.br/images/004/663/941/original/bannerComprimido.png"
                              alt="" width="900"
 
